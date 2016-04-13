@@ -7,7 +7,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var Userschema = new Schema({
+var schema = new Schema({
   user: String,
   callSettingsime: Date,
   expert: String,
