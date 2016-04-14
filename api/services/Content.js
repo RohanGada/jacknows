@@ -11,9 +11,19 @@
   title:String,
   content:String
  });
-module.exports = {
+ module.exports = mongoose.model('Content', schema);
+ var models = {
+     saveData: function(data, callback) {
+        var content = this(data);
+         content.save(function(err, deleted) {
+             if (err) {
+                 callback(err, null);
+             } else {
+                 callback(null, deleted);
+             }
+         });
+     },
 
-  attributes: {
 
-  }
-};
+ };
+ module.exports = _.assign(module.exports, models);

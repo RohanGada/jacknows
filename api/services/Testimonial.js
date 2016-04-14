@@ -14,9 +14,19 @@
   image:String,
 
  });
-module.exports = {
+ module.exports = mongoose.model('Testimonial', schema);
+ var models = {
+     saveData: function(data, callback) {
+         var tewstimonial = this(data);
+         tewstimonial.save(function(err, deleted) {
+             if (err) {
+                 callback(err, null);
+             } else {
+                 callback(null, deleted);
+             }
+         });
+     },
 
-  attributes: {
 
-  }
-};
+ };
+ module.exports = _.assign(module.exports, models);

@@ -15,9 +15,34 @@ var schema = new Schema({
   timestamp: Date,
   image:String,
 });
-module.exports = {
+module.exports =mongoose.model('DailyUpdates', schema);
+var models = {
 
-  attributes: {
+  saveData:function(data, callback)  {
+    var dailyupdates = this(data);
+    if (data._id) {
+        this.findOneAndUpdate({
+            _id: data._id
+        }, data, function(err, data2) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, data2);
+            }
+        });
+    } else {
+      dailyupdates.timestamp=new Date();
+        dailyupdates.save(function(err, data2) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, data2);
+            }
+        });
+    }
 
-  }
+  },
+  
+
 };
+module.exports = _.assign(module.exports, models);

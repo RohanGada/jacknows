@@ -17,24 +17,74 @@
    experience:String,
    contact:Number,
    forgotId:String,
-   notification:Schema.Types.Mixed,
+   
+   notification: {
+        type: [{
+            user: String,
+            description: String,
+            action: String,
+            timestamp: Date
+        }],
+        index: true
+    },
    shortList:{
      type:[{
        expertUser:
        {type:Schema.Types.ObjectId,
-       ref:'Expertuser'},
+       ref:'ExpertUser'},
        timestamp:Date
-     }]
+     }],
      index:true
      },
-
-
  });
 
+ module.exports =mongoose.model('User', schema);
+ var models = {
 
-module.exports = {
+   saveData:function(data, callback)  {
+     var user = this(data);
+     if (data._id) {
+         this.findOneAndUpdate({
+             _id: data._id
+         }, data, function(err, data2) {
+             if (err) {
+                 callback(err, null);
+             } else {
+                 callback(null, data2);
+             }
+         });
+     } else {
+       user.timestamp=new Date();
+         user.save(function(err, data2) {
+             if (err) {
+                 callback(err, null);
+             } else {
+                 callback(null, data2);
+             }
+         });
+     }
 
-  attributes: {
+   },
+   getAll: function(data, callback) {
+       this.find({}, {}, {}, function(err, deleted) {
+           if (err) {
+               callback(err, null);
+           } else {
+               callback(null, deleted);
+           }
+       });
+   },
+   deleteData:function(data,callback){
+     this.findOneAndRemove({
+       _id:data._id
+     },function(err,deleted){
+       if(err){
+         callback(err,null)
+       }else{
+         callback(null,deleted)
+       }
+     });
+   },
 
-  }
-};
+ };
+ module.exports = _.assign(module.exports, models);
