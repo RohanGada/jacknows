@@ -11,9 +11,14 @@ var schema = new Schema({
   title: String,
   description: String,
   content: String,
-  recommendation: Schema.Types.Mixed,
   timestamp: Date,
   image:String,
+  recommendation: {
+      type: [{
+          user: String
+      }],
+      index: true
+  },
 });
 module.exports =mongoose.model('DailyUpdates', schema);
 var models = {
@@ -42,7 +47,7 @@ var models = {
     }
 
   },
-  
+
 
 };
 module.exports = _.assign(module.exports, models);

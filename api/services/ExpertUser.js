@@ -15,9 +15,9 @@ var schema = new Schema({
     mobileno: String,
     addressDetails: String,
     experience: String,
-    qualification: Number,
-    professionalDetails: {
-        type: [{
+  
+    // professionalDetails: {
+    //     type: [{
             professionalInfo: {
                 type: [{
                     areaOfExpertise: String,
@@ -73,9 +73,9 @@ var schema = new Schema({
                 index: true
             },
 
-        }],
-        index: true
-    },
+    //     }],
+    //     index: true
+    // },
     callSettings: {
         type: [{
             date: Date,

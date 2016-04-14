@@ -16,7 +16,6 @@ var models = {
 
     saveData: function(data, callback) {
       var searchlog = this(data);
-        searchlog.timestamp = new Date();
         searchlog.save(function(err, deleted) {
             if (err) {
                 callback(err, null);
