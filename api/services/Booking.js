@@ -51,7 +51,7 @@ var models = {
                 }
             });
         } else {
-            booking.timestamp = new Date();
+            //booking.timestamp = new Date();
             booking.save(function(err, data2) {
                 if (err) {
                     callback(err, null);

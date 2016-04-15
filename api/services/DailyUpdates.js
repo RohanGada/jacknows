@@ -36,7 +36,7 @@ var models = {
             }
         });
     } else {
-      dailyupdates.timestamp=new Date();
+      //dailyupdates.timestamp=new Date();
         dailyupdates.save(function(err, data2) {
             if (err) {
                 callback(err, null);
@@ -47,7 +47,19 @@ var models = {
     }
 
   },
-
-
+  getAll: function(data, callback) {
+       this.find().exec(callback);
+   },
+   deleteData: function(data, callback) {
+       this.findOneAndRemove({
+           _id: data._id
+       }, function(err, deleted) {
+           if (err) {
+               callback(err, null)
+           } else {
+               callback(null, deleted)
+           }
+       });
+   },
 };
 module.exports = _.assign(module.exports, models);

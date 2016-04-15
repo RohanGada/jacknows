@@ -16,16 +16,45 @@
  });
  module.exports = mongoose.model('Testimonial', schema);
  var models = {
-     saveData: function(data, callback) {
-         var tewstimonial = this(data);
-         tewstimonial.save(function(err, deleted) {
-             if (err) {
-                 callback(err, null);
-             } else {
-                 callback(null, deleted);
-             }
-         });
-     },
+   saveData: function(data, callback) {
+       var testimonial = this(data);
+       if (data._id) {
+           this.findOneAndUpdate({
+               _id: data._id
+           }, data, function(err, data2) {
+               if (err) {
+                   callback(err, null);
+               } else {
+                   callback(null, data2);
+               }
+           });
+       } else {
+           //booking.timestamp = new Date();
+           testimonial.save(function(err, data2) {
+               if (err) {
+                   callback(err, null);
+               } else {
+                   callback(null, data2);
+               }
+           });
+       }
+
+   },
+   getAll: function(data, callback) {
+        this.find().exec(callback);
+    },
+    
+   deleteData: function(data, callback) {
+       this.findOneAndRemove({
+           _id: data._id
+       }, function(err, deleted) {
+           if (err) {
+               callback(err, null)
+           } else {
+               callback(null, deleted)
+           }
+       });
+   },
 
 
  };

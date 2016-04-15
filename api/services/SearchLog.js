@@ -14,16 +14,54 @@ var schema = new Schema({
 module.exports = mongoose.model('SearchLog', schema);
 var models = {
 
-    saveData: function(data, callback) {
+  saveData: function(data, callback) {
       var searchlog = this(data);
-        searchlog.save(function(err, deleted) {
-            if (err) {
-                callback(err, null);
-            } else {
-                callback(null, deleted);
-            }
-        });
-    },
+      if (data._id) {
+          this.findOneAndUpdate({
+              _id: data._id
+          }, data, function(err, data2) {
+              if (err) {
+                  callback(err, null);
+              } else {
+                  callback(null, data2);
+              }
+          });
+      } else {
+          //booking.timestamp = new Date();
+          searchlog.save(function(err, data2) {
+              if (err) {
+                  callback(err, null);
+              } else {
+                  callback(null, data2);
+              }
+          });
+      }
+
+  },
+  getAll: function(data, callback) {
+       this.find().exec(callback);
+   },
+  // getAll: function(data, callback) {
+  //     this.find({}, {}, {}, function(err, deleted) {
+  //         if (err) {
+  //             callback(err, null);
+  //         } else {
+  //             callback(null, deleted);
+  //         }
+  //     });
+  // },
+  deleteData: function(data, callback) {
+      this.findOneAndRemove({
+          _id: data._id
+      }, function(err, deleted) {
+          if (err) {
+              callback(err, null)
+          } else {
+              callback(null, deleted)
+          }
+      });
+  },
+
 
 
 };

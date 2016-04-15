@@ -66,7 +66,7 @@ var models = {
 
     },
     getAll: function(data, callback) {
-        this.find({}, {}, {}, function(err, deleted) {
+        this.find({}, {}, {}).populate('expertUser').exec(function(err, deleted) {
             if (err) {
                 callback(err, null);
             } else {
