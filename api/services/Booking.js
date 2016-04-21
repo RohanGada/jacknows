@@ -18,7 +18,7 @@ var schema = new Schema({
     callStartTime: Date,
     callEndTime: Date,
     callDuration: Date,
-    transactionId: String,
+    //transactionId: String,
     stateLog: {
         type: [{
             status: String,

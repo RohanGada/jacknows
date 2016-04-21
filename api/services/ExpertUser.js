@@ -8,14 +8,18 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var schema = new Schema({
-    name: String,
+    firstName: String,
+    lastName: String,
     email: String,
     password: String,
+    confirmPassword: String,
     gender: String,
     mobileno: String,
     addressDetails: String,
     experience: String,
-  
+    image:String,
+    descriptionAndSkills:String,
+
     // professionalDetails: {
     //     type: [{
             professionalInfo: {
@@ -39,12 +43,13 @@ var schema = new Schema({
             },
             experience: {
                 type: [{
+                  experienceType:String,
                     companyName: String,
                     jobTitle: String,
                     jobDescription: String,
                     startDate: Date,
                     endDate: Date,
-                    image: String
+                    image1: String
                 }],
                 index: true
             },
@@ -62,7 +67,7 @@ var schema = new Schema({
             },
             addPhotos: {
                 type: [{
-                    image: String
+                    image2: String
                 }],
                 index: true
             },
