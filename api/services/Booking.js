@@ -18,7 +18,11 @@ var schema = new Schema({
     callStartTime: Date,
     callEndTime: Date,
     callDuration: Date,
-    //transactionId: String,
+    areaOfExpertise: String,
+    bookDate:Date,
+    bookTime:Date,
+    image:String,
+    feedback:String,
     stateLog: {
         type: [{
             status: String,
