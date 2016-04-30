@@ -19,11 +19,18 @@ var schema = new Schema({
     gender: String,
     mobileno: String,
     addressDetails: String,
-    experience: String,
     image: String,
     descriptionAndSkills: String,
     category: String,
-    salesPitch:String,
+    salesPitch: String,
+
+    accountHolderName: String,
+    bankName: String,
+    typeOfAccount: String,
+    branchAddress: String,
+    accountNo: String,
+    code: String,
+    accountHolderAddress: String,
 
     // professionalDetails: {
     //     type: [{
@@ -75,19 +82,21 @@ var schema = new Schema({
     //     }],
     //     index: true
     // },
+    unavailableSettings: Schema.Types.Mixed,
+    customSettings: Schema.Types.Mixed,
     callSettings: Schema.Types.Mixed,
-    bankDetails: {
-        type: [{
-            accountHolderName: String,
-            bankName: String,
-            typeOfAccount: String,
-            branchAddress: String,
-            accountNo: String,
-            code: String,
-            accountHolderAddress: String
-        }],
-        index: true
-    },
+    // bankDetails: {
+    //     type: [{
+    //         accountHolderName: String,
+    //         bankName: String,
+    //         typeOfAccount: String,
+    //         branchAddress: String,
+    //         accountNo: String,
+    //         code: String,
+    //         accountHolderAddress: String
+    //     }],
+    //     index: true
+    // },
     // expertRegistration: {
     //     type: [{
     //         fName: String,
@@ -110,6 +119,7 @@ var models = {
         if (data.password && data.password != "") {
             data.password = md5(data.password);
         }
+        data.name = data.firstName + " " + data.lastName;
         var expertuser = this(data);
         this.count({
             "email": data.email
@@ -131,6 +141,9 @@ var models = {
     editProfile: function(data, callback) {
         delete data.password;
         delete data.forgotpassword;
+        if (data.firstName && data.firstName != "" && data.lastName && data.lastName) {
+            data.name = data.firstName + " " + data.lastName;
+        }
         this.findOneAndUpdate({
             _id: data._id
         }, data, function(err, data2) {
@@ -233,7 +246,6 @@ var models = {
         if (data.password && data.password != "") {
             data.password = md5(data.password);
         }
-        //name=firstName+" "+lastName;
         var expertuser = this(data);
         if (data._id) {
             this.findOneAndUpdate({
@@ -286,58 +298,48 @@ var models = {
     },
     searchData: function(data, callback) {
         var check = new RegExp(data.search, "i");
-        var newreturn = [];
-        async.parallel([
-            function(callback) {
-                Category.findByName(data, function(err, data2) {
-                    if (err) {
-                        console.log(err);
-                        callback(err, null);
-                    } else if (data2 && data2.length > 0) {
-                        _.each(data2, function(cat) {
-                            newreturn.push(cat);
-                        });
-                        callback(null, newreturn);
-                    }
-                });
-            },
-            function(callback) {
-                ExpertUser.find({
-                    $or: [{
-                        name: {
-                            '$regex': check
-                        }
-                    }, {
-                        descriptionAndSkills: {
-                            '$regex': check
-                        }
-                    }]
-                }, function(err, data3) {
-                    if (err) {
-                        console.log(err);
-                        callback(err, null);
-                    } else {
-                        _.each(data3, function(skill) {
-                            newreturn.push(skill);
-                        });
-                        callback(null, newreturn);
-                    }
-                });
+        ExpertUser.find({
+            $or: [{
+                name: {
+                    '$regex': check
+                }
+            }, {
+                descriptionAndSkills: {
+                    '$regex': check
+                }
+            }, {
+                areaOfExpertise: {
+                    '$regex': check
+                }
+            }]
+        }, {
+            password: 0,
+            forgotpassword: 0
+        }, function(err, data3) {
+            if (err) {
+                console.log(err);
+                callback(err, null);
+            } else {
+                if (data3.length > 0) {
+                    callback(null, data3);
+                } else {
+                    callback(null, []);
+                }
             }
-        ]);
+        });
     },
 
     getOne: function(data, callback) {
-     ExpertUser.findOne({
-         _id: data._id
-     }, function(err, deleted) {
-         if (err) {
-             callback(err, null);
-         } else {
-             callback(null, deleted);
-         }
-     });
- },
+        ExpertUser.findOne({
+            _id: data._id
+        }, function(err, deleted) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, deleted);
+            }
+        });
+    },
 
 };
 module.exports = _.assign(module.exports, models);

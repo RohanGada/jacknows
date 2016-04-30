@@ -36,6 +36,7 @@ var schema = new Schema({
     userRating: String,
     cancelReason: String,
     expertRating: String,
+    query: String,
 });
 
 
@@ -86,6 +87,5 @@ var models = {
             }
         });
     },
-
 };
 module.exports = _.assign(module.exports, models);
