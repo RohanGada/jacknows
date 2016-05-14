@@ -7,7 +7,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var md5 = require('MD5');
-var sendgrid = require('sendgrid')('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');
+var sendgrid = require('sendgrid')('');
 
 
 var schema = new Schema({

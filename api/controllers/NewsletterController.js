@@ -4,7 +4,7 @@
  * @description :: Server-side logic for managing Newsletters
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
-var sendgrid = require('sendgrid')('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');
+var sendgrid = require('sendgrid')('');
 module.exports = {
     saveData: function(req, res) {
         if (req.body) {
