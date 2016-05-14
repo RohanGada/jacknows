@@ -1,0 +1,73 @@
+{ 
+    "_id" : ObjectId("570f518b7741fd7314c4c23d"), 
+    "timestamp" : ISODate("2016-04-14T08:15:07.813+0000"), 
+    "title" : "Top 10 News", 
+    "description" : "ssedfghj", 
+    "content" : "erdghjn", 
+    "image" : "abc.jpg", 
+    "recommendation" : [
+        {
+            "user" : "abc", 
+            "_id" : ObjectId("5718841c372ec60409df8186")
+        }, 
+        {
+            "user" : "d", 
+            "_id" : ObjectId("5718841c372ec60409df8185")
+        }, 
+        {
+            "user" : "h", 
+            "_id" : ObjectId("5718841c372ec60409df8184")
+        }
+    ], 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("571878e3372ec60409df817c"), 
+    "timestamp" : ISODate("2016-04-14T08:15:07.813+0000"), 
+    "title" : "Top 10 things to do in Thailand", 
+    "description" : "ssedfghj", 
+    "content" : "This beautiful gold-tipped series of buildings is over 200 years old, and perhaps Bangkok's most famous destination. Yes, it can feel like a tourist trap, but the complex's history and grandeur is palpable", 
+    "image" : "abc.jpg", 
+    "recommendation" : [
+        {
+            "user" : "abc", 
+            "_id" : ObjectId("571878e3372ec60409df817e")
+        }, 
+        {
+            "user" : "xyz", 
+            "_id" : ObjectId("571878e3372ec60409df817d")
+        }
+    ], 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("57188584372ec60409df8188"), 
+    "timestamp" : ISODate("2016-04-14T08:15:07.813+0000"), 
+    "title" : "Mumbai food: Binge the French way in the comfort of your home", 
+    "description" : "ssedfghj", 
+    "content" : "Indulge in a French-style culinary adventure with goodies from a Mumbai-based cheesemaker and a patissier", 
+    "image" : "abc.jpg", 
+    "recommendation" : [
+        {
+            "user" : "abc", 
+            "_id" : ObjectId("57188862372ec60409df8197")
+        }, 
+        {
+            "user" : "d", 
+            "_id" : ObjectId("57188862372ec60409df8196")
+        }, 
+        {
+            "user" : "h", 
+            "_id" : ObjectId("57188862372ec60409df8195")
+        }, 
+        {
+            "user" : "abc", 
+            "_id" : ObjectId("57188862372ec60409df8194")
+        }, 
+        {
+            "user" : "d", 
+            "_id" : ObjectId("57188862372ec60409df8193")
+        }
+    ], 
+    "__v" : NumberInt(0)
+}

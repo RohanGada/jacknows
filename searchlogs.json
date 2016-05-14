@@ -1,0 +1,168 @@
+{ 
+    "_id" : ObjectId("573322c67a009c5c3d95b404"), 
+    "search" : "node3", 
+    "time" : NumberInt(26), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("573322cd7a009c5c3d95b405"), 
+    "search" : "wedrgdthyu", 
+    "time" : NumberInt(1), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("573322d17a009c5c3d95b406"), 
+    "search" : "tryui", 
+    "time" : NumberInt(1), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("573322db7a009c5c3d95b407"), 
+    "search" : "bucky", 
+    "time" : NumberInt(2), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("573322e67a009c5c3d95b408"), 
+    "search" : "abcaaaaaa", 
+    "time" : NumberInt(1), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("5733230b7a009c5c3d95b409"), 
+    "search" : "pooja", 
+    "time" : NumberInt(2), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("5733268d7a009c5c3d95b40a"), 
+    "search" : "no", 
+    "time" : NumberInt(32), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("573328fe7a009c5c3d95b40b"), 
+    "search" : "n", 
+    "time" : NumberInt(62), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("57332fcd7a009c5c3d95b40c"), 
+    "search" : null, 
+    "time" : NumberInt(26), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("573330f57a009c5c3d95b40d"), 
+    "search" : "xyz", 
+    "time" : NumberInt(1), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("573424ef69e5bee104fdc0b7"), 
+    "search" : "abc", 
+    "time" : NumberInt(8), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("57342a4869e5bee104fdc0b8"), 
+    "search" : "Aaa", 
+    "time" : NumberInt(2), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("57342a4c69e5bee104fdc0b9"), 
+    "search" : "aaa", 
+    "time" : NumberInt(3), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("57342a5069e5bee104fdc0ba"), 
+    "search" : "node", 
+    "time" : NumberInt(41), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("57342a5569e5bee104fdc0bb"), 
+    "search" : "robert", 
+    "time" : NumberInt(2), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("57342afa69e5bee104fdc0bc"), 
+    "search" : "ro", 
+    "time" : NumberInt(3), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("57342ca569e5bee104fdc0bd"), 
+    "search" : "r", 
+    "time" : NumberInt(19), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("5734350b69e5bee104fdc0be"), 
+    "search" : "Aaaaaaaaaaaaaaaaaaaaaaaaa", 
+    "time" : NumberInt(1), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("57348bea69e5bee104fdc0bf"), 
+    "search" : "s", 
+    "time" : NumberInt(304), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("5735ddc8ecf4f12192f1191a"), 
+    "search" : "b", 
+    "time" : NumberInt(1), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("5735ddceecf4f12192f1191b"), 
+    "search" : "a", 
+    "time" : NumberInt(201), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("5735df03ecf4f12192f1191c"), 
+    "search" : "c", 
+    "time" : NumberInt(3), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("5735e724ecf4f12192f1191d"), 
+    "search" : "p", 
+    "time" : NumberInt(2), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("5736bf7421a2e624afd9ceeb"), 
+    "search" : "para", 
+    "time" : NumberInt(1), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("5736c75821a2e624afd9ceec"), 
+    "search" : "nu", 
+    "time" : NumberInt(4), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("5736d02921a2e624afd9ceed"), 
+    "search" : "parag", 
+    "time" : NumberInt(2), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("5736eef121a2e624afd9ceee"), 
+    "search" : "pa", 
+    "time" : NumberInt(1), 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("5736fce921a2e624afd9ceef"), 
+    "search" : "g", 
+    "time" : NumberInt(1), 
+    "__v" : NumberInt(0)
+}

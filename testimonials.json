@@ -1,0 +1,21 @@
+{ 
+    "_id" : ObjectId("57186c6e6ffa420d0c4ba3c6"), 
+    "name" : "- Kris Mathews", 
+    "testimonial" : "We had been planning our honeymoon for a lng time. Jacknows’ travel expert helped us curate our experience and visit some places that we would have otherwise missed. I would recommend Jacknows to all would be travellers.Their help in getting us a good expert who could be trusted helped us a great deal", 
+    "image" : "img/team.png", 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("57186c846ffa420d0c4ba3c7"), 
+    "name" : "- john Mathews", 
+    "testimonial" : "We had been planning our honeymoon for a lng time.", 
+    "image" : "img/logo2.png", 
+    "__v" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("5718728c372ec60409df817a"), 
+    "name" : "- Bucky Robert", 
+    "testimonial" : "We had been planning our honeymoon for a lng time.", 
+    "image" : "img/logop.png", 
+    "__v" : NumberInt(0)
+}
