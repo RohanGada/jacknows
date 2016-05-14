@@ -7,7 +7,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var md5 = require('MD5');
-var sendgrid = require('sendgrid')('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');
+var sendgrid = require('sendgrid')('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');
 
 
 var schema = new Schema({
@@ -25,7 +25,10 @@ var schema = new Schema({
     mobile: String,
     additionalInfo: String,
     forgotpassword: String,
-
+    image: {
+        type: String,
+        default: ""
+    },
     notification: {
         type: [{
             user: String,
@@ -142,15 +145,16 @@ var models = {
             password: data.password
         }, {
             password: data.changePassword
-        }, function(err, data2) {
+        }).lean().exec(function(err, data2) {
             if (err) {
                 callback(err, null);
             } else {
                 if (_.isEmpty(data2)) {
                     callback(null, {});
                 } else {
-                    data2.password = "";
-                    data2.forgotpassword = "";
+                    delete data2.password;
+                    delete data2.forgotpassword;
+                    delete data2._id;
                     callback(null, data2);
                 }
             }
@@ -229,7 +233,7 @@ var models = {
                 callback(err, null);
             } else {
                 if (found) {
-                    if (!found.oauthLogin[0]) {
+                    if (!found.oauthLogin || (found.oauthLogin && found.oauthLogin.length <= 0)) {
                         var text = "";
                         var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
                         for (var i = 0; i < 8; i++) {
@@ -248,12 +252,13 @@ var models = {
                                 sendgrid.send({
                                     to: found.email,
                                     from: "info@wohlig.com",
-                                    subject: "One Time Password For Blazen",
-                                    html: "<html><body><p>Dear " + found.name + ",</p><p>Your One Time Password for Blazen is " + text + "</p></body></html>"
+                                    subject: "One Time Password For Jacknows",
+                                    html: "<html><body><p>Dear " + found.firstName + ",</p><p>Your One Time Password for Jacknows is " + text + "</p></body></html>"
                                 }, function(err, json) {
                                     if (err) {
                                         callback(err, null);
                                     } else {
+                                        console.log(json);
                                         callback(null, {
                                             comment: "Mail Sent"
                                         });
@@ -274,15 +279,15 @@ var models = {
             }
         });
     },
-    getShortlist:function(data,callback){
-      //var name=firstName+" "+lastName;
+    getShortlist: function(data, callback) {
+        //var name=firstName+" "+lastName;
         User.findOne({
-          _id:data._id
-        },{
-          _id:0,
-          password:0,
-          forgotpassword:0
-        }).populate("shortList.expertUser", '-_id -password -forgotpassword -__v -bankDetails').exec(callback);
+            _id: data._id
+        }, {
+            _id: 0,
+            password: 0,
+            forgotpassword: 0
+        }).populate("shortList.expertUser", '-password -forgotpassword -__v -bankDetails').exec(callback);
     }
 };
 module.exports = _.assign(module.exports, models);

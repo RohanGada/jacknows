@@ -4,7 +4,7 @@
  * @description :: Server-side logic for managing Users
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
-var sendgrid = require('sendgrid')('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');
+var sendgrid = require('sendgrid')('');
 module.exports = {
     saveData: function(req, res) {
         if (req.body) {
@@ -136,7 +136,6 @@ module.exports = {
             }
         };
         if (req.body) {
-            console.log(req.body);
             if (req.session.user) {
                 req.body._id = req.session.user._id;
                 User.editProfile(req.body, callback);
@@ -215,7 +214,27 @@ module.exports = {
             if (req.session.user) {
                 req.body._id = req.session.user._id;
                 if (req.body.password && req.body.password != "" && req.body.changePassword && req.body.changePassword != "") {
-                    User.changePassword(req.body, res.callback);
+                    User.changePassword(req.body, function(err,data2){
+                      if(err){
+                        console.log(err);
+                        res.json({
+                          value:false,
+                          data:err
+                        });
+                      }else{
+                        if(data2.email){
+                          res.json({
+                            value:true,
+                            data:data2
+                          });
+                        }else{
+                          res.json({
+                            value:false,
+                            data:{}
+                          });
+                        }
+                      }
+                    });
                 } else {
                     res.json({
                         value: false,

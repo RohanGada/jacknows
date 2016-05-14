@@ -128,6 +128,7 @@ module.exports = {
                     value: false
                 });
             } else {
+              console.log(data);
                 req.session.expertuser = data;
                 res.json({
                     data: "Profile Edited",
@@ -136,7 +137,6 @@ module.exports = {
             }
         };
         if (req.body) {
-            console.log(req.body);
             if (req.session.expertuser) {
                 req.body._id = req.session.expertuser._id;
                 ExpertUser.editProfile(req.body, callback);
@@ -156,6 +156,7 @@ module.exports = {
     login: function(req, res) {
         var callback = function(err, data) {
             if (err || _.isEmpty(data)) {
+              console.log('in 1 loop');
                 res.json({
                     error: err,
                     value: false
@@ -194,13 +195,49 @@ module.exports = {
             });
         }
     },
+    logout: function(req, res) {
+        req.session.destroy(function(err) {
+            if (err) {
+                res.json({
+                    value: false,
+                    error: err
+                });
+            } else {
+                setTimeout(function() {
+                    res.json({
+                        value: true
+                    });
+                }, 3000);
+            }
+        });
+    },
 
     changePassword: function(req, res) {
         if (req.body) {
             if (req.session.expertuser) {
-                req.body._id = req.session.user._id;
+                req.body._id = req.session.expertuser._id;
                 if (req.body.password && req.body.password != "" && req.body.changePassword && req.body.changePassword != "") {
-                    ExpertUser.changePassword(req.body, res.callback);
+                    ExpertUser.changePassword(req.body, function(err,data){
+                      if(err){
+                        console.log(err);
+                        res.json({
+                          value:false,
+                          data:err
+                        });
+                      }else{
+                        if(data.email){
+                          res.json({
+                            value:true,
+                            data:data
+                          });
+                        }else{
+                          res.json({
+                            value:false,
+                            data:{}
+                          });
+                        }
+                      }
+                    });
                 } else {
                     res.json({
                         value: false,

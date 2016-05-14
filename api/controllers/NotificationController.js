@@ -1,65 +1,25 @@
 /**
- * BookingController
+ * NotificationController
  *
- * @description :: Server-side logic for managing Bookings
+ * @description :: Server-side logic for managing notifications
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
-
 module.exports = {
     saveData: function(req, res) {
         if (req.body) {
-            if (req.body._id && req.body._id != "") {
-                if (req.body.from == "expert") {
-                    req.body.expertname = req.session.expertuser.name;
-                    req.body.expertimage = req.session.expertuser.image;
-                    callSave();
-                } else if (req.body.from == "user") {
-                    req.body.user = req.session.user._id;
-                    req.body.username = req.session.user.firstName + " " + req.session.user.lastName;
-                    req.body.userimage = req.session.user.image;
-                    callSave();
-                } else {
+            Notification.saveData(req.body, function(err, respo) {
+                if (err) {
                     res.json({
                         value: false,
-                        data: "Please provide params"
+                        data: err
                     });
-                }
-            } else {
-                if (req.session.user) {
-                    req.body.user = req.session.user._id;
-                    req.body.username = req.session.user.firstName + " " + req.session.user.lastName;
-                    req.body.userimage = req.session.user.image;
-                    callSave();
                 } else {
                     res.json({
-                        value: false,
-                        data: "User not loggd-in"
+                        value: true,
+                        data: respo
                     });
                 }
-            }
-
-            function callSave() {
-                Booking.saveData(req.body, function(err, respo) {
-                    if (err) {
-                        res.json({
-                            value: false,
-                            data: err
-                        });
-                    } else {
-                        if (respo._id) {
-                            res.json({
-                                value: true,
-                                data: respo
-                            });
-                        } else {
-                            res.json({
-                                value: false,
-                                data: respo
-                            });
-                        }
-                    }
-                });
-            }
+            });
         } else {
             res.json({
                 value: false,
@@ -69,7 +29,7 @@ module.exports = {
     },
     getAll: function(req, res) {
         if (req.body) {
-            Booking.getAll(req.body, function(err, respo) {
+            Notification.getAll(req.body, function(err, respo) {
                 if (err) {
                     res.json({
                         value: false,
@@ -93,7 +53,7 @@ module.exports = {
         if (req.body) {
             if (req.body._id && req.body._id != "") {
                 //	console.log("not valid");
-                Booking.deleteData(req.body, function(err, respo) {
+                Notification.deleteData(req.body, function(err, respo) {
                     if (err) {
                         res.json({
                             value: false,
@@ -119,11 +79,10 @@ module.exports = {
             });
         }
     },
-    getBooking: function(req, res) {
+    getOne: function(req, res) {
         if (req.body) {
-            if (req.session.user) {
-                req.body.user = req.session.user._id;
-                Booking.getBooking(req.body, function(err, respo) {
+            if (req.body._id && req.body._id != "") {
+                Notification.getOne(req.body, function(err, respo) {
                     if (err) {
                         res.json({
                             value: false,
@@ -139,7 +98,7 @@ module.exports = {
             } else {
                 res.json({
                     value: false,
-                    data: "User not Loggedin"
+                    data: "Invalid Id"
                 });
             }
         } else {
@@ -149,35 +108,41 @@ module.exports = {
             });
         }
     },
-    getExpertBooking: function(req, res) {
-        if (req.body) {
-            if (req.session.expertuser) {
-                req.body.expertuser = req.session.expertuser._id;
-                Booking.getExpertBooking(req.body, function(err, respo) {
-                    if (err) {
-                        res.json({
-                            value: false,
-                            data: err
-                        });
-                    } else {
-                        res.json({
-                            value: true,
-                            data: respo
-                        });
-                    }
-                });
+    findNotification: function(req, res) {
+        if (req.body && req.body.from) {
+            if (req.body.from == 'expert') {
+                req.body._id = req.session.expertuser._id;
+                callMe();
+            } else if (req.body.from == 'user') {
+                req.body._id = req.session.user._id;
+                callMe();
             } else {
                 res.json({
                     value: false,
-                    data: "Expert not Loggedin"
+                    data: "User not logged-in"
                 });
             }
-        } else {
-            res.json({
-                value: false,
-                data: "Invalid call"
-            });
-        }
-    },
 
+            function callMe() {
+                Notification.findNotification(req.body, function(err, respo) {
+                    if (err) {
+                        res.json({
+                            value: false,
+                            data: err
+                        });
+                    } else {
+                        res.json({
+                            value: true,
+                            data: respo
+                        });
+                    }
+                });
+            }
+        } else {
+            res.json({
+                value: false,
+                data: "Invalid call"
+            });
+        }
+    }
 };

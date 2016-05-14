@@ -19,10 +19,14 @@ var schema = new Schema({
     gender: String,
     mobileno: String,
     addressDetails: String,
-    image: String,
+    image: {
+        type: String,
+        default: ""
+    },
     descriptionAndSkills: String,
     category: String,
     salesPitch: String,
+    city: String,
 
     accountHolderName: String,
     bankName: String,
@@ -32,6 +36,7 @@ var schema = new Schema({
     code: String,
     accountHolderAddress: String,
 
+
     // professionalDetails: {
     //     type: [{
     // professionalInfo: {
@@ -39,7 +44,7 @@ var schema = new Schema({
     areaOfExpertise: String,
     specilization: String,
     description: String,
-    priceForService: String,
+    priceForService: Number,
     //     }],
     //     index: true
     // },
@@ -49,7 +54,7 @@ var schema = new Schema({
             instituteName: String,
             city: String,
             country: String,
-            yearOfPassing: Date
+            yearOfPassing: String
         }],
         index: true
     },
@@ -182,7 +187,11 @@ var models = {
     login: function(data, callback) {
         data.password = md5(data.password);
         ExpertUser.findOne({
-            email: data.email,
+            $or: [{
+                mobileno: data.email
+            }, {
+                email: data.email
+            }],
             password: data.password
         }, function(err, data2) {
             if (err) {
@@ -191,7 +200,11 @@ var models = {
             } else {
                 if (_.isEmpty(data2)) {
                     ExpertUser.findOne({
-                        email: data.email,
+                        $or: [{
+                            mobileno: data.email
+                        }, {
+                            email: data.email
+                        }],
                         forgotpassword: data.password
                     }, function(err, data4) {
                         if (err) {
@@ -298,35 +311,93 @@ var models = {
     },
     searchData: function(data, callback) {
         var check = new RegExp(data.search, "i");
-        ExpertUser.find({
-            $or: [{
-                name: {
-                    '$regex': check
-                }
-            }, {
-                descriptionAndSkills: {
-                    '$regex': check
-                }
-            }, {
-                areaOfExpertise: {
-                    '$regex': check
-                }
-            }]
-        }, {
-            password: 0,
-            forgotpassword: 0
-        }, function(err, data3) {
-            if (err) {
-                console.log(err);
-                callback(err, null);
+        var newreturns = {};
+        newreturns.arr = {};
+        newreturns.arr.expertise = [];
+        newreturns.arr.location = [];
+        SearchLog.updateLog(data, function(error, respo) {
+            if (error) {
+                console.log(error);
+                callback(error, null)
             } else {
-                if (data3.length > 0) {
-                    callback(null, data3);
+                if (!data.minprice || data.minprice == "") {
+                    data.minprice = 0;
                 } else {
-                    callback(null, []);
+                    data.minprice = parseInt(data.minprice);
                 }
+                if (!data.maxprice || data.maxprice == "") {
+                    data.maxprice = 0;
+                } else {
+                    data.maxprice = parseInt(data.maxprice);
+                }
+                var matchobj = {
+                    $or: [{
+                        name: {
+                            '$regex': check
+                        }
+                    }, {
+                        descriptionAndSkills: {
+                            '$regex': check
+                        }
+                    }, {
+                        areaOfExpertise: {
+                            '$regex': check
+                        }
+                    }],
+                    city: {
+                        $in: data.location
+                    },
+                    areaOfExpertise: {
+                        $in: data.areaofexpert
+                    },
+                    priceForService: {
+                        $gte: data.minprice,
+                        $lte: data.maxprice
+                    }
+                };
+                if (!data.location || (data.location && data.location.length == 0)) {
+                    delete matchobj["city"];
+                }
+                if (!data.areaofexpert || (data.areaofexpert && data.areaofexpert.length == 0)) {
+                    delete matchobj["areaOfExpertise"];
+                } else {
+                    matchobj["$or"].splice(2, 1);
+                }
+                if (data.minprice == 0 && data.maxprice == 0) {
+                    delete matchobj["priceForService"];
+                }
+                // callback(null, matchobj);
+                ExpertUser.find(matchobj, {
+                    password: 0,
+                    forgotpassword: 0
+                }, function(err, data3) {
+                    if (err) {
+                        console.log(err);
+                        callback(err, null);
+                    } else {
+                        if (data3.length > 0) {
+                            newreturns.data = data3;
+                            _.each(data3, function(z) {
+                                if (z.areaOfExpertise && z.areaOfExpertise != "") {
+                                    var index = newreturns.arr.expertise.indexOf(z.areaOfExpertise);
+                                    if (index == -1)
+                                        newreturns.arr.expertise.push(z.areaOfExpertise);
+                                }
+                                if (z.city && z.city != "") {
+                                    var index = newreturns.arr.location.indexOf(z.city);
+                                    if (index == -1)
+                                        newreturns.arr.location.push(z.city);
+                                }
+                            });
+                            callback(null, newreturns);
+                        } else {
+                            callback(null, []);
+                        }
+                    }
+                });
             }
         });
+
     },
 
     getOne: function(data, callback) {
