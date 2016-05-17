@@ -306,5 +306,23 @@ module.exports = {
                 data: "Invalid Call"
             });
         }
+    },
+    getFindExpert: function(req, res) {
+        if (req.body) {
+            if (req.session.user) {
+                req.body._id = req.session.user._id;
+                User.getFindExpert(req.body, res.callback);
+            } else {
+                res.json({
+                    value: false,
+                    data: "User not loggd-in"
+                });
+            }
+        } else {
+            res.json({
+                value: false,
+                data: "Invalid Call"
+            });
+        }
     }
 };

@@ -48,6 +48,14 @@ var schema = new Schema({
         }],
         index: true
     },
+    findCategory: {
+        type: [{
+            expertCategory:String,
+              query:String
+        }],
+        index: true
+    }
+
 });
 
 module.exports = mongoose.model('User', schema);
@@ -288,6 +296,16 @@ var models = {
             password: 0,
             forgotpassword: 0
         }).populate("shortList.expertUser", '-password -forgotpassword -__v -bankDetails').exec(callback);
-    }
+    },
+    getFindExpert: function(data, callback) {
+        //var name=firstName+" "+lastName;
+        User.findOne({
+            _id: data._id
+        }, {
+            _id: 0,
+            password: 0,
+            forgotpassword: 0
+        }).populate("findCategory.category").exec(callback);
+    },
 };
 module.exports = _.assign(module.exports, models);
