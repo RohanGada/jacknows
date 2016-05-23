@@ -54,7 +54,17 @@ var schema = new Schema({
               query:String
         }],
         index: true
-    }
+    },
+    oauthLogin: {
+       type: [{
+           socialProvider: String,
+           socialId: String,
+           modificationTime: Date
+       }],
+       index: true
+   },
+
+
 
 });
 

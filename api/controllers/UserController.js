@@ -5,6 +5,8 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 var sendgrid = require('sendgrid')('');
+// var redirect="http://146.148.4.222/test";
+var redirect="http://localhost:8080/#/home";
 module.exports = {
     saveData: function(req, res) {
         if (req.body) {
@@ -214,26 +216,26 @@ module.exports = {
             if (req.session.user) {
                 req.body._id = req.session.user._id;
                 if (req.body.password && req.body.password != "" && req.body.changePassword && req.body.changePassword != "") {
-                    User.changePassword(req.body, function(err,data2){
-                      if(err){
-                        console.log(err);
-                        res.json({
-                          value:false,
-                          data:err
-                        });
-                      }else{
-                        if(data2.email){
-                          res.json({
-                            value:true,
-                            data:data2
-                          });
-                        }else{
-                          res.json({
-                            value:false,
-                            data:{}
-                          });
+                    User.changePassword(req.body, function(err, data2) {
+                        if (err) {
+                            console.log(err);
+                            res.json({
+                                value: false,
+                                data: err
+                            });
+                        } else {
+                            if (data2.email) {
+                                res.json({
+                                    value: true,
+                                    data: data2
+                                });
+                            } else {
+                                res.json({
+                                    value: false,
+                                    data: {}
+                                });
+                            }
                         }
-                      }
                     });
                 } else {
                     res.json({
@@ -324,5 +326,69 @@ module.exports = {
                 data: "Invalid Call"
             });
         }
-    }
+    },
+    loginGoogle: function(req, res) {
+        passport.authenticate('google', {
+            scope: "openid profile email"
+        })(req, res);
+    },
+    loginGoogleCallback: function(req, res) {
+        var callback = function(err, data) {
+            if (err || _.isEmpty(data)) {
+                res.json({
+                    error: err,
+                    value: false
+                });
+            } else {
+                if (data._id) {
+                    req.session.user = data;
+                    req.session.save(function(err) {
+                        if (err) {
+                            res.json(err);
+                        } else {
+                            res.redirect(redirect);
+                        }
+                    });
+                } else {
+                    res.json({
+                        data: "User not found",
+                        value: false
+                    });
+                }
+            }
+        }
+        passport.authenticate('google', {
+            failureRedirect: '/login'
+        }, callback)(req, res);
+    },
+    loginFacebook: function(req, res) {
+        var callback = function(err, data) {
+            if (err || _.isEmpty(data)) {
+                res.json({
+                    error: err,
+                    value: false
+                });
+            } else {
+                if (data._id) {
+                    req.session.user = data;
+                    req.session.save(function(err) {
+                        if (err) {
+                            res.json(err);
+                        } else {
+                            res.redirect(redirect);
+                        }
+                    });
+                } else {
+                    res.json({
+                        data: "User not found",
+                        value: false
+                    });
+                }
+            }
+        };
+        passport.authenticate('facebook', {
+            scope: ['public_profile', 'user_friends', 'email']
+        }, callback)(req, res);
+    },
+
 };
