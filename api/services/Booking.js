@@ -6,6 +6,7 @@
  */
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var sendgrid = require('sendgrid')('');
 
 var schema = new Schema({
     //user: String,
@@ -52,8 +53,27 @@ var schema = new Schema({
 module.exports = mongoose.model('Booking', schema);
 var models = {
 
+    mysend: function(data, callback) {
+        sendgrid.send({
+            to: data.email,
+            from: "info@wohlig.com",
+            subject: data.subject,
+            html: "<html><body><p>Hi," + data.username + "</p><p>" + data.message + "</p></body></html>"
+        }, function(err, json) {
+            if (err) {
+                callback(err, null);
+            } else {
+                console.log(json);
+                callback(null, json);
+
+            }
+        });
+    },
     saveData: function(data, callback) {
         var booking = this(data);
+        var emailData = {};
+        emailData.email=data.email;
+        emailData.username = data.username;
         if (data._id) {
             this.findOneAndUpdate({
                 _id: data._id
@@ -63,6 +83,7 @@ var models = {
                 } else {
                     switch (booking.status) {
                         case "accept":
+                            // mysend();
                             Notification.saveData({
                                 user: data2.user,
                                 notification: data.expertname + " has accept your request.",
@@ -76,6 +97,7 @@ var models = {
                             });
                             break;
                         case "reject":
+                            // mysend();
                             Notification.saveData({
                                 user: data2.user,
                                 notification: data.expertname + " has reject your request.",
@@ -89,6 +111,7 @@ var models = {
                             });
                             break;
                         case "paid":
+                            // mysend();
                             Notification.saveData({
                                 expert: data2.expert,
                                 notification: data.username + " has paid for service.",
@@ -126,7 +149,10 @@ var models = {
                             if (err) {
                                 callback(err, null);
                             } else {
-                                console.log(booking);
+                                // mysend();
+                                emailData.subject = "Booking Notification";
+                                emailData.message = data.username + " has booked you.";
+                                console.log(data2);
                                 Notification.saveData({
                                     expert: booking.expert,
                                     notification: data.username + " has booked you.",
@@ -134,7 +160,14 @@ var models = {
                                     if (err) {
                                         callback(err, null);
                                     } else {
-                                        callback(null, data2);
+                                      Booking.mysend(emailData,function(err,emailRespo){
+                                          if(err){
+                                            console.log(err);
+                                            callback(err,null);
+                                          }else{
+                                            callback(null, data2);
+                                          }
+                                      });
                                     }
                                 });
                             }

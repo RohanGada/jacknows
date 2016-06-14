@@ -4,7 +4,7 @@
  * @description :: Server-side logic for managing Users
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
-var sendgrid = require('sendgrid')('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');
+var sendgrid = require('sendgrid')('');
 // var redirect="http://146.148.4.222/test";
 var redirect="http://localhost:8080/#/home";
 module.exports = {
@@ -390,5 +390,24 @@ module.exports = {
             scope: ['public_profile', 'user_friends', 'email']
         }, callback)(req, res);
     },
+
+    // send: function(req, res) {
+    //     sendgrid.send({
+    //         to: req.body.email,
+    //         from: "info@wohlig.com",
+    //         subject: "Welcome to Jacknows",
+    //         html: "<html><body><p>Hi ,</p><p>Welcome to Jacknows </p></body></html>"
+    //     }, function(err, json) {
+    //         if (err) {
+    //             res.json({
+    //                 value: false
+    //             });
+    //         } else {
+    //             res.json({
+    //                 value: "Message Sent"
+    //             });
+    //         }
+    //     });
+    // },
 
 };

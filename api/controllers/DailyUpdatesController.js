@@ -46,6 +46,7 @@ module.exports = {
        }
      },
 getAll: function(req, res) {
+	console.log("abc");
 
       if (req.body) {
           DailyUpdates.getAll(req.body, res.callback);

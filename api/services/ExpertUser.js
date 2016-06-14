@@ -7,6 +7,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var md5 = require('MD5');
+var sendgrid = require('sendgrid')('');
 
 var schema = new Schema({
     name: String,
@@ -19,7 +20,7 @@ var schema = new Schema({
     gender: String,
     mobileno: String,
     addressDetails: String,
-    callTime:String, 
+    callTime:String,
     image: {
         type: String,
         default: ""
@@ -121,12 +122,36 @@ var schema = new Schema({
 module.exports = mongoose.model('ExpertUser', schema);
 var models = {
 
+    // register: function(data, callback) {
+    //     if (data.password && data.password != "") {
+    //         data.password = md5(data.password);
+    //     }
+    //     data.name = data.firstName + " " + data.lastName;
+    //     var expertuser = this(data);
+    //     this.count({
+    //         "email": data.email
+    //     }).exec(function(err, data2) {
+    //         if (err) {
+    //             callback(err, data);
+    //         } else {
+    //             if (data2 === 0) {
+    //                 expertuser.save(function(err, data3) {
+    //                     data3.password = '';
+    //                     callback(err, data3);
+    //                 });
+    //             } else {
+    //                 callback("Email already Exists", false);
+    //             }
+    //         }
+    //     });
+    // },
     register: function(data, callback) {
         if (data.password && data.password != "") {
             data.password = md5(data.password);
         }
         data.name = data.firstName + " " + data.lastName;
         var expertuser = this(data);
+          expertuser.email = data.email;
         this.count({
             "email": data.email
         }).exec(function(err, data2) {
@@ -136,11 +161,31 @@ var models = {
                 if (data2 === 0) {
                     expertuser.save(function(err, data3) {
                         data3.password = '';
-                        callback(err, data3);
+                        if (err) {
+                            callback(err, null);
+                        } else {
+                          sendgrid.send({
+                              to: expertuser.email,
+                              from: "info@wohlig.com",
+                              subject: "Welcome to Jacknows",
+                              html: "<html><body><p>Hi,</p><p>Welcome to Jacknows</p></body></html>"
+                          }, function(err, json) {
+                              if (err) {
+                                  callback(err, null);
+                              } else {
+                                  console.log(json);
+                                  callback(null, data3);
+
+                              }
+                          });
+
+                      }
+                        // callback(err, data3);
                     });
                 } else {
-                    callback("Email already Exists", false);
+                  callback("Expert already Exists", false);
                 }
+
             }
         });
     },
@@ -311,7 +356,8 @@ var models = {
         });
     },
     searchData: function(data, callback) {
-        var check = new RegExp(data.search, "i");
+        var check = new RegExp([data.search], "i");
+        // var check = new RegExp(data.search, "[data.search]");
         var newreturns = {};
         newreturns.arr = {};
         newreturns.arr.expertise = [];

@@ -7,7 +7,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var md5 = require('MD5');
-var sendgrid = require('sendgrid')('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');
+var sendgrid = require('sendgrid')('');
 
 
 var schema = new Schema({
@@ -50,19 +50,19 @@ var schema = new Schema({
     },
     findCategory: {
         type: [{
-            expertCategory:String,
-              query:String
+            expertCategory: String,
+            query: String
         }],
         index: true
     },
     oauthLogin: {
-       type: [{
-           socialProvider: String,
-           socialId: String,
-           modificationTime: Date
-       }],
-       index: true
-   },
+        type: [{
+            socialProvider: String,
+            socialId: String,
+            modificationTime: Date
+        }],
+        index: true
+    },
 
 
 
@@ -70,24 +70,68 @@ var schema = new Schema({
 
 module.exports = mongoose.model('User', schema);
 var models = {
+    // register: function(data, callback) {
+    //     if (data.password && data.password != "") {
+    //         data.password = md5(data.password);
+    //     }
+    //     var user = this(data);
+    //     this.count({
+    //         "email": data.email
+    //     }).exec(function(err, data2) {
+    //         if (err) {
+    //             callback(err, data);
+    //         } else {
+    //             if (data2 === 0) {
+    //                 user.save(function(err, data3) {
+    //                     data3.password = '';
+    //                     callback(err, data3);
+    //                 });
+    //             } else {
+    //                 callback("Email already Exists", false);
+    //             }
+    //         }
+    //     });
+    // },
+
     register: function(data, callback) {
         if (data.password && data.password != "") {
             data.password = md5(data.password);
         }
         var user = this(data);
+        user.email = data.email;
         this.count({
-            "email": data.email
+            "email": user.email
         }).exec(function(err, data2) {
             if (err) {
                 callback(err, data);
             } else {
                 if (data2 === 0) {
+                    console.log(data2);
                     user.save(function(err, data3) {
                         data3.password = '';
-                        callback(err, data3);
+                        if (err) {
+                            callback(err, null);
+                        } else {
+                            sendgrid.send({
+                                to: user.email,
+                                from: "info@wohlig.com",
+                                subject: "Welcome to Jacknows",
+                                html: "<html><body><p>Hi,</p><p>Welcome to Jacknows</p></body></html>"
+                            }, function(err, json) {
+                                if (err) {
+                                    callback(err, null);
+                                } else {
+                                    console.log(json);
+                                    // callback(null, data3);
+
+                                }
+                            });
+                            callback(null, data3);
+                        }
+                        // callback(err, data3);
                     });
                 } else {
-                    callback("Email already Exists", false);
+                    callback("User already Exists", false);
                 }
             }
         });

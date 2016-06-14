@@ -8,7 +8,7 @@
 var mongoose = require('mongoose');
 var Grid = require('gridfs-stream');
 var fs = require("fs");
-// var lwip = require("lwip");
+var lwip = require("lwip");
 var process = require('child_process');
 var lodash = require('lodash');
 var MaxImageSize = 1200;

@@ -4,6 +4,7 @@
  * @description :: Server-side logic for managing Bookings
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
+var sendgrid = require('sendgrid')('');
 
 module.exports = {
     saveData: function(req, res) {
@@ -12,11 +13,14 @@ module.exports = {
                 if (req.body.from == "expert") {
                     req.body.expertname = req.session.expertuser.name;
                     req.body.expertimage = req.session.expertuser.image;
+                    req.body.email=req.session.expertuser.email;
                     callSave();
                 } else if (req.body.from == "user") {
                     req.body.user = req.session.user._id;
                     req.body.username = req.session.user.firstName + " " + req.session.user.lastName;
                     req.body.userimage = req.session.user.image;
+                      req.body.email=req.session.user.email;
+                      req.body.mobile=req.session.user.mobile;
                     callSave();
                 } else {
                     res.json({
@@ -29,6 +33,8 @@ module.exports = {
                     req.body.user = req.session.user._id;
                     req.body.username = req.session.user.firstName + " " + req.session.user.lastName;
                     req.body.userimage = req.session.user.image;
+                    req.body.email=req.session.user.email;
+                    req.body.mobile=req.session.user.mobile;
                     callSave();
                 } else {
                     res.json({
@@ -180,4 +186,56 @@ module.exports = {
         }
     },
 
+
+    // send: function(req, res) {
+    //   var fname = req.session.firstname;
+    //   var lname = req.session.lasttname;
+    //     sendgrid.send({
+    //         to: req.session.email,
+    //         from: "info@wohlig.com",
+    //         subject: "Booking status for Jacknows",
+    //         html: "<html><body><p>Hi,</p><p>Your booking status for Jacknows is </p></body></html>"
+    //     }, function(err, json) {
+    //         if (err) {
+    //             res.json({
+    //                 value: false
+    //             });
+    //         } else {
+    //             res.json({
+    //                 value: "Message Sent"
+    //             });
+    //         }
+    //     });
+    // },
+    //
+    mysend: function(req, res) {
+        if (req.body) {
+            if (req.body.email && req.body.email != "") {
+                //	console.log("not valid");
+                Booking.mysend(req.body, function(err, respo) {
+                    if (err) {
+                        res.json({
+                            value: false,
+                            data: err
+                        });
+                    } else {
+                        res.json({
+                            value: true,
+                            data: respo
+                        });
+                    }
+                });
+            } else {
+                res.json({
+                    value: false,
+                    data: "Invalid Id"
+                });
+            }
+        } else {
+            res.json({
+                value: false,
+                data: "Invalid call"
+            });
+        }
+    },
 };

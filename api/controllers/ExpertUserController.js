@@ -4,7 +4,7 @@
  * @description :: Server-side logic for managing Expertusers
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
-
+var sendgrid = require('sendgrid')('');
 module.exports = {
     saveData: function(req, res) {
         if (req.body) {
@@ -309,6 +309,25 @@ module.exports = {
             });
         }
     },
+    send: function(req, res) {
+        sendgrid.send({
+            to: req.body.email,
+            from: "info@wohlig.com",
+            subject: "Welcome to Jacknows",
+            html: "<html><body><p>Hi ,</p><p>Welcome to Jacknows </p></body></html>"
+        }, function(err, json) {
+            if (err) {
+                res.json({
+                    value: false
+                });
+            } else {
+                res.json({
+                    value: "Message Sent"
+                });
+            }
+        });
+    },
+
 
 
 };
