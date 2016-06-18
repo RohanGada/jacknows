@@ -61,6 +61,16 @@ var models = {
             }
         });
     },
+    deleteAll: function(data, callback) {
+        Category.remove({
+        }, function(err, deleted) {
+            if (err) {
+                callback(err, null)
+            } else {
+                callback(null, deleted)
+            }
+        });
+    },
 
 };
 module.exports = _.assign(module.exports, models);
