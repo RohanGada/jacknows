@@ -1,5 +1,0 @@
-{"_id":{"$oid":"570f7a564bf9812a1c02843a"},"name":"Lawyer","__v":0}
-{"_id":{"$oid":"570f7aa14bf9812a1c02843c"},"name":"Financial Adviser","parent":{"$oid":"570f7a564bf9812a1c02843a"},"__v":0}
-{"_id":{"$oid":"570f7df9eb1e8ff41ccc05b2"},"name":"Musician","parent":{"$oid":"570f7a564bf9812a1c02843a"},"__v":0}
-{"_id":{"$oid":"570f7e02eb1e8ff41ccc05b3"},"name":"node3","parent":{"$oid":"570f7a564bf9812a1c02843a"},"__v":0}
-{"_id":{"$oid":"5736c37f5d182a470acafc3e"},"name":"Business Management","__v":0}
