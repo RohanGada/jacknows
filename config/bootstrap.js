@@ -8,10 +8,17 @@
  * For more information on bootstrapping your app, check out:
  * http://sailsjs.org/#!/documentation/reference/sails.config/sails.config.bootstrap.html
  */
-
 module.exports.bootstrap = function(cb) {
-
-  // It's very important to trigger this callback method when you are finished
-  // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
-  cb();
+    // Password.find().exec(function(err, userdata) {
+    //     if (err) {
+    //         sails.pass = "";
+    //     } else if (userdata && userdata.length > 0) {
+    //         sails.pass = userdata[0].name;
+    //     } else {
+    //         sails.pass = "";
+    //     }
+    //     cb();
+    // });
+    // It's very important to trigger this callback method when you are finished
+    // with the bootstrap!  (otherwise your server will never lift, since it's waiting on the bootstrap)
 };
