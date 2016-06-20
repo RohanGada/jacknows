@@ -1,0 +1,36 @@
+ <!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Forgot Email</title>
+    <style>
+      body { margin: 0; font-family: sans-serif; }
+      section { margin: 0 auto; }
+      a { text-decoration: none; color: #1AA3EB; }
+      a:focus { outline: none; }
+      p { margin-bottom: 10px; font-size: 16px; line-height: 1.2em; }
+      .unsubscribe p { margin: 0; font-size: 12px; }
+    </style>
+  </head>
+  <body>
+    <section style="width: 600px; padding: 20px; background-color: #ddd; font: Lato, sans-serif 16px;">
+      <div style="padding: 20px; background-color: white;">
+        <div style="margin-bottom: 40px; text-align: center;">
+          <img src="http://wohlig.co.in/blazen_emailer/blazenlogo.png" alt="Blazen Logo" style="margin: 0 auto;">
+        </div>
+        <p style="font-weight: bold;">Hi <%= name %>,</p>
+        <p><%= content %></p>
+        <p>In the meantime, check out the <a href="">docs</a>. To stay up to date follow us on Twitter <a href="https://twitter.com/Blazendev">@Blazen</a>. For queries and support, <a href="mailto:support@blazen.com">email us.</a></p>
+        <p style="margin: 30px 0 0;">Thank You,</p>
+        <p style="margin-top: 2px;">Blazen Team.</p>
+      </div>
+      <div style="margin-top: 20px; text-align: center;" class="unsubscribe">
+          <a href="https://www.facebook.com/Blazen-240917366258079" style="margin-right: 5px; color: gray; font-size: 14px;">Facebook</a>
+          <span style="color: gray;">|</span>
+          <a href="https://twitter.com/Blazendev" style="margin: 0 5px; color: gray; font-size: 14px;">Twitter</a>
+          <span style="color: gray;">|</span>
+          <a href="https://instagram.com/devblazen" style="margin-left: 5px; color: gray; font-size: 14px;">Instagram</a>
+      </div>
+    </section>
+  </body>
+</html>
