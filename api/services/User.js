@@ -114,11 +114,11 @@ var models = {
                         } else {
                             var emailData = {};
                             emailData.email = data.email;
-                            emailData.name = data.name;
+                            emailData.name = data.firstName;
                             emailData.content = "Thank you for signing up with us! We hope you have a great experience on this platform. Please take a moment to leave your feedback.";
                             emailData.filename = "dummy.ejs";
                             emailData.timestamp = moment().format("MMM DD YYYY");
-                            emailData.time = moment().format("HH.MM A")
+                            emailData.time = moment().format("HH.MM A");
                             emailData.subject = "Signup in Jacknows";
                             Config.email(emailData, function(err, emailRespo) {
                                 if (err) {
@@ -182,6 +182,17 @@ var models = {
         this.find({}, {
             _id: 0
         }, {}).populate('expertUser').exec(function(err, deleted) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, deleted);
+            }
+        });
+    },
+    getOne: function(data, callback) {
+        this.findOne({}, {
+            _id: 0
+        }, {}).exec(function(err, deleted) {
             if (err) {
                 callback(err, null);
             } else {

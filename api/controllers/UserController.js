@@ -6,7 +6,7 @@
  */
 var sendgrid = require('sendgrid')('');
 // var redirect="http://146.148.4.222/test";
-var redirect="http://localhost:8080/#/home";
+var redirect = "http://localhost:8080/#/home";
 module.exports = {
     saveData: function(req, res) {
         if (req.body) {
@@ -45,6 +45,35 @@ module.exports = {
                     });
                 }
             });
+        } else {
+            res.json({
+                value: false,
+                data: "Invalid call"
+            });
+        }
+    },
+    getOne: function(req, res) {
+        if (req.body) {
+            if (req.body._id && req.body._id != "") {
+                User.getOne(req.body, function(err, respo) {
+                    if (err) {
+                        res.json({
+                            value: false,
+                            data: err
+                        });
+                    } else {
+                        res.json({
+                            value: true,
+                            data: respo
+                        });
+                    }
+                });
+            } else {
+                res.json({
+                    value: false,
+                    data: "User id Invalid"
+                });
+            }
         } else {
             res.json({
                 value: false,
@@ -273,24 +302,6 @@ module.exports = {
             });
         }
     },
-    // send: function(req, res) {
-    //     sendgrid.send({
-    //         to: req.body.email,
-    //         from: "info@wohlig.com",
-    //         subject: "One Time Password For Jacknows",
-    //         html: "<html><body><p>Dear ,</p><p>Your One Time Password for Jacknows is </p></body></html>"
-    //     }, function(err, json) {
-    //         if (err) {
-    //             res.json({
-    //                 value: false
-    //             });
-    //         } else {
-    //             res.json({
-    //                 value: "Message Sent"
-    //             });
-    //         }
-    //     });
-    // },
     getShortlist: function(req, res) {
         if (req.body) {
             if (req.session.user) {

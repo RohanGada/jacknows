@@ -350,7 +350,6 @@ var models = {
                                         callback(err, null);
                                     } else {
                                         callback(null, json);
-
                                     }
                                 });
                             } else {

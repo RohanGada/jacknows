@@ -7,7 +7,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var md5 = require('MD5');
-var sendgrid = require('sendgrid')('');
+var moment = require('moment');
 
 var schema = new Schema({
     name: String,
@@ -153,9 +153,13 @@ var models = {
         var expertuser = this(data);
         expertuser.email = data.email;
         this.count({
-          $or:[{"email": data.email},{"mobileno": data.mobileno}]
-
+            $or: [{
+                "email": data.email
+            }, {
+                "mobileno": data.mobileno
+            }]
         }).exec(function(err, data2) {
+            console.log(data2);
             if (err) {
                 callback(err, data);
             } else {
@@ -169,8 +173,9 @@ var models = {
                             emailData.email = data.email;
                             emailData.filename = 'dummy.ejs';
                             emailData.name = data.firstName;
-                            emailData.content = "Thank you for sharing your details with us. Our expert on-boarding team will get back to you at the earliest."
-                            emailData.timestamp = new Date();
+                            emailData.timestamp = moment().format("MMM DD YYYY");
+                            emailData.time = moment().format("HH.MM A");
+                            emailData.content = "Thank you for sharing your details with us. Our expert on-boarding team will get back to you at the earliest.";
                             emailData.subject = "Signup in Jacknows";
                             Config.email(emailData, function(err, emailRespo) {
                                 if (err) {
@@ -181,23 +186,7 @@ var models = {
                                     callback(null, data3);
                                 }
                             });
-                            // sendgrid.send({
-                            //     to: expertuser.email,
-                            //     from: "info@wohlig.com",
-                            //     subject: "Welcome to Jacknows",
-                            //     html: "<html><body><p>Hi,</p><p>Welcome to Jacknows</p></body></html>"
-                            // }, function(err, json) {
-                            //     if (err) {
-                            //         callback(err, null);
-                            //     } else {
-                            //         console.log(json);
-                            //         callback(null, data3);
-                            //
-                            //     }
-                            // });
-
                         }
-                        // callback(err, data3);
                     });
                 } else {
                     callback("Expert already Exists", false);
