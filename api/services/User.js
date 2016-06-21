@@ -7,7 +7,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var md5 = require('MD5');
-var sendgrid = require('sendgrid')('');
+var moment = require('moment');
 
 
 var schema = new Schema({
@@ -112,23 +112,24 @@ var models = {
                         if (err) {
                             callback(err, null);
                         } else {
-                            sendgrid.send({
-                                to: user.email,
-                                from: "info@wohlig.com",
-                                subject: "Welcome to Jacknows",
-                                html: "<html><body><p>Hi,</p><p>Welcome to Jacknows</p></body></html>"
-                            }, function(err, json) {
+                            var emailData = {};
+                            emailData.email = data.email;
+                            emailData.name = data.name;
+                            emailData.content = "Thank you for signing up with us! We hope you have a great experience on this platform. Please take a moment to leave your feedback.";
+                            emailData.filename = "dummy.ejs";
+                            emailData.timestamp = moment().format("MMM DD YYYY");
+                            emailData.time = moment().format("HH.MM A")
+                            emailData.subject = "Signup in Jacknows";
+                            Config.email(emailData, function(err, emailRespo) {
                                 if (err) {
+                                    console.log(err);
                                     callback(err, null);
                                 } else {
-                                    console.log(json);
-                                    // callback(null, data3);
-
+                                    console.log(emailRespo);
+                                    callback(null, data3);
                                 }
                             });
-                            callback(null, data3);
                         }
-                        // callback(err, data3);
                     });
                 } else {
                     callback("User already Exists", false);
@@ -311,21 +312,35 @@ var models = {
                                 console.log(err);
                                 callback(err, null);
                             } else {
-                                sendgrid.send({
-                                    to: found.email,
-                                    from: "info@wohlig.com",
-                                    subject: "One Time Password For Jacknows",
-                                    html: "<html><body><p>Dear " + found.firstName + ",</p><p>Your One Time Password for Jacknows is " + text + "</p></body></html>"
-                                }, function(err, json) {
+
+                                user.email = data.email;
+                                user.filename = data.filename;
+                                Config.email(user, function(err, emailRespo) {
                                     if (err) {
+                                        console.log(err);
                                         callback(err, null);
                                     } else {
-                                        console.log(json);
+                                        console.log(emailRespo);
                                         callback(null, {
                                             comment: "Mail Sent"
                                         });
                                     }
                                 });
+                                // sendgrid.send({
+                                //     to: found.email,
+                                //     from: "info@wohlig.com",
+                                //     subject: "One Time Password For Jacknows",
+                                //     html: "<html><body><p>Dear " + found.firstName + ",</p><p>Your One Time Password for Jacknows is " + text + "</p></body></html>"
+                                // }, function(err, json) {
+                                //     if (err) {
+                                //         callback(err, null);
+                                //     } else {
+                                //         console.log(json);
+                                //         callback(null, {
+                                //             comment: "Mail Sent"
+                                //         });
+                                //     }
+                                // });
                             }
                         });
                     } else {

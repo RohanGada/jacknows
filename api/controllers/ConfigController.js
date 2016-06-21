@@ -85,7 +85,10 @@ module.exports = {
         if (isfile2) {
             res.view(req.body.filename, req.body);
         } else {
-            res.json({ value: false, message: "Please provide params" });
+            res.json({
+                value: false,
+                message: "Please provide params"
+            });
         }
     }
 };

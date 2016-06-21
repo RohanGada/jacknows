@@ -20,7 +20,7 @@ var schema = new Schema({
     gender: String,
     mobileno: String,
     addressDetails: String,
-    callTime:String,
+    callTime: String,
     image: {
         type: String,
         default: ""
@@ -151,7 +151,7 @@ var models = {
         }
         data.name = data.firstName + " " + data.lastName;
         var expertuser = this(data);
-          expertuser.email = data.email;
+        expertuser.email = data.email;
         this.count({
             "email": data.email
         }).exec(function(err, data2) {
@@ -164,26 +164,42 @@ var models = {
                         if (err) {
                             callback(err, null);
                         } else {
-                          sendgrid.send({
-                              to: expertuser.email,
-                              from: "info@wohlig.com",
-                              subject: "Welcome to Jacknows",
-                              html: "<html><body><p>Hi,</p><p>Welcome to Jacknows</p></body></html>"
-                          }, function(err, json) {
-                              if (err) {
-                                  callback(err, null);
-                              } else {
-                                  console.log(json);
-                                  callback(null, data3);
+                            var emailData = {};
+                            emailData.email = data.email;
+                            emailData.filename = 'dummy.ejs';
+                            emailData.name = data.firstName;
+                            emailData.content = "Thank you for sharing your details with us. Our expert on-boarding team will get back to you at the earliest."
+                            emailData.timestamp = new Date();
+                            emailData.subject = "Signup in Jacknows";
+                            Config.email(emailData, function(err, emailRespo) {
+                                if (err) {
+                                    console.log(err);
+                                    callback(err, null);
+                                } else {
+                                    console.log(emailRespo);
+                                    callback(null, data3);
+                                }
+                            });
+                            // sendgrid.send({
+                            //     to: expertuser.email,
+                            //     from: "info@wohlig.com",
+                            //     subject: "Welcome to Jacknows",
+                            //     html: "<html><body><p>Hi,</p><p>Welcome to Jacknows</p></body></html>"
+                            // }, function(err, json) {
+                            //     if (err) {
+                            //         callback(err, null);
+                            //     } else {
+                            //         console.log(json);
+                            //         callback(null, data3);
+                            //
+                            //     }
+                            // });
 
-                              }
-                          });
-
-                      }
+                        }
                         // callback(err, data3);
                     });
                 } else {
-                  callback("Expert already Exists", false);
+                    callback("Expert already Exists", false);
                 }
 
             }

@@ -273,24 +273,24 @@ module.exports = {
             });
         }
     },
-    send: function(req, res) {
-        sendgrid.send({
-            to: req.body.email,
-            from: "info@wohlig.com",
-            subject: "One Time Password For Jacknows",
-            html: "<html><body><p>Dear ,</p><p>Your One Time Password for Jacknows is </p></body></html>"
-        }, function(err, json) {
-            if (err) {
-                res.json({
-                    value: false
-                });
-            } else {
-                res.json({
-                    value: "Message Sent"
-                });
-            }
-        });
-    },
+    // send: function(req, res) {
+    //     sendgrid.send({
+    //         to: req.body.email,
+    //         from: "info@wohlig.com",
+    //         subject: "One Time Password For Jacknows",
+    //         html: "<html><body><p>Dear ,</p><p>Your One Time Password for Jacknows is </p></body></html>"
+    //     }, function(err, json) {
+    //         if (err) {
+    //             res.json({
+    //                 value: false
+    //             });
+    //         } else {
+    //             res.json({
+    //                 value: "Message Sent"
+    //             });
+    //         }
+    //     });
+    // },
     getShortlist: function(req, res) {
         if (req.body) {
             if (req.session.user) {

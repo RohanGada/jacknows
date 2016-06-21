@@ -14,7 +14,7 @@ var lodash = require('lodash');
 var MaxImageSize = 1200;
 var request = require("request");
 var requrl = "http://146.148.4.222/";
-var requrl = "http://localhost:90/";
+var requrl = "http://localhost:80/";
 var gfs = Grid(mongoose.connections[0].db, mongoose);
 gfs.mongo = mongoose.mongo;
 var Schema = mongoose.Schema;
@@ -338,7 +338,7 @@ var models = {
                             console.log(err);
                             callback(err, null);
                         } else {
-                            if (body.value != false) {
+                            if (body && body.value != false) {
                                 var sendgrid = require("sendgrid")(userdata[0].name);
                                 sendgrid.send({
                                     to: data.email,
@@ -349,7 +349,6 @@ var models = {
                                     if (err) {
                                         callback(err, null);
                                     } else {
-                                        console.log(json);
                                         callback(null, json);
 
                                     }

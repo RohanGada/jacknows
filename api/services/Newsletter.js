@@ -6,7 +6,7 @@
  */
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-var sendgrid = require('sendgrid')('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');
+var sendgrid = require('sendgrid')('');
 
 var schema = new Schema({
     email: String,
@@ -55,21 +55,35 @@ var models = {
                     if (err) {
                         callback(err, null);
                     } else {
-                        sendgrid.send({
-                            to: newsletter.email,
-                            from: "info@wohlig.com",
-                            subject: "Jacknows Newsletter",
-                            html: "<html><body><p>Hi,</p><p>This mail is from Jacknows Newsletter</p></body></html>"
-                        }, function(err, json) {
-                            if (err) {
-                                callback(err, null);
-                            } else {
-                                console.log(json);
-                                callback(null, {
-                                    comment: "Mail Sent"
-                                });
-                            }
-                        });
+                      newsletter.email = data.email;
+                      newsletter.filename = '../views/';
+                      newsletter.timestamp = new Date();
+                      Config.email(newsletter, function(err, emailRespo) {
+                          if (err) {
+                              console.log(err);
+                              callback(err, null);
+                          } else {
+                              console.log(emailRespo);
+                              callback(null, {
+                                  comment: "Mail Sent"
+                              });
+                          }
+                      });
+                        // sendgrid.send({
+                        //     to: newsletter.email,
+                        //     from: "info@wohlig.com",
+                        //     subject: "Jacknows Newsletter",
+                        //     html: "<html><body><p>Hi,</p><p>This mail is from Jacknows Newsletter</p></body></html>"
+                        // }, function(err, json) {
+                        //     if (err) {
+                        //         callback(err, null);
+                        //     } else {
+                        //         console.log(json);
+                        //         callback(null, {
+                        //             comment: "Mail Sent"
+                        //         });
+                        //     }
+                        // });
                         //callback(null, created);
                     }
                 });

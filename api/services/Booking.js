@@ -54,20 +54,32 @@ module.exports = mongoose.model('Booking', schema);
 var models = {
 
     mysend: function(data, callback) {
-        sendgrid.send({
-            to: data.email,
-            from: "info@wohlig.com",
-            subject: data.subject,
-            html: "<html><body><p>Hi," + data.username + "</p><p>" + data.message + "</p></body></html>"
-        }, function(err, json) {
-            if (err) {
-                callback(err, null);
-            } else {
-                console.log(json);
-                callback(null, json);
-
-            }
-        });
+      user.email = data.email;
+      user.filename = '../views/';
+      user.timestamp = new Date();
+      Config.email(user, function(err, json) {
+          if (err) {
+              console.log(err);
+              callback(err, null);
+          } else {
+              console.log(json);
+              callback(null, json);
+          }
+      });
+        // sendgrid.send({
+        //     to: data.email,
+        //     from: "info@wohlig.com",
+        //     subject: data.subject,
+        //     html: "<html><body><p>Hi," + data.username + "</p><p>" + data.message + "</p></body></html>"
+        // }, function(err, json) {
+        //     if (err) {
+        //         callback(err, null);
+        //     } else {
+        //         console.log(json);
+        //         callback(null, json);
+        //
+        //     }
+        // });
     },
     saveData: function(data, callback) {
         var booking = this(data);
@@ -83,6 +95,18 @@ var models = {
                 } else {
                     switch (booking.status) {
                         case "accept":
+                        user.email = data.email;
+                        user.filename = '../views/';
+                        user.timestamp = new Date();
+                        Config.email(user, function(err, json) {
+                            if (err) {
+                                console.log(err);
+                                callback(err, null);
+                            } else {
+                                console.log(json);
+                                callback(null, json);
+                            }
+                        });
                             // mysend();
                             Notification.saveData({
                                 user: data2.user,
@@ -97,6 +121,18 @@ var models = {
                             });
                             break;
                         case "reject":
+                        user.email = data.email;
+                        user.filename = '../views/';
+                        user.timestamp = new Date();
+                        Config.email(user, function(err, json) {
+                            if (err) {
+                                console.log(err);
+                                callback(err, null);
+                            } else {
+                                console.log(json);
+                                callback(null, json);
+                            }
+                        });
                             // mysend();
                             Notification.saveData({
                                 user: data2.user,
@@ -111,6 +147,18 @@ var models = {
                             });
                             break;
                         case "paid":
+                        user.email = data.email;
+                        user.filename = '../views/';
+                        user.timestamp = new Date();
+                        Config.email(user, function(err, json) {
+                            if (err) {
+                                console.log(err);
+                                callback(err, null);
+                            } else {
+                                console.log(json);
+                                callback(null, json);
+                            }
+                        });
                             // mysend();
                             Notification.saveData({
                                 expert: data2.expert,
@@ -149,6 +197,18 @@ var models = {
                             if (err) {
                                 callback(err, null);
                             } else {
+                              user.email = data.email;
+                              user.filename = '../views/';
+                              user.timestamp = new Date();
+                              Config.email(user, function(err, json) {
+                                  if (err) {
+                                      console.log(err);
+                                      callback(err, null);
+                                  } else {
+                                      console.log(json);
+                                      callback(null, json);
+                                  }
+                              });
                                 // mysend();
                                 emailData.subject = "Booking Notification";
                                 emailData.message = data.username + " has booked you.";
@@ -160,14 +220,26 @@ var models = {
                                     if (err) {
                                         callback(err, null);
                                     } else {
-                                      Booking.mysend(emailData,function(err,emailRespo){
-                                          if(err){
-                                            console.log(err);
-                                            callback(err,null);
-                                          }else{
-                                            callback(null, data2);
+                                      user.email = data.email;
+                                      user.filename = '../views/';
+                                      user.timestamp = new Date();
+                                      Config.email(user, function(err, emailRespo) {
+                                          if (err) {
+                                              console.log(err);
+                                              callback(err, null);
+                                          } else {
+                                              console.log(json);
+                                              callback(null, data2);
                                           }
                                       });
+                                    //   Booking.mysend(emailData,function(err,emailRespo){
+                                    //       if(err){
+                                    //         console.log(err);
+                                    //         callback(err,null);
+                                    //       }else{
+                                    //         callback(null, data2);
+                                    //       }
+                                    //   });
                                     }
                                 });
                             }
