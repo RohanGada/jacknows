@@ -153,7 +153,8 @@ var models = {
         var expertuser = this(data);
         expertuser.email = data.email;
         this.count({
-            "email": data.email
+          $or:[{"email": data.email},{"mobileno": data.mobileno}]
+
         }).exec(function(err, data2) {
             if (err) {
                 callback(err, data);
