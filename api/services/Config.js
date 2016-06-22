@@ -11,6 +11,7 @@ var fs = require("fs");
 var lwip = require("lwip");
 var process = require('child_process');
 var lodash = require('lodash');
+var moment = require('moment');
 var MaxImageSize = 1200;
 var request = require("request");
 var requrl = "http://146.148.4.222/";
@@ -362,6 +363,37 @@ var models = {
                 }
             } else {
                 callback({ message: "No api keys found" }, null);
+            }
+        });
+    },
+    checkCall: function(data, callback) {
+        Booking.find({
+            callTime: {
+                $gt: new Date()
+            },
+            status: "paid"
+        }).populate("user", "-_id mobile").populate("expert", "-_id mobileno").lean().exec(function(err, data2) {
+            if (err) {
+                console.log(err);
+                callback(err, null);
+            } else if (data2 && data2.length > 0) {
+                _.each(data2, function(book) {
+                    book.callDuration = parseInt(book.callDuration.split(" ")[0]);
+                    book.callDuration = book.callDuration * 60;
+                    book.callTime = moment(book.callTime).format("YYYY-MM-DD HH:mm");
+                    // book.callTime = moment().format("YYYY-MM-DD HH:mm");
+                    book.endTime = moment(book.callTime).add(book.callDuration, 's').format("YYYY-MM-DD HH:mm");
+                    request.get({ url: "http://etsdom.kapps.in/webapi/wohlig/api/wohlig_c2c.py?customer_number=+91" + book.user.mobile + "&agent_number=+91" + book.expert.mobileno + "&call_duration=" + book.callDuration + "&call_start_time=" + book.callTime + "&call_stop_time=" + book.endTime + "&auth_key=bb23a8a029-8bd4-4e44-97ccaa" }, function(err, http, body) {
+                        if (err) {
+                            console.log("error", err);
+                        } else {
+                            console.log(body);
+                        }
+                    });
+                });
+                callback(err, data2);
+            } else {
+                callback(null, { mesage: "No calls found" });
             }
         });
     }

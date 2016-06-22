@@ -185,29 +185,28 @@ module.exports = {
             });
         }
     },
-
-
-    // send: function(req, res) {
-    //   var fname = req.session.firstname;
-    //   var lname = req.session.lasttname;
-    //     sendgrid.send({
-    //         to: req.session.email,
-    //         from: "info@wohlig.com",
-    //         subject: "Booking status for Jacknows",
-    //         html: "<html><body><p>Hi,</p><p>Your booking status for Jacknows is </p></body></html>"
-    //     }, function(err, json) {
-    //         if (err) {
-    //             res.json({
-    //                 value: false
-    //             });
-    //         } else {
-    //             res.json({
-    //                 value: "Message Sent"
-    //             });
-    //         }
-    //     });
-    // },
-    //
+    deleteAll: function(req, res) {
+        if (req.body) {
+            Booking.deleteAll(req.body, function(err, respo) {
+                if (err) {
+                    res.json({
+                        value: false,
+                        data: err
+                    });
+                } else {
+                    res.json({
+                        value: true,
+                        data: respo
+                    });
+                }
+            });
+        } else {
+            res.json({
+                value: false,
+                data: "Invalid call"
+            });
+        }
+    },
     mysend: function(req, res) {
         if (req.body) {
             if (req.body.email && req.body.email != "") {
