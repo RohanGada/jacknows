@@ -108,5 +108,18 @@ var models = {
             }
         });
     },
+
+    editNotification: function(data, callback) {
+      data.status=true;
+        this.findOneAndUpdate({
+            _id: data._id
+        }, data, function(err, data2) {
+            if (err) {
+                callback(err, false);
+            } else {
+                callback(null, data2);
+            }
+        });
+    },
 };
 module.exports = _.assign(module.exports, models);
