@@ -377,6 +377,7 @@ var models = {
                 console.log(err);
                 callback(err, null);
             } else if (data2 && data2.length > 0) {
+                console.log("Calls found");
                 _.each(data2, function(book) {
                     book.callDuration = parseInt(book.callDuration.split(" ")[0]);
                     book.callDuration = book.callDuration * 60;
@@ -393,6 +394,7 @@ var models = {
                 });
                 callback(err, data2);
             } else {
+                console.log("No calls found");
                 callback(null, { mesage: "No calls found" });
             }
         });
