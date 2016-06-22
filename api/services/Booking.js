@@ -108,11 +108,27 @@ var models = {
                     }
 
                     function callMe(data, data2) {
-                        Notification.saveData({
-                            user: data2.user,
-                            notification: data.message,
-                            image: data.expertimage
-                        }, function(err, notRespo) {
+                      var saveObj={};
+                      if (booking.status == "accept") {
+                          saveObj={
+                              user: data2.user,
+                              notification: data.message,
+                              image: data.expertimage
+                          };
+                      } else if (booking.status == "reject") {
+                          saveObj={
+                              user: data2.user,
+                              notification: data.message,
+                              image: data.expertimage
+                          };
+                      } else {
+                          saveObj={
+                              expert: data2.expert,
+                              notification: data.message,
+                              image: data.userimage
+                          };
+                      }
+                        Notification.saveData(saveObj, function(err, notRespo) {
                             if (err) {
                                 callback(err, null);
                             } else {
