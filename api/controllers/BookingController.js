@@ -98,7 +98,7 @@ module.exports = {
     delete: function(req, res) {
         if (req.body) {
             if (req.body._id && req.body._id != "") {
-                //	console.log("not valid");
+                //  console.log("not valid");
                 Booking.deleteData(req.body, function(err, respo) {
                     if (err) {
                         res.json({
@@ -210,7 +210,7 @@ module.exports = {
     mysend: function(req, res) {
         if (req.body) {
             if (req.body.email && req.body.email != "") {
-                //	console.log("not valid");
+                //  console.log("not valid");
                 Booking.mysend(req.body, function(err, respo) {
                     if (err) {
                         res.json({
@@ -237,4 +237,34 @@ module.exports = {
             });
         }
     },
+    editBooking: function(req, res) {
+        if (req.body) {
+            if (req.body._id && req.body._id != "") {
+                //  console.log("not valid");
+                Booking.editBooking(req.body, function(err, respo) {
+                    if (err) {
+                        res.json({
+                            value: false,
+                            data: err
+                        });
+                    } else {
+                        res.json({
+                            value: true,
+                            data: respo
+                        });
+                    }
+                });
+            } else {
+                res.json({
+                    value: false,
+                    data: "Invalid Id"
+                });
+            }
+        } else {
+            res.json({
+                value: false,
+                data: "Invalid call"
+            });
+        }
+    }
 };

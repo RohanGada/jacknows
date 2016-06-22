@@ -368,6 +368,16 @@ var models = {
             }
         });
     },
-
+    editBooking: function(data, callback) {
+        this.findOneAndUpdate({
+            _id: data._id
+        }, data).lean().exec(function(err, data2) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, data);
+            }
+        });
+    }
 };
 module.exports = _.assign(module.exports, models);

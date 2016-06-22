@@ -378,6 +378,7 @@ var models = {
                 callback({ mesage: "No calls found" }, null);
             } else {
                 console.log("Calls found");
+                console.log(data2);
                 data2.callDuration = parseInt(data2.callDuration.split(" ")[0]);
                 data2.callDuration = data2.callDuration * 60;
                 data2.callTime = moment(data2.callTime).format("YYYY-MM-DD HH:mm");
