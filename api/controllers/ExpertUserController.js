@@ -98,12 +98,13 @@ module.exports = {
                 });
             } else {
                 req.session.expertuser = {};
-                console.log(data);
                 req.session.expertuser = data;
-                res.json({
-                    data: "Expert Registered",
-                    value: true
-                });
+                setTimeout(function() {
+                    res.json({
+                        data: "Expert Registered",
+                        value: true
+                    });
+                },2000);
             }
         };
         if (req.body) {
