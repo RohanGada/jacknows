@@ -53,7 +53,6 @@ module.exports = {
     delete: function(req, res) {
         if (req.body) {
             if (req.body._id && req.body._id != "") {
-                //  console.log("not valid");
                 Config.deleteData(req.body, function(err, respo) {
                     if (err) {
                         res.json({
@@ -79,6 +78,22 @@ module.exports = {
                 data: "Invalid call"
             });
         }
+    },
+    checkCall: function(req, res) {
+        Config.checkCall(req.body, function(err, data) {
+            if (err) {
+                console.log(err);
+                res.json({
+                    value: false,
+                    data: err
+                });
+            } else {
+                res.json({
+                    value: true,
+                    data: data
+                });
+            }
+        });
     },
     emailReader: function(req, res) {
         var isfile2 = fs.existsSync('./views/' + req.body.filename);
