@@ -367,35 +367,31 @@ var models = {
         });
     },
     checkCall: function(data, callback) {
-        Booking.find({
-            callTime: {
-                $eq: new Date()
-            },
-            status: "paid"
+        Booking.findOne({
+            _id: data._id
         }).populate("user", "-_id mobile").populate("expert", "-_id mobileno").lean().exec(function(err, data2) {
             if (err) {
                 console.log(err);
                 callback(err, null);
-            } else if (data2 && data2.length > 0) {
-                console.log("Calls found");
-                _.each(data2, function(book) {
-                    book.callDuration = parseInt(book.callDuration.split(" ")[0]);
-                    book.callDuration = book.callDuration * 60;
-                    book.callTime = moment(book.callTime).format("YYYY-MM-DD HH:mm");
-                    // book.callTime = moment().format("YYYY-MM-DD HH:mm");
-                    book.endTime = moment(book.callTime).add(book.callDuration, 's').format("YYYY-MM-DD HH:mm");
-                    request.get({ url: "http://etsdom.kapps.in/webapi/wohlig/api/wohlig_c2c.py?customer_number=+91" + book.user.mobile + "&agent_number=+91" + book.expert.mobileno + "&call_duration=" + book.callDuration + "&call_start_time=" + book.callTime + "&call_stop_time=" + book.endTime + "&auth_key=bb23a8a029-8bd4-4e44-97ccaa" }, function(err, http, body) {
-                        if (err) {
-                            console.log("error", err);
-                        } else {
-                            console.log(body);
-                        }
-                    });
-                });
-                callback(err, data2);
-            } else {
+            } else if (_.isEmpty(data2)) {
                 console.log("No calls found");
-                callback(null, { mesage: "No calls found" });
+                callback({ mesage: "No calls found" }, null);
+            } else {
+                console.log("Calls found");
+                data2.callDuration = parseInt(data2.callDuration.split(" ")[0]);
+                data2.callDuration = data2.callDuration * 60;
+                data2.callTime = moment(data2.callTime).format("YYYY-MM-DD HH:mm");
+                // data2.callTime = moment().format("YYYY-MM-DD HH:mm");
+                data2.endTime = moment(data2.callTime).add(data2.callDuration, 's').format("YYYY-MM-DD HH:mm");
+                request.get({ url: "http://etsdom.kapps.in/webapi/wohlig/api/wohlig_c2c.py?customer_number=+91" + data2.user.mobile + "&agent_number=+91" + data2.expert.mobileno + "&call_duration=" + data2.callDuration + "&call_start_time=" + data2.callTime + "&call_stop_time=" + data2.endTime + "&auth_key=bb23a8a029-8bd4-4e44-97ccaa" }, function(err, http, body) {
+                    if (err) {
+                        console.log("error", err);
+                        callback(err, null);
+                    } else {
+                        console.log(body);
+                        callback(null, { mesage: "Calls found" });
+                    }
+                });
             }
         });
     }

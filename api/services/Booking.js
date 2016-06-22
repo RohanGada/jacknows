@@ -132,7 +132,18 @@ var models = {
                             if (err) {
                                 callback(err, null);
                             } else {
-                                callback(null, data2);
+                                if (booking.status == "paid") {
+                                    Config.checkCall({ _id: data._id }, function(err, scheduRes) {
+                                        if (err) {
+                                            console.log(err);
+                                            callback(err, null);
+                                        } else {
+                                            callback(null, data2);
+                                        }
+                                    });
+                                } else {
+                                    callback(null, data2);
+                                }
                             }
                         });
                     }
@@ -243,6 +254,7 @@ var models = {
                                     Notification.saveData({
                                         expert: booking.expert,
                                         notification: data.username + " has booked you.",
+                                        image: data.userimage
                                     }, function(err, notRespo) {
                                         if (err) {
                                             callback1(err, null);
