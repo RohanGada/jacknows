@@ -163,6 +163,7 @@ var models = {
             if (err) {
                 callback(err, data);
             } else {
+                console.log(_.isEmpty(data));
                 if (_.isEmpty(data)) {
                     expertuser.save(function(err, data3) {
                         data3.password = '';
@@ -189,9 +190,8 @@ var models = {
                         }
                     });
                 } else {
-                    callback("Expert already Exists", false);
+                    callback({message:"Expert already Exists"}, false);
                 }
-
             }
         });
     },
