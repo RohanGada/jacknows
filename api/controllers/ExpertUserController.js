@@ -97,6 +97,8 @@ module.exports = {
                     value: false
                 });
             } else {
+                req.session.expertuser = {};
+                console.log(data);
                 req.session.expertuser = data;
                 res.json({
                     data: "Expert Registered",
@@ -128,7 +130,7 @@ module.exports = {
                     value: false
                 });
             } else {
-              console.log(data);
+                console.log(data);
                 req.session.expertuser = data;
                 res.json({
                     data: "Profile Edited",
@@ -156,7 +158,7 @@ module.exports = {
     login: function(req, res) {
         var callback = function(err, data) {
             if (err || _.isEmpty(data)) {
-              console.log('in 1 loop');
+                console.log('in 1 loop');
                 res.json({
                     error: err,
                     value: false
@@ -217,26 +219,26 @@ module.exports = {
             if (req.session.expertuser) {
                 req.body._id = req.session.expertuser._id;
                 if (req.body.password && req.body.password != "" && req.body.changePassword && req.body.changePassword != "") {
-                    ExpertUser.changePassword(req.body, function(err,data){
-                      if(err){
-                        console.log(err);
-                        res.json({
-                          value:false,
-                          data:err
-                        });
-                      }else{
-                        if(data.email){
-                          res.json({
-                            value:true,
-                            data:data
-                          });
-                        }else{
-                          res.json({
-                            value:false,
-                            data:{}
-                          });
+                    ExpertUser.changePassword(req.body, function(err, data) {
+                        if (err) {
+                            console.log(err);
+                            res.json({
+                                value: false,
+                                data: err
+                            });
+                        } else {
+                            if (data.email) {
+                                res.json({
+                                    value: true,
+                                    data: data
+                                });
+                            } else {
+                                res.json({
+                                    value: false,
+                                    data: {}
+                                });
+                            }
                         }
-                      }
                     });
                 } else {
                     res.json({
