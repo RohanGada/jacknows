@@ -152,7 +152,7 @@ var models = {
         data.name = data.firstName + " " + data.lastName;
         var expertuser = this(data);
         expertuser.email = data.email;
-        this.count({
+        this.findOne({
             $or: [{
                 "email": data.email
             }, {
@@ -163,7 +163,7 @@ var models = {
             if (err) {
                 callback(err, data);
             } else {
-                if (data2 === 0) {
+                if (_.isEmpty(data)) {
                     expertuser.save(function(err, data3) {
                         data3.password = '';
                         if (err) {
