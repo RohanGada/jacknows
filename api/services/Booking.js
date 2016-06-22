@@ -55,9 +55,6 @@ module.exports = mongoose.model('Booking', schema);
 var models = {
     saveData: function(data, callback) {
         var booking = this(data);
-        var emailData = {};
-        emailData.email = data.email;
-        emailData.username = data.username;
         if (data._id) {
             this.findOneAndUpdate({
                 _id: data._id
@@ -65,6 +62,51 @@ var models = {
                 if (err) {
                     callback(err, null);
                 } else {
+                    function callMail(emailData, emailData2) {
+                        async.parallel([
+                            function(callback1) {
+                                Config.email(emailData, function(err, json) {
+                                    if (err) {
+                                        console.log(err);
+                                        callback1(err, null);
+                                    } else {
+                                        callback1(null, {
+                                            message: "Done"
+                                        });
+                                    }
+                                });
+                            },
+                            function(callback1) {
+                                Config.email(emailData2, function(err, json) {
+                                    if (err) {
+                                        console.log(err);
+                                        callback1(err, null);
+                                    } else {
+                                        callback1(null, {
+                                            message: "Done"
+                                        });
+                                    }
+                                });
+                            }
+                        ], function(err, asyncrespo) {
+                            if (err) {
+                                console.log(err);
+                                callback(err, null);
+                            } else {
+                                if (booking.status == "accept") {
+                                    data.message = data.expertname + " has accepted your request.";
+                                    callMe(data, data2);
+                                } else if (booking.status == "reject") {
+                                    data.message = data.expertname + " has rejected your request.";
+                                    callMe(data, data2);
+                                } else {
+                                    data.message = data.username + " has paid for service.";
+                                    callMe(data, data2);
+                                }
+                            }
+                        });
+                    }
+
                     function callMe(data, data2) {
                         Notification.saveData({
                             user: data2.user,
@@ -80,151 +122,61 @@ var models = {
                     }
                     switch (booking.status) {
                         case "accept":
-                            async.parallel([function(callback1) {
-                                var emailData = {};
-                                emailData.email = data.email;
-                                emailData.filename = 'dummy.ejs';
-                                emailData.name = data.expertname;
-                                emailData.timestamp = moment().format("MMM DD YYYY");
-                                emailData.time = moment().format("HH.MM A");
-                                emailData.content = "We have sent your response to the user. We will get back to you once the call is confirmed.";
-                                emailData.subject = "Booking Status";
-                                Config.email(emailData, function(err, json) {
-                                    if (err) {
-                                        console.log(err);
-                                        callback(err, null);
-                                    } else {
-                                        console.log(json);
-                                        data.message = data.expertname + " has reject your request.";
-                                        callMe(data, data2);
-                                    }
-                                });
-                            }, function(callback1) {
-                                var emailData2 = {};
-                                emailData2.email = data.useremail;
-                                emailData2.filename = 'dummy.ejs';
-                                emailData2.name = data.username;
-                                emailData2.timestamp = moment().format("MMM DD YYYY");
-                                emailData2.time = moment().format("HH.MM A");
-                                emailData2.content = "You have received a response from the expert regarding your request. Please login to check.";
-                                emailData2.subject = "Booking Status";
-                                Config.email(emailData2, function(err, json) {
-                                    if (err) {
-                                        console.log(err);
-                                        callback(err, null);
-                                    } else {
-                                        console.log(json);
-                                        data.message = data.expertname + " has reject your request.";
-                                        callMe(data, data2);
-                                    }
-                                });
-                            }], function(err, asyncrespo) {
-                                if (err) {
-                                    console.log(err);
-                                    callback(err, null);
-                                } else {
-                                    data.message = data.expertname + " has accept your request.";
-                                    callMe(data, data2);
-                                }
-                            });
+                            var emailData = {};
+                            emailData.email = data.email;
+                            emailData.filename = 'dummy.ejs';
+                            emailData.name = data.expertname;
+                            emailData.timestamp = moment().format("MMM DD YYYY");
+                            emailData.time = moment().format("HH.MM A");
+                            emailData.content = "We have sent your response to the user. We will get back to you once the call is confirmed.";
+                            emailData.subject = "Booking Status";
+                            var emailData2 = {};
+                            emailData2.email = data.useremail;
+                            emailData2.filename = 'dummy.ejs';
+                            emailData2.name = data.username;
+                            emailData2.timestamp = moment().format("MMM DD YYYY");
+                            emailData2.time = moment().format("HH.MM A");
+                            emailData2.content = "You have received a response from the expert regarding your request. Please login to check.";
+                            emailData2.subject = "Booking Status";
+                            callMail(emailData, emailData2);
                             break;
                         case "reject":
-                            async.parallel([function(callback1) {
-                                var emailData = {};
-                                emailData.email = data.email;
-                                emailData.filename = 'dummy.ejs';
-                                emailData.name = data.expertname;
-                                emailData.timestamp = moment().format("MMM DD YYYY");
-                                emailData.time = moment().format("HH.MM A");
-                                emailData.content = "We have sent your response to the user. We will get back to you once the call is confirmed.";
-                                emailData.subject = "Booking Status";
-                                Config.email(emailData, function(err, json) {
-                                    if (err) {
-                                        console.log(err);
-                                        callback(err, null);
-                                    } else {
-                                        console.log(json);
-                                        data.message = data.expertname + " has reject your request.";
-                                        callMe(data, data2);
-                                    }
-                                });
-                            }, function(callback1) {
-                                var emailData2 = {};
-                                emailData2.email = data.useremail;
-                                emailData2.filename = 'dummy.ejs';
-                                emailData2.name = data.username;
-                                emailData2.timestamp = moment().format("MMM DD YYYY");
-                                emailData2.time = moment().format("HH.MM A");
-                                emailData2.content = "You have received a response from the expert regarding your request. Please login to check.";
-                                emailData2.subject = "Booking Status";
-                                Config.email(emailData2, function(err, json) {
-                                    if (err) {
-                                        console.log(err);
-                                        callback(err, null);
-                                    } else {
-                                        console.log(json);
-                                        data.message = data.expertname + " has reject your request.";
-                                        callMe(data, data2);
-                                    }
-                                });
-                            }], function(err, asyncrespo) {
-                                if (err) {
-                                    console.log(err);
-                                    callback(err, null);
-                                } else {
-                                    data.message = data.expertname + " has reject your request.";
-                                    callMe(data, data2);
-                                }
-                            });
+                            var emailData = {};
+                            emailData.email = data.email;
+                            emailData.filename = 'dummy.ejs';
+                            emailData.name = data.expertname;
+                            emailData.timestamp = moment().format("MMM DD YYYY");
+                            emailData.time = moment().format("HH.MM A");
+                            emailData.content = "We have sent your response to the user. We will get back to you once the call is confirmed.";
+                            emailData.subject = "Booking Status";
+                            var emailData2 = {};
+                            emailData2.email = data.useremail;
+                            emailData2.filename = 'dummy.ejs';
+                            emailData2.name = data.username;
+                            emailData2.timestamp = moment().format("MMM DD YYYY");
+                            emailData2.time = moment().format("HH.MM A");
+                            emailData2.content = "You have received a response from the expert regarding your request. Please login to check.";
+                            emailData2.subject = "Booking Status";
+                            callMail(emailData, emailData2);
                             break;
                         case "paid":
-                            async.parallel([function(callback1) {
-                                var emailData = {};
-                                emailData.email = data.expertemail;
-                                emailData.filename = 'dummy.ejs';
-                                emailData.name = data.expertname;
-                                emailData.timestamp = moment().format("MMM DD YYYY");
-                                emailData.time = moment().format("HH.MM A");
-                                emailData.content = "The call with " + data.username + " is confirmed. We will connect you with the user on " + data2.bookTime + ".";
-                                emailData.subject = "Booking Status";
-                                Config.email(emailData, function(err, json) {
-                                    if (err) {
-                                        console.log(err);
-                                        callback(err, null);
-                                    } else {
-                                        console.log(json);
-                                        data.message = data.expertname + " has reject your request.";
-                                        callMe(data, data2);
-                                    }
-                                });
-                            }, function(callback1) {
-                                var emailData2 = {};
-                                emailData2.email = data.email;
-                                emailData2.filename = 'dummy.ejs';
-                                emailData2.name = data.username;
-                                emailData2.timestamp = moment().format("MMM DD YYYY");
-                                emailData2.time = moment().format("HH.MM A");
-                                emailData2.content = "Thank you for the payment. Your call with " + data.expertname + " is confirmed. We will connect you with the expert at " + data2.bookTime + ".";
-                                emailData2.subject = "Booking Status";
-                                Config.email(emailData2, function(err, json) {
-                                    if (err) {
-                                        console.log(err);
-                                        callback(err, null);
-                                    } else {
-                                        console.log(json);
-                                        data.message = data.expertname + " has reject your request.";
-                                        callMe(data, data2);
-                                    }
-                                });
-                            }], function(err, asyncrespo) {
-                                if (err) {
-                                    console.log(err);
-                                    callback(err, null);
-                                } else {
-                                    data.message = data.username + " has paid for service.";
-                                    callMe(data, data2);
-                                }
-                            });
+                            var emailData = {};
+                            emailData.email = data.expertemail;
+                            emailData.filename = 'dummy.ejs';
+                            emailData.name = data.expertname;
+                            emailData.timestamp = moment().format("MMM DD YYYY");
+                            emailData.time = moment().format("HH.MM A");
+                            emailData.content = "The call with " + data.username + " is confirmed. We will connect you with the user on " + data2.bookTime + ".";
+                            emailData.subject = "Booking Status";
+                            var emailData2 = {};
+                            emailData2.email = data.email;
+                            emailData2.filename = 'dummy.ejs';
+                            emailData2.name = data.username;
+                            emailData2.timestamp = moment().format("MMM DD YYYY");
+                            emailData2.time = moment().format("HH.MM A");
+                            emailData2.content = "Thank you for the payment. Your call with " + data.expertname + " is confirmed. We will connect you with the expert at " + data2.bookTime + ".";
+                            emailData2.subject = "Booking Status";
+                            callMail(emailData, emailData2);
                             break;
                         default:
                             callback({
@@ -359,7 +311,7 @@ var models = {
             };
         }
 
-        Booking.find(matchobj).populate("expert", '-_id -password -forgotpassword -__v ').exec(callback);
+        Booking.find(matchobj).populate("expert", '-password -forgotpassword -__v ').exec(callback);
     },
 
     getExpertBooking: function(data, callback) {
