@@ -108,26 +108,26 @@ var models = {
                     }
 
                     function callMe(data, data2) {
-                      var saveObj={};
-                      if (booking.status == "accept") {
-                          saveObj={
-                              user: data2.user,
-                              notification: data.message,
-                              image: data.expertimage
-                          };
-                      } else if (booking.status == "reject") {
-                          saveObj={
-                              user: data2.user,
-                              notification: data.message,
-                              image: data.expertimage
-                          };
-                      } else {
-                          saveObj={
-                              expert: data2.expert,
-                              notification: data.message,
-                              image: data.userimage
-                          };
-                      }
+                        var saveObj = {};
+                        if (booking.status == "accept") {
+                            saveObj = {
+                                user: data2.user,
+                                notification: data.message,
+                                image: data.expertimage
+                            };
+                        } else if (booking.status == "reject") {
+                            saveObj = {
+                                user: data2.user,
+                                notification: data.message,
+                                image: data.expertimage
+                            };
+                        } else {
+                            saveObj = {
+                                expert: data2.expert,
+                                notification: data.message,
+                                image: data.userimage
+                            };
+                        }
                         Notification.saveData(saveObj, function(err, notRespo) {
                             if (err) {
                                 callback(err, null);
@@ -347,7 +347,15 @@ var models = {
         }
         Booking.find(matchobj).populate("user", '-_id -password -forgotpassword -__v ').exec(callback);
     },
-
+    deleteAll: function(data, callback) {
+        Booking.remove({}, function(err, deleted) {
+            if (err) {
+                callback(err, null)
+            } else {
+                callback(null, deleted)
+            }
+        });
+    },
 
 };
 module.exports = _.assign(module.exports, models);
