@@ -369,7 +369,7 @@ var models = {
     checkCall: function(data, callback) {
         Booking.find({
             callTime: {
-                $gt: new Date()
+                $eq: new Date()
             },
             status: "paid"
         }).populate("user", "-_id mobile").populate("expert", "-_id mobileno").lean().exec(function(err, data2) {
