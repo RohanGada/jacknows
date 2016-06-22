@@ -10,8 +10,16 @@ var Schema = mongoose.Schema;
 var schema = new Schema({
     notification: String,
     image: String,
-    expert: String,
-    user: String,
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    expert: {
+        type: Schema.Types.ObjectId,
+        ref: 'ExpertUser'
+    },
+    // expert: String,
+    // user: String,
     status: Boolean,
     timestamp: Date
 });
