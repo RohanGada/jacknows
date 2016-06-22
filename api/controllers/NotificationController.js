@@ -111,11 +111,25 @@ module.exports = {
     findNotification: function(req, res) {
         if (req.body && req.body.from) {
             if (req.body.from == 'expert') {
-                req.body._id = req.session.expertuser._id;
-                callMe();
+                if (req.session.expertuser) {
+                    req.body._id = req.session.expertuser._id;
+                    callMe();
+                } else {
+                    res.json({
+                        value: false,
+                        data: "User not logged-in"
+                    });
+                }
             } else if (req.body.from == 'user') {
-                req.body._id = req.session.user._id;
-                callMe();
+                if (req.session.user) {
+                    req.body._id = req.session.user._id;
+                    callMe();
+                } else {
+                    res.json({
+                        value: false,
+                        data: "User not logged-in"
+                    });
+                }
             } else {
                 res.json({
                     value: false,
