@@ -71,6 +71,19 @@ var models = {
             }
         });
     },
+    getOne: function(data, callback){
+      this.findOne({
+    _id: data._id
+      }).exec(function(err, data2){
+        if(err){
+          console.log(err);
+          callback(err, null)
+        }
+        else {
+          callback(null, data2);
+        }
+      });
+    },
 
 };
 module.exports = _.assign(module.exports, models);

@@ -180,7 +180,7 @@ var models = {
     },
     getAll: function(data, callback) {
         this.find({}, {
-            _id: 0
+            // _id: 0
         }, {}).populate('expertUser').exec(function(err, deleted) {
             if (err) {
                 callback(err, null);
@@ -189,17 +189,30 @@ var models = {
             }
         });
     },
-    getOne: function(data, callback) {
-        this.findOne({}, {
-            _id: 0
-        }, {}).exec(function(err, deleted) {
-            if (err) {
-                callback(err, null);
-            } else {
-                callback(null, deleted);
-            }
-        });
+    getOne: function(data, callback){
+      this.findOne({
+    _id: data._id
+      }).exec(function(err, data2){
+        if(err){
+          console.log(err);
+          callback(err, null)
+        }
+        else {
+          callback(null, data2);
+        }
+      });
     },
+    // getOne: function(data, callback) {
+    //     this.findOne({}, {
+    //
+    //     }, {}).exec(function(err, deleted) {
+    //         if (err) {
+    //             callback(err, null);
+    //         } else {
+    //             callback(null, deleted);
+    //         }
+    //     });
+    // },
     deleteData: function(data, callback) {
         this.findOneAndRemove({
             _id: data._id
