@@ -71,6 +71,15 @@ var models = {
             }
         });
     },
+    deleteAll: function(data, callback) {
+        Notification.remove({}, function(err, deleted) {
+            if (err) {
+                callback(err, null)
+            } else {
+                callback(null, deleted)
+            }
+        });
+    },
     getOne: function(data, callback) {
         Notification.findOne({
             _id: data._id
@@ -96,11 +105,9 @@ var models = {
                 status: false
             }
         }
-        Notification.find(matchobj,
-          {},
-          {
-            sort:{_id:-1}
-          },function(err, nodata) {
+        Notification.find(matchobj, {}, {
+            sort: { _id: -1 }
+        }, function(err, nodata) {
             if (err) {
                 callback(err, null);
             } else {
@@ -110,7 +117,7 @@ var models = {
     },
 
     editNotification: function(data, callback) {
-      data.status=true;
+        data.status = true;
         this.findOneAndUpdate({
             _id: data._id
         }, data, function(err, data2) {

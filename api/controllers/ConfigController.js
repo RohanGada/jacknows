@@ -5,6 +5,7 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 var fs = require("fs");
+var moment = require('moment');
 module.exports = {
     saveData: function(req, res) {
         if (req.body) {
@@ -105,5 +106,45 @@ module.exports = {
                 message: "Please provide params"
             });
         }
-    }
+    },
+    scheduleCron: function(req, res) {
+        Booking.find({
+            $or: [{
+                callTime: {
+                    $gt: moment(new Date()).add(1, 'days').seconds(0)._d,
+                    $lte: moment(new Date()).add(1, 'days').add(1, 'minutes').seconds(0)._d
+                }
+            }, {
+                callTime: {
+                    $gt: moment().add(1, 'hours').seconds(0),
+                    $lte: moment().add(1, 'hours').add(5, 'minutes').seconds(0)
+                }
+            }, {
+                callTime: {
+                    $gt: moment().seconds(0),
+                    $lte: moment().add(5, 'minutes').seconds(0)
+                }
+            }]
+        }).populate("user", "-_id firstName mobile email").populate("expert", "-_id firstName mobileno email").lean().exec(function(err, data2) {
+            if (err) {
+                console.log(err);
+                res.json({ value: false, data: err });
+            } else if (data2 && data2.length > 0) {
+                res.json({ value: true, data: data2 });
+                // var time = {};
+                // var days = "";
+                // var date = "";
+                // time.email = data2.expert.email;
+                // time.timestamp = moment().format("MMM DD YYYY");
+                // time.time = moment().format("HH.mm A");
+                // time.subject = "Call Reminder";
+                // time.name = data2.expert.firstName;
+                // time.content = "";
+                // time.mobile = data2.expert.mobileno;
+            } else {
+                console.log("No calls found");
+                res.json({ value: false, data: { message: "No data found" } });
+            }
+        });
+    },
 };

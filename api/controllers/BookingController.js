@@ -11,17 +11,31 @@ module.exports = {
         if (req.body) {
             if (req.body._id && req.body._id != "") {
                 if (req.body.from == "expert") {
-                    req.body.expertname = req.session.expertuser.name;
-                    req.body.expertimage = req.session.expertuser.image;
-                    req.body.email = req.session.expertuser.email;
-                    callSave();
+                    if (req.session.expertuser) {
+                        req.body.expertname = req.session.expertuser.name;
+                        req.body.expertimage = req.session.expertuser.image;
+                        req.body.email = req.session.expertuser.email;
+                        callSave();
+                    } else {
+                        res.json({
+                            value: false,
+                            data: "User not loggd-in"
+                        });
+                    }
                 } else if (req.body.from == "user") {
-                    req.body.user = req.session.user._id;
-                    req.body.username = req.session.user.firstName + " " + req.session.user.lastName;
-                    req.body.userimage = req.session.user.image;
-                    req.body.email = req.session.user.email;
-                    req.body.mobile = req.session.user.mobile;
-                    callSave();
+                    if (req.session.user) {
+                        req.body.user = req.session.user._id;
+                        req.body.username = req.session.user.firstName + " " + req.session.user.lastName;
+                        req.body.userimage = req.session.user.image;
+                        req.body.email = req.session.user.email;
+                        req.body.mobile = req.session.user.mobile;
+                        callSave();
+                    } else {
+                        res.json({
+                            value: false,
+                            data: "User not loggd-in"
+                        });
+                    }
                 } else {
                     res.json({
                         value: false,

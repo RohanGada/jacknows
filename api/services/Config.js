@@ -14,8 +14,8 @@ var lodash = require('lodash');
 var moment = require('moment');
 var MaxImageSize = 1200;
 var request = require("request");
-var requrl = "http://146.148.4.222/";
 var requrl = "http://localhost:80/";
+// var requrl = "http://localhost:90/"; ///////////////////////////////////////////////////change kar
 var gfs = Grid(mongoose.connections[0].db, mongoose);
 gfs.mongo = mongoose.mongo;
 var Schema = mongoose.Schema;
@@ -366,6 +366,21 @@ var models = {
             }
         });
     },
+    message: function(data, callback) {
+        if (data.mobile || data.mobileno) {
+            request.get({
+                url: "http://etsdom.kapps.in/webapi/wohlig/api/gofish_sms.py?sms_text=" + data.content2 + "&mobile_number=" + data.mobile
+            }, function(err, http, body) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log(body);
+                }
+            });
+        } else {
+            callback({ message: "Mobile number not found" }, null);
+        }
+    },
     checkCall: function(data, callback) {
         Booking.findOne({
             _id: data._id
@@ -395,6 +410,6 @@ var models = {
                 });
             }
         });
-    }
+    },
 };
 module.exports = _.assign(module.exports, models);
