@@ -10,17 +10,15 @@ var sendgrid = require('sendgrid')('');
 var moment = require('moment');
 
 var schema = new Schema({
-    //user: String,
     user: {
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
-    //expert: String,
     expert: {
         type: Schema.Types.ObjectId,
         ref: 'ExpertUser'
     },
-    callTime: Date,
+    callTime: Number,
     status: String,
     amount: String,
     discountCoupon: String,
@@ -67,28 +65,28 @@ var models = {
                     function callMail(emailData, emailData2) {
                         async.parallel([
                             function(callback1) {
-                                Config.email(emailData, function(err, json) {
-                                    if (err) {
-                                        console.log(err);
-                                        callback1(err, null);
-                                    } else {
-                                        callback1(null, {
-                                            message: "Done"
-                                        });
-                                    }
+                                // Config.email(emailData, function(err, json) {
+                                //     if (err) {
+                                //         console.log(err);
+                                //         callback1(err, null);
+                                //     } else {
+                                callback1(null, {
+                                    message: "Done"
                                 });
+                                //     }
+                                // });
                             },
                             function(callback1) {
-                                Config.email(emailData2, function(err, json) {
-                                    if (err) {
-                                        console.log(err);
-                                        callback1(err, null);
-                                    } else {
-                                        callback1(null, {
-                                            message: "Done"
-                                        });
-                                    }
+                                // Config.email(emailData2, function(err, json) {
+                                //     if (err) {
+                                //         console.log(err);
+                                //         callback1(err, null);
+                                //     } else {
+                                callback1(null, {
+                                    message: "Done"
                                 });
+                                //     }
+                                // });
                             }
                         ], function(err, asyncrespo) {
                             if (err) {
@@ -135,14 +133,13 @@ var models = {
                                 callback(err, null);
                             } else {
                                 if (booking.status == "paid") {
-                                    Config.checkCall({ _id: data._id }, function(err, scheduRes) {
-                                        if (err) {
-                                            console.log(err);
-                                            callback(err, null);
-                                        } else {
-                                            callback(null, data2);
-                                        }
-                                    });
+                                    // Config.checkCall({ _id: data._id }, function(err, scheduRes) {
+                                    //     if (err) {
+                                    //         console.log(err);
+                                    //         callback(err, null);
+                                    //     } else {
+                                    callback(null, data2);
+                                    //     }
                                 } else {
                                     callback(null, data2);
                                 }
@@ -243,15 +240,15 @@ var models = {
                                         emailData.time = moment().format("HH.mm A");
                                         emailData.content = "Your request has been sent across to the expert. Please await our confirmation";
                                         emailData.subject = "Booking Status";
-                                        Config.email(emailData, function(err, json) {
-                                            if (err) {
-                                                callback1(err, null);
-                                            } else {
-                                                callback1(null, {
-                                                    message: "Done"
-                                                });
-                                            }
+                                        // Config.email(emailData, function(err, json) {
+                                        //     if (err) {
+                                        //         callback1(err, null);
+                                        //     } else {
+                                        callback1(null, {
+                                            message: "Done"
                                         });
+                                        //     }
+                                        // });
                                     },
                                     function(callback1) {
                                         Notification.saveData({
@@ -277,15 +274,15 @@ var models = {
                                         emailData2.time = moment().format("HH.mm A");
                                         emailData2.content = "Hi! You have received a request for a discussion. Please login to check and confirm. Thanks.";
                                         emailData2.subject = "Booking Status";
-                                        Config.email(emailData2, function(err, emailRespo) {
-                                            if (err) {
-                                                callback1(err, null);
-                                            } else {
-                                                callback1(null, {
-                                                    message: "Done"
-                                                });
-                                            }
+                                        // Config.email(emailData2, function(err, emailRespo) {
+                                        //     if (err) {
+                                        //         callback1(err, null);
+                                        //     } else {
+                                        callback1(null, {
+                                            message: "Done"
                                         });
+                                        //     }
+                                        // });
                                     }
                                 ], function(err, asyncrespo) {
                                     if (err) {
