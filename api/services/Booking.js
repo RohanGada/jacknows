@@ -359,7 +359,7 @@ var models = {
                 status: data.status
             };
         }
-        Booking.find(matchobj).populate("user", '-_id -password -forgotpassword -__v ').exec(callback);
+        Booking.find(matchobj).populate("user", '-password -forgotpassword -__v ').exec(callback);
     },
     deleteAll: function(data, callback) {
         Booking.remove({}, function(err, deleted) {
