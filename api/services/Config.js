@@ -369,7 +369,7 @@ var models = {
     message: function(data, callback) {
         if (data.mobile || data.mobileno) {
             request.get({
-                url: "http://etsdom.kapps.in/webapi/wohlig/api/gofish_sms.py?sms_text=" + data.content2 + "&mobile_number=" + data.mobile
+                url: "http://etsdom.kapps.in/webapi/wohlig/api/gofish_sms.py?sms_text=" + data.content + "&mobile_number=" + data.mobile
             }, function(err, http, body) {
                 if (err) {
                     console.log(err);
