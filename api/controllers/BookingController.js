@@ -11,6 +11,7 @@ module.exports = {
         if (req.body) {
             if (req.body._id && req.body._id != "") {
                 if (req.body.from == "expert") {
+                    console.log(req.body);
                     if (req.session.expertuser) {
                         req.body.expertname = req.session.expertuser.name;
                         req.body.expertimage = req.session.expertuser.image;
@@ -280,7 +281,8 @@ module.exports = {
                 data: "Invalid call"
             });
         }
-    },getOne: function(req, res) {
+    },
+    getOne: function(req, res) {
         if (req.body) {
             if (req.body._id && req.body._id != "") {
                 Booking.getOne(req.body, function(err, respo) {
