@@ -38,6 +38,28 @@
        }
 
    },
+   deleteData: function(data, callback) {
+       this.findOneAndRemove({
+           _id: data._id
+       }, function(err, deleted) {
+           if (err) {
+               callback(err, null)
+           } else {
+               callback(null, deleted)
+           }
+       });
+   },
+   getAll: function(data, callback) {
+       this.find({}, {
+           // _id: 0
+       }, {}).populate('expertUser').exec(function(err, deleted) {
+           if (err) {
+               callback(err, null);
+           } else {
+               callback(null, deleted);
+           }
+       });
+   },
 
 
 

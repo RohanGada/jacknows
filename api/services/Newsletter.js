@@ -39,6 +39,17 @@ var models = {
         }
 
     },
+    getAll: function(data, callback) {
+        this.find({}, {
+            // _id: 0
+        }, {}).populate('expertUser').exec(function(err, deleted) {
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, deleted);
+            }
+        });
+    },
     newsletterApi: function(data, callback) {
         var newsletter = this(data);
         newsletter.timestamp = new Date();
@@ -93,6 +104,19 @@ var models = {
                 });
             }
         });
+    },
+    getOne: function(data, callback){
+      this.findOne({
+    _id: data._id
+      }).exec(function(err, data2){
+        if(err){
+          console.log(err);
+          callback(err, null)
+        }
+        else {
+          callback(null, data2);
+        }
+      });
     },
 
     deleteData: function(data, callback) {

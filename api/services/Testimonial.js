@@ -43,7 +43,7 @@
    getAll: function(data, callback) {
         this.find().exec(callback);
     },
-    
+
    deleteData: function(data, callback) {
        this.findOneAndRemove({
            _id: data._id
@@ -55,7 +55,19 @@
            }
        });
    },
-
+   getOne: function(data, callback){
+     this.findOne({
+   _id: data._id
+     }).exec(function(err, data2){
+       if(err){
+         console.log(err);
+         callback(err, null)
+       }
+       else {
+         callback(null, data2);
+       }
+     });
+   },
 
  };
  module.exports = _.assign(module.exports, models);

@@ -280,5 +280,33 @@ module.exports = {
                 data: "Invalid call"
             });
         }
+    },getOne: function(req, res) {
+        if (req.body) {
+            if (req.body._id && req.body._id != "") {
+                Booking.getOne(req.body, function(err, respo) {
+                    if (err) {
+                        res.json({
+                            value: false,
+                            data: err
+                        });
+                    } else {
+                        res.json({
+                            value: true,
+                            data: respo
+                        });
+                    }
+                });
+            } else {
+                res.json({
+                    value: false,
+                    data: "User id Invalid"
+                });
+            }
+        } else {
+            res.json({
+                value: false,
+                data: "Invalid call"
+            });
+        }
     }
 };
