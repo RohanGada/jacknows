@@ -66,10 +66,13 @@ var models = {
                     if (err) {
                         callback(err, null);
                     } else {
-                      newsletter.email = data.email;
-                      newsletter.filename = '../views/';
-                      newsletter.timestamp = new Date();
-                      Config.email(newsletter, function(err, emailRespo) {
+                      var emailData = {};
+                      emailData.email = data.email;
+                      console.log('data.email',data.email);
+                      emailData.content = "Newsletter demo.";
+                      emailData.filename = "newsletter.ejs";
+                      emailData.subject = "Jacknows Newsletter";
+                      Config.email(emailData, function(err, emailRespo) {
                           if (err) {
                               console.log(err);
                               callback(err, null);

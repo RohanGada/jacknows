@@ -73,6 +73,7 @@ module.exports = {
         if (req.body) {
             if (req.body.email && req.body.email != "") {
                 Newsletter.newsletterApi(req.body, res.callback);
+                console.log('in if');
             } else {
                 res.json({
                     value: false,
