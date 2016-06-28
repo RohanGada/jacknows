@@ -118,18 +118,18 @@ module.exports = {
         Booking.find({
             $or: [{
                 callTime: {
-                    $gt: parseFloat(plusobj.day.getTime()),
-                    $lte: parseFloat(plusobj.dayfive.getTime())
+                    $gt: plusobj.day,
+                    $lte: plusobj.dayfive
                 }
             }, {
                 callTime: {
-                    $gt: parseFloat(plusobj.hour.getTime()),
-                    $lte: parseFloat(plusobj.hourfive.getTime())
+                    $gt: plusobj.hour,
+                    $lte: plusobj.hourfive
                 }
             }, {
                 callTime: {
-                    $gt: parseFloat(plusobj.mins.getTime()),
-                    $lte: parseFloat(plusobj.minsfive.getTime())
+                    $gt: plusobj.mins,
+                    $lte: plusobj.minsfive
                 }
             }],
             status: "paid"
@@ -151,7 +151,7 @@ module.exports = {
                     time.expert.subject = "Call Reminder";
                     time.user.subject = "Call Reminder";
                     time.expert.name = some.expert.firstName;
-                    time.user.name = some.expert.firstName;
+                    time.user.name = some.user.firstName;
                     time.expert.mobile = some.expert.mobileno;
                     time.user.mobile = some.user.mobile;
                     var timer = moment(some.callTime).diff(moment());

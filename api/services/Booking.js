@@ -294,11 +294,6 @@ var models = {
             if (err) {
                 callback(err, null);
             } else {
-                _.each(deleted, function(abc) {
-                    console.log(abc.callTime);
-                    abc.callTime = moment(abc.callTime).local().format("YYYY-MM-DD HH:mm");
-                    console.log(abc.callTime);
-                });
                 callback(null, deleted);
             }
         });
