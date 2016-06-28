@@ -334,9 +334,15 @@ var models = {
                                 console.log(err);
                                 callback(err, null);
                             } else {
-                                user.email = data.email;
-                                user.filename = data.filename;
-                                Config.email(user, function(err, emailRespo) {
+                              var emailData = {};
+                              emailData.email = data.email;
+                              console.log('data.email',data.email);
+                              emailData.content = "Your password for Jacknows website is "+text+".";
+                              emailData.filename = "newsletter.ejs";
+                              emailData.subject = "Jacknows forgot password";
+                                // user.email = data.email;
+                                // user.filename = data.filename;
+                                Config.email(emailData, function(err, emailRespo) {
                                     if (err) {
                                         console.log(err);
                                         callback(err, null);

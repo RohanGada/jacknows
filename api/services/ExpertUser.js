@@ -80,6 +80,8 @@ var schema = new Schema({
     customSettings: Schema.Types.Mixed,
     callSettings: Schema.Types.Mixed,
     image: String,
+    forgotId: String,
+    forgotpassword: String,
 });
 module.exports = mongoose.model('ExpertUser', schema);
 var models = {
@@ -400,6 +402,69 @@ var models = {
             }
         });
     },
+    forgotPassword: function(data, callback) {
+        this.findOne({
+            email: data.email
+        }, {
+            password: 0,
+            forgotpassword: 0
+        }, function(err, found) {
+            if (err) {
+                console.log(err);
+                callback(err, null);
+            } else {
+                if (found) {
+                    if (!found.oauthLogin || (found.oauthLogin && found.oauthLogin.length <= 0)) {
+                        var text = "";
+                        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+                        for (var i = 0; i < 8; i++) {
+                            text += possible.charAt(Math.floor(Math.random() * possible.length));
+                        }
+                        var encrypttext = md5(text);
+                        this.findOneAndUpdate({
+                            _id: found._id
+                        }, {
+                            forgotpassword: encrypttext
+                        }, function(err, data2) {
+                            if (err) {
+                                console.log(err);
+                                callback(err, null);
+                            } else {
+                              var emailData = {};
+                              emailData.email = data.email;
+                              console.log('data.email',data.email);
+                              emailData.content = "Your password for Jacknows website is "+text+".";
+                              emailData.filename = "newsletter.ejs";
+                              emailData.subject = "Jacknows forgot password";
+                                // user.email = data.email;
+                                // user.filename = data.filename;
+                                Config.email(emailData, function(err, emailRespo) {
+                                    if (err) {
+                                        console.log(err);
+                                        callback(err, null);
+                                    } else {
+                                        console.log(emailRespo);
+                                        callback(null, {
+                                            comment: "Mail Sent"
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    } else {
+                        callback(null, {
+                            comment: "User logged in through social login"
+                        });
+                    }
+                } else {
+                    callback(null, {
+                        comment: "User not found"
+                    });
+                }
+            }
+        });
+    },
+
 
 };
 module.exports = _.assign(module.exports, models);
