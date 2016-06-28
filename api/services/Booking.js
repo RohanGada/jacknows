@@ -18,7 +18,7 @@ var schema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'ExpertUser'
     },
-    callTime: Number,
+    callTime: Date,
     status: String,
     amount: String,
     discountCoupon: String,
