@@ -117,8 +117,6 @@ var models = {
                             emailData.name = data.firstName;
                             emailData.content = "Thank you for signing up with us! We hope you have a great experience on this platform. Please take a moment to leave your feedback.";
                             emailData.filename = "dummy.ejs";
-                            emailData.timestamp = moment().format("MMM DD YYYY");
-                            emailData.time = moment().format("HH.MM A");
                             emailData.subject = "Signup in Jacknows";
                             Config.email(emailData, function(err, emailRespo) {
                                 if (err) {
@@ -336,7 +334,6 @@ var models = {
                                 console.log(err);
                                 callback(err, null);
                             } else {
-
                                 user.email = data.email;
                                 user.filename = data.filename;
                                 Config.email(user, function(err, emailRespo) {
@@ -350,21 +347,6 @@ var models = {
                                         });
                                     }
                                 });
-                                // sendgrid.send({
-                                //     to: found.email,
-                                //     from: "info@wohlig.com",
-                                //     subject: "One Time Password For Jacknows",
-                                //     html: "<html><body><p>Dear " + found.firstName + ",</p><p>Your One Time Password for Jacknows is " + text + "</p></body></html>"
-                                // }, function(err, json) {
-                                //     if (err) {
-                                //         callback(err, null);
-                                //     } else {
-                                //         console.log(json);
-                                //         callback(null, {
-                                //             comment: "Mail Sent"
-                                //         });
-                                //     }
-                                // });
                             }
                         });
                     } else {

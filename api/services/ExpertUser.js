@@ -37,19 +37,10 @@ var schema = new Schema({
     accountNo: String,
     code: String,
     accountHolderAddress: String,
-
-
-    // professionalDetails: {
-    //     type: [{
-    // professionalInfo: {
-    //     type: [{
     areaOfExpertise: String,
     specilization: String,
     description: String,
     priceForService: Number,
-    //     }],
-    //     index: true
-    // },
     educationalQualification: {
         type: [{
             degreeTitle: String,
@@ -85,66 +76,13 @@ var schema = new Schema({
         }],
         index: true
     },
-
-    //     }],
-    //     index: true
-    // },
     unavailableSettings: Schema.Types.Mixed,
     customSettings: Schema.Types.Mixed,
     callSettings: Schema.Types.Mixed,
-    // bankDetails: {
-    //     type: [{
-    //         accountHolderName: String,
-    //         bankName: String,
-    //         typeOfAccount: String,
-    //         branchAddress: String,
-    //         accountNo: String,
-    //         code: String,
-    //         accountHolderAddress: String
-    //     }],
-    //     index: true
-    // },
-    // expertRegistration: {
-    //     type: [{
-    //         fName: String,
-    //         lName: String,
-    //         emailid: String,
-    //         mobile: String,
-    //         pswd: String,
-    //         //confirmPswd: String,
-    //         age: String,
-    //         sex: String
-    //     }],
-    //     index: true
-    // },
     image: String,
 });
 module.exports = mongoose.model('ExpertUser', schema);
 var models = {
-
-    // register: function(data, callback) {
-    //     if (data.password && data.password != "") {
-    //         data.password = md5(data.password);
-    //     }
-    //     data.name = data.firstName + " " + data.lastName;
-    //     var expertuser = this(data);
-    //     this.count({
-    //         "email": data.email
-    //     }).exec(function(err, data2) {
-    //         if (err) {
-    //             callback(err, data);
-    //         } else {
-    //             if (data2 === 0) {
-    //                 expertuser.save(function(err, data3) {
-    //                     data3.password = '';
-    //                     callback(err, data3);
-    //                 });
-    //             } else {
-    //                 callback("Email already Exists", false);
-    //             }
-    //         }
-    //     });
-    // },
     register: function(data, callback) {
         if (data.password && data.password != "") {
             data.password = md5(data.password);
@@ -174,8 +112,6 @@ var models = {
                             emailData.email = data.email;
                             emailData.filename = 'dummy.ejs';
                             emailData.name = data.firstName;
-                            emailData.timestamp = moment().format("MMM DD YYYY");
-                            emailData.time = moment().format("HH.MM A");
                             emailData.content = "Thank you for sharing your details with us. Our expert on-boarding team will get back to you at the earliest.";
                             emailData.subject = "Signup in Jacknows";
                             Config.email(emailData, function(err, emailRespo) {

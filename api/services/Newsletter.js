@@ -80,22 +80,6 @@ var models = {
                               });
                           }
                       });
-                        // sendgrid.send({
-                        //     to: newsletter.email,
-                        //     from: "info@wohlig.com",
-                        //     subject: "Jacknows Newsletter",
-                        //     html: "<html><body><p>Hi,</p><p>This mail is from Jacknows Newsletter</p></body></html>"
-                        // }, function(err, json) {
-                        //     if (err) {
-                        //         callback(err, null);
-                        //     } else {
-                        //         console.log(json);
-                        //         callback(null, {
-                        //             comment: "Mail Sent"
-                        //         });
-                        //     }
-                        // });
-                        //callback(null, created);
                     }
                 });
             } else {
