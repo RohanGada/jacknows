@@ -13,7 +13,7 @@ module.exports = {
                 if (req.body.from == "expert") {
                     console.log(req.body);
                     if (req.session.expertuser) {
-                        req.body.expertname = req.session.expertuser.name;
+                        req.body.expertname = req.session.expertuser.firstName;
                         req.body.expertimage = req.session.expertuser.image;
                         req.body.email = req.session.expertuser.email;
                         callSave();
@@ -26,7 +26,7 @@ module.exports = {
                 } else if (req.body.from == "user") {
                     if (req.session.user) {
                         req.body.user = req.session.user._id;
-                        req.body.username = req.session.user.firstName + " " + req.session.user.lastName;
+                        req.body.username = req.session.user.firstName;
                         req.body.userimage = req.session.user.image;
                         req.body.email = req.session.user.email;
                         req.body.mobile = req.session.user.mobile;
@@ -46,7 +46,7 @@ module.exports = {
             } else {
                 if (req.session.user) {
                     req.body.user = req.session.user._id;
-                    req.body.username = req.session.user.firstName + " " + req.session.user.lastName;
+                    req.body.username = req.session.user.firstName;
                     req.body.userimage = req.session.user.image;
                     req.body.email = req.session.user.email;
                     req.body.mobile = req.session.user.mobile;

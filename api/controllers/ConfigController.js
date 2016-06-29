@@ -215,4 +215,40 @@ module.exports = {
             }
         });
     },
+    callStatus: function(req, res) {
+        if (req.param && req.param.status && req.param.status != "" && req.param.callId && req.param.callId != "") {
+            Booking.update({
+                callId: req.param.callId
+            }, {
+                $set: {
+                    status: req.param.status
+                }
+            }, function(err, respo) {
+                if (err) {
+                    console.log(err);
+                    res.json({
+                        value: false,
+                        data: err
+                    });
+                } else {
+                    if (_.isEmpty(respo)) {
+                        res.json({
+                            value: false,
+                            data: { message: "Call-Id not found" }
+                        });
+                    } else {
+                        res.json({
+                            value: true,
+                            data: { message: "Status updated successfully" }
+                        });
+                    }
+                }
+            });
+        } else {
+            res.json({
+                value: false,
+                data: { message: "Invalid params. Please provide status" }
+            });
+        }
+    }
 };

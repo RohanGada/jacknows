@@ -26,6 +26,7 @@ var schema = new Schema({
     callStartTime: Date,
     callEndTime: Date,
     callDuration: String,
+    callId: String,
     areaOfExpertise: String,
     bookDate: Date,
     bookTime: Date,
@@ -183,13 +184,13 @@ var models = {
                             emailData.email = data.expertemail;
                             emailData.filename = 'dummy.ejs';
                             emailData.name = data.expertname;
-                            emailData.content = "The call with " + data.username + " is confirmed. We will connect you with the user on " + data2.bookTime + ".";
+                            emailData.content = "The call with " + data.username + " is confirmed. We will connect you with the user on " + moment(data2.callTime).format("DD-MM-YYYY hh:mm A") + ".";
                             emailData.subject = "Booking Status";
                             var emailData2 = {};
                             emailData2.email = data.email;
                             emailData2.filename = 'dummy.ejs';
                             emailData2.name = data.username;
-                            emailData2.content = "Thank you for the payment. Your call with " + data.expertname + " is confirmed. We will connect you with the expert at " + data2.bookTime + ".";
+                            emailData2.content = "Thank you for the payment. Your call with " + data.expertname + " is confirmed. We will connect you with the expert at " + moment(data2.callTime).format("DD-MM-YYYY hh:mm A") + ".";
                             emailData2.subject = "Booking Status";
                             callMail(emailData, emailData2);
                             break;

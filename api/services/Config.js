@@ -397,6 +397,7 @@ var models = {
                 data2.callDuration = parseInt(data2.callDuration.split(" ")[0]);
                 data2.callDuration = data2.callDuration * 60;
                 data2.callTime = moment(data2.callTime).add(5, "hours").add(30, "minutes").format("YYYY-MM-DD HH:mm");
+                // data2.callTime = moment(data2.callTime).format("YYYY-MM-DD HH:mm");
                 console.log(data2.callTime);
                 data2.endTime = moment(data2.callTime).add(data2.callDuration, 's').format("YYYY-MM-DD HH:mm");
                 request.get({ url: "http://etsdom.kapps.in/webapi/wohlig/api/wohlig_c2c.py?customer_number=+91" + data2.user.mobile + "&agent_number=+91" + data2.expert.mobileno + "&call_duration=" + data2.callDuration + "&call_start_time=" + data2.callTime + "&call_stop_time=" + data2.endTime + "&auth_key=bb23a8a029-8bd4-4e44-97ccaa" }, function(err, http, body) {
@@ -405,7 +406,25 @@ var models = {
                         callback(err, null);
                     } else {
                         console.log(body);
-                        callback(null, { mesage: "Calls found" });
+                        body = JSON.parse(body);
+                        if (body && body.callId) {
+                            Booking.update({
+                                _id: data._id
+                            }, {
+                                $set: {
+                                    callId: body.callId
+                                }
+                            }, function(err, respo) {
+                                if (err) {
+                                    console.log(err);
+                                    callback(err, null);
+                                } else {
+                                    callback(null, { mesage: "Calls found" });
+                                }
+                            });
+                        } else {
+                            callback({ message: "Some error" }, null);
+                        }
                     }
                 });
             }
