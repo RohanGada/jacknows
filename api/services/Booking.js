@@ -101,7 +101,7 @@ var models = {
                                     data.message = data.expertname + " has rejected your request.";
                                     callMe(data, data2);
                                 } else {
-                                    data.message = data.username + " has paid for service.";
+                                    data.message = data.username + " has completed Payment.";
                                     callMe(data, data2);
                                 }
                             }
@@ -241,7 +241,7 @@ var models = {
                                     function(callback1) {
                                         Notification.saveData({
                                             expert: booking.expert,
-                                            notification: data.username + " has booked you.",
+                                            notification: data.username + " has requested for a call.",
                                             image: data.userimage
                                         }, function(err, notRespo) {
                                             if (err) {

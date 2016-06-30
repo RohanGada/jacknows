@@ -32,7 +32,26 @@
                if (err) {
                    callback(err, null);
                } else {
-                   callback(null, data2);
+                  //  callback(null, data2);
+                  var emailData = {};
+                  emailData.email = data.email;
+                  console.log('data.email',data.email);
+                  emailData.content = "Hi, thanks for reaching out! This is an auto-generated response to let you know that we have received your request and will get back to you shortly.We appreciate your interest.";
+                  emailData.filename = "newsletter.ejs";
+                  emailData.subject = "Jacknows Contact";
+                    // user.email = data.email;
+                    // user.filename = data.filename;
+                    Config.email(emailData, function(err, emailRespo) {
+                        if (err) {
+                            console.log(err);
+                            callback(err, null);
+                        } else {
+                            console.log(emailRespo);
+                            callback(null, {
+                                comment: "Mail Sent"
+                            });
+                        }
+                    });
                }
            });
        }
