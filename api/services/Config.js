@@ -381,6 +381,23 @@ var models = {
             callback({ message: "Mobile number not found" }, null);
         }
     },
+    message2: function(data, callback) {
+        if (data.mobile || data.mobileno) {
+            request.get({
+                url: "http://etsdom.kapps.in/webapi/wohlig/api/gofish_sms.py?sms_text=" + data.content + "&mobile_number=" + data.mobile
+            }, function(err, http, body) {
+                if (err) {
+                    console.log(err);
+                    callback(err, null);
+                } else {
+                    console.log(body);
+                    callback(null, body);
+                }
+            });
+        } else {
+            callback({ message: "Mobile number not found" }, null);
+        }
+    },
     checkCall: function(data, callback) {
         Booking.findOne({
             _id: data._id

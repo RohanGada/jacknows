@@ -65,47 +65,53 @@ var models = {
                 } else {
                     function callMail(emailData, emailData2) {
                         async.parallel([
-                            function(callback1) {
-                                Config.email(emailData, function(err, json) {
-                                    if (err) {
-                                        console.log(err);
-                                        callback1(err, null);
-                                    } else {
-                                        callback1(null, {
-                                            message: "Done"
-                                        });
-                                    }
-                                });
-                            },
-                            function(callback1) {
-                                Config.email(emailData2, function(err, json) {
-                                    if (err) {
-                                        console.log(err);
-                                        callback1(err, null);
-                                    } else {
-                                        callback1(null, {
-                                            message: "Done"
-                                        });
-                                    }
-                                });
-                            }
-                        ], function(err, asyncrespo) {
-                            if (err) {
-                                console.log(err);
-                                callback(err, null);
-                            } else {
-                                if (booking.status == "accept") {
-                                    data.message = data.expertname + " has accepted your request.";
-                                    callMe(data, data2);
-                                } else if (booking.status == "reject") {
-                                    data.message = data.expertname + " has rejected your request.";
-                                    callMe(data, data2);
-                                } else {
-                                    data.message = data.username + " has completed Payment.";
-                                    callMe(data, data2);
+                                function(callback1) {
+                                    Config.email(emailData, function(err, json) {
+                                        if (err) {
+                                            console.log(err);
+                                            callback1(err, null);
+                                        } else {
+                                            callback1(null, {
+                                                message: "Done"
+                                            });
+                                        }
+                                    });
+                                },
+                                function(callback1) {
+                                    Config.email(emailData2, function(err, json) {
+                                        if (err) {
+                                            console.log(err);
+                                            callback1(err, null);
+                                        } else {
+                                            callback1(null, {
+                                                message: "Done"
+                                            });
+                                        }
+                                    });
+                                },
+                                function(callback1) {
+                                    Config.message2({ mobile: emailData.mobile, content: emailData.content2 }, function(err, data2) {
+                                        callback1(null, { message: "Done" });
+                                    });
                                 }
-                            }
-                        });
+                            ],
+                            function(err, asyncrespo) {
+                                if (err) {
+                                    console.log(err);
+                                    callback(err, null);
+                                } else {
+                                    if (booking.status == "accept") {
+                                        data.message = data.expertname + " has accepted your request.";
+                                        callMe(data, data2);
+                                    } else if (booking.status == "reject") {
+                                        data.message = data.expertname + " has rejected your request.";
+                                        callMe(data, data2);
+                                    } else {
+                                        data.message = data.username + " has completed Payment.";
+                                        callMe(data, data2);
+                                    }
+                                }
+                            });
                     }
 
                     function callMe(data, data2) {
@@ -162,6 +168,8 @@ var models = {
                             emailData2.name = data.username;
                             emailData2.content = "You have received a response from the expert regarding your request. Please login to check.";
                             emailData2.subject = "Booking Status";
+                            emailData.mobile = data.mobile;
+                            emailData.content2 = "You have received a response from the expert regarding your request. Please login to check.";
                             callMail(emailData, emailData2);
                             break;
                         case "reject":
@@ -177,21 +185,27 @@ var models = {
                             emailData2.name = data.username;
                             emailData2.content = "You have received a response from the expert regarding your request. Please login to check.";
                             emailData2.subject = "Booking Status";
+                            emailData.mobile = data.mobile;
+                            emailData.content2 = "You have received a response from the expert regarding your request. Please login to check.";
                             callMail(emailData, emailData2);
                             break;
                         case "paid":
                             var emailData = {};
+                            var timestamp = moment(data2.callTime).add(5, "hours").add(30, "minutes").format("DD-MM-YYYY hh:mm A");
+                            // var timestamp = moment(data2.callTime).format("DD-MM-YYYY hh:mm A");
                             emailData.email = data.expertemail;
                             emailData.filename = 'dummy.ejs';
                             emailData.name = data.expertname;
-                            emailData.content = "The call with " + data.username + " is confirmed. We will connect you with the user on " + moment(data2.callTime).format("DD-MM-YYYY hh:mm A") + ".";
+                            emailData.content = "The call with " + data.username + " is confirmed. We will connect you with the user on " + timestamp + " IST.";
                             emailData.subject = "Booking Status";
                             var emailData2 = {};
                             emailData2.email = data.email;
                             emailData2.filename = 'dummy.ejs';
                             emailData2.name = data.username;
-                            emailData2.content = "Thank you for the payment. Your call with " + data.expertname + " is confirmed. We will connect you with the expert at " + moment(data2.callTime).format("DD-MM-YYYY hh:mm A") + ".";
+                            emailData2.content = "Thank you for the payment. Your call with " + data.expertname + " is confirmed. We will connect you with the expert at " + timestamp + " IST.";
                             emailData2.subject = "Booking Status";
+                            emailData.mobile = data.mobile;
+                            emailData.content2 = emailData.content;
                             callMail(emailData, emailData2);
                             break;
                         default:
@@ -226,7 +240,7 @@ var models = {
                                         emailData.email = data.email;
                                         emailData.filename = 'dummy.ejs';
                                         emailData.name = data.username;
-                                        emailData.content = "Your request has been sent across to the expert. Please await our confirmation";
+                                        emailData.content = "Your request has been sent across to the expert. Please await for our confirmation";
                                         emailData.subject = "Booking Status";
                                         Config.email(emailData, function(err, json) {
                                             if (err) {
@@ -263,6 +277,24 @@ var models = {
                                         Config.email(emailData2, function(err, emailRespo) {
                                             if (err) {
                                                 callback1(err, null);
+                                            } else {
+                                                callback1(null, {
+                                                    message: "Done"
+                                                });
+                                            }
+                                        });
+                                    },
+
+                                    function(callback1) {
+                                        data.content2 = "Hi! You have received a request for a discussion. Please login to check and confirm. Thanks.";
+                                        Config.message2({
+                                            mobile: data.mobile,
+                                            content: data.content2
+                                        }, function(err, data2) {
+                                            if (err) {
+                                                callback1(null, {
+                                                    message: "Done"
+                                                });
                                             } else {
                                                 callback1(null, {
                                                     message: "Done"

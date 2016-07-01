@@ -9,9 +9,9 @@ var sendgrid = require('sendgrid')('');
 module.exports = {
     saveData: function(req, res) {
         if (req.body) {
+            console.log(req.body);
             if (req.body._id && req.body._id != "") {
                 if (req.body.from == "expert") {
-                    console.log(req.body);
                     if (req.session.expertuser) {
                         req.body.expertname = req.session.expertuser.firstName;
                         req.body.expertimage = req.session.expertuser.image;
@@ -29,7 +29,6 @@ module.exports = {
                         req.body.username = req.session.user.firstName;
                         req.body.userimage = req.session.user.image;
                         req.body.email = req.session.user.email;
-                        req.body.mobile = req.session.user.mobile;
                         callSave();
                     } else {
                         res.json({
@@ -49,7 +48,6 @@ module.exports = {
                     req.body.username = req.session.user.firstName;
                     req.body.userimage = req.session.user.image;
                     req.body.email = req.session.user.email;
-                    req.body.mobile = req.session.user.mobile;
                     callSave();
                 } else {
                     res.json({
