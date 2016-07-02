@@ -7,8 +7,8 @@ module.exports = require("passport");
 
 
 module.exports.use(new FacebookStrategy({
-        clientID: "1676496155933091",
-        clientSecret: "f47e8f9004da629d5feccf47fc9a142c",
+        clientID: "643534085794616",
+        clientSecret: "a48d87149d67008ca29a136141b184c8",
         callbackURL: "/user/loginFacebook/",
         profileFields: ['id', 'displayName', 'photos', 'email'],
         enableProof: false
@@ -53,8 +53,8 @@ module.exports.use(new FacebookStrategy({
 
 
 module.exports.use(new GoogleStrategy({
-        clientID: "509027466200-p7sfllmlr5aquvqrm970tjlfo8n8pf8f.apps.googleusercontent.com",
-        clientSecret: "4KyfLPNLx9KECFCMI0NjW39O",
+        clientID: "804038447884-to2ormfpkrr3ieor12306sj0oiq0daih.apps.googleusercontent.com",
+        clientSecret: "usaySzaGy38sJPT4u9xWvuHt",
         callbackURL: "/user/loginGoogleCallback"
     },
     function(token, tokenSecret, profile, done) {
