@@ -55,7 +55,7 @@ module.exports.http = {
          ****************************************************************************/
 
         myRequestLogger: function(req, res, next) {
-
+            console.log(req.headers);
             res.callback = function(err, data) {
                 if (err) {
                     res.json({
