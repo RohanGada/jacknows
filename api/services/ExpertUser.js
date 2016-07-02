@@ -8,6 +8,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var md5 = require('MD5');
 var moment = require('moment');
+var objectid = require("mongodb").ObjectId;
 
 var schema = new Schema({
     name: String,
@@ -128,7 +129,9 @@ var models = {
                         }
                     });
                 } else {
-                    callback({message:"Expert already Exists"}, false);
+                    callback({
+                        message: "Expert already Exists"
+                    }, false);
                 }
             }
         });
@@ -402,6 +405,50 @@ var models = {
             }
         });
     },
+    getOneEducationQualification: function(data, callback) {
+        ExpertUser.aggregate([{
+            $unwind: "$educationalQualification"
+        }, {
+            $match: {
+                "educationalQualification._id": objectid(data._id)
+            }
+        }, {
+            $project: {
+                educationalQualification: 1
+            }
+        }]).exec(function(err, respo) {
+            if (err) {
+                console.log(err);
+                callback(err, null);
+            } else if (respo && respo.length > 0 && respo[0].educationalQualification) {
+                callback(null, respo[0].educationalQualification);
+            } else {
+                callback({
+                    message: "No data found"
+                }, null);
+            }
+        });
+    },
+    saveEducationQualification: function(data, callback) {
+        data._id = objectid(data._id);
+        tobechanged = {};
+        var attribute = "educationalQualification.$.";
+        _.forIn(data, function(value, key) {
+            tobechanged[attribute + key] = value;
+        });
+        ExpertUser.update({
+            "educationalQualification._id": data._id
+        }, {
+            $set: tobechanged
+        }, function(err, updated) {
+            if (err) {
+                console.log(err);
+                callback(err, null);
+            } else {
+                callback(null, updated);
+            }
+        });
+    },
     forgotPassword: function(data, callback) {
         this.findOne({
             email: data.email
@@ -430,12 +477,12 @@ var models = {
                                 console.log(err);
                                 callback(err, null);
                             } else {
-                              var emailData = {};
-                              emailData.email = data.email;
-                              console.log('data.email',data.email);
-                              emailData.content = "Your password for Jacknows website is "+text+".";
-                              emailData.filename = "newsletter.ejs";
-                              emailData.subject = "Jacknows forgot password";
+                                var emailData = {};
+                                emailData.email = data.email;
+                                console.log('data.email', data.email);
+                                emailData.content = "Your password for Jacknows website is " + text + ".";
+                                emailData.filename = "newsletter.ejs";
+                                emailData.subject = "Jacknows forgot password";
                                 // user.email = data.email;
                                 // user.filename = data.filename;
                                 Config.email(emailData, function(err, emailRespo) {
