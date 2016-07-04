@@ -1,4 +1,3 @@
-
 var FacebookStrategy = require("passport-facebook");
 
 
@@ -18,19 +17,26 @@ module.exports.use(new FacebookStrategy({
             User.findOne({
                 "oauthLogin.socialId": profile.id + ""
             }).exec(function(err, data) {
+                console.log(profile);
                 if (err) {
                     done(err, false);
                 } else {
                     usertemp = {
-                        "name": profile.displayName,
                         "oauthLogin": [{
                             "socialId": profile.id + "",
                             "socialProvider": profile.provider
                         }],
-
+                        "status": 1
                     };
+                    if (profile.displayName) {
+                        usertemp.firstName = profile.displayName.split(" ")[0];
+                        usertemp.lastName = profile.displayName.split(" ")[1];
+                    }
                     if (profile.photos && profile.photos.length > 0) {
                         usertemp.image = profile.photos[0].value;
+                    }
+                    if (profile.emails && profile.emails.length > 0) {
+                        usertemp.email = profile.emails[0].value;
                     }
                     if (_.isEmpty(data)) {
                         var user = User(usertemp);
@@ -66,15 +72,21 @@ module.exports.use(new GoogleStrategy({
                     done(err, false);
                 } else {
                     usertemp = {
-                        "name": profile.displayName,
                         "oauthLogin": [{
                             "socialId": profile.id + "",
                             "socialProvider": profile.provider
                         }],
                         "status": 1
                     };
+                    if (profile.displayName) {
+                        usertemp.firstName = profile.displayName.split(" ")[0];
+                        usertemp.lastName = profile.displayName.split(" ")[1];
+                    }
                     if (profile.photos && profile.photos.length > 0) {
                         usertemp.profilePic = profile.photos[0].value;
+                    }
+                    if (profile.emails && profile.emails.length > 0) {
+                        usertemp.email = profile.emails[0].value;
                     }
                     if (_.isEmpty(data)) {
                         var user = User(usertemp);
@@ -84,10 +96,8 @@ module.exports.use(new GoogleStrategy({
                     } else {
                         done(err, data);
                     }
-
                 }
             });
-
         } else {
             done("There is an Error", false);
         }

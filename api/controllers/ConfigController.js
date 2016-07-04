@@ -144,20 +144,28 @@ module.exports = {
                     var time = {};
                     time.user = {};
                     time.expert = {};
-                    time.expert.email = some.expert.email;
+                    if (some.expert.email) {
+                        time.expert.email = some.expert.email;
+                    }
                     time.expert.filename = 'dummy.ejs';
                     time.user.filename = 'dummy.ejs';
-                    time.user.email = some.user.email;
+                    if (some.user.email) {
+                        time.user.email = some.user.email;
+                    }
                     time.expert.subject = "Call Reminder";
                     time.user.subject = "Call Reminder";
                     time.expert.name = some.expert.firstName;
                     time.user.name = some.user.firstName;
-                    time.expert.mobile = some.expert.mobileno;
-                    time.user.mobile = some.user.mobile;
+                    if (some.expert.mobileno) {
+                        time.expert.mobile = some.expert.mobileno;
+                    }
+                    if (some.user.mobile) {
+                        time.user.mobile = some.user.mobile;
+                    }
                     var timer = moment(some.callTime).diff(moment());
                     if ((timer < 60000 || timer > 60000) && timer < 3600000) {
-                        time.expert.content = "We will be connecting you shortly. Request you to please be ready and hope that you have a great consultation experience";
-                        time.user.content = "We will be connecting you shortly. Request you to please be ready and hope that you have a great consultation experience";
+                        time.expert.content = "We will connect you as sson as the expert is on the online. Request you to please be ready and hope that you have a great consultation experience";
+                        time.user.content = "We will connect you as sson as the expert is on the online. Request you to please be ready and hope that you have a great consultation experience";
                         callMe();
                     } else if ((timer < 3600000 || timer > 3600000) && timer < 86400000) {
                         time.expert.content = "This is a reminder message for your call through JacKnows. We will be calling you in an hour. Please make sure your phone is on, sufficiently charged and you are in a good signal area. Thank you. ";
@@ -173,28 +181,44 @@ module.exports = {
                         console.log(time);
                         async.parallel([
                             function(callback2) {
-                                Config.email(time.expert, function(err, respo) {
-                                    console.log(err);
+                                if (time.expert.email) {
+                                    Config.email(time.expert, function(err, respo) {
+                                        console.log(err);
+                                        callback2(null, { message: "Done" });
+                                    });
+                                } else {
                                     callback2(null, { message: "Done" });
-                                });
+                                }
                             },
                             function(callback2) {
-                                Config.email(time.user, function(err, respo) {
-                                    console.log(err);
+                                if (time.user.email) {
+                                    Config.email(time.user, function(err, respo) {
+                                        console.log(err);
+                                        callback2(null, { message: "Done" });
+                                    });
+                                } else {
                                     callback2(null, { message: "Done" });
-                                });
+                                }
                             },
                             function(callback2) {
-                                Config.message(time.expert, function(err, respo) {
-                                    console.log(err);
+                                if (time.expert.mobile) {
+                                    Config.message(time.expert, function(err, respo) {
+                                        console.log(err);
+                                        callback2(null, { message: "Done" });
+                                    });
+                                } else {
                                     callback2(null, { message: "Done" });
-                                });
+                                }
                             },
                             function(callback2) {
-                                Config.message(time.user, function(err, resp) {
-                                    console.log(err);
+                                if (time.user.mobile) {
+                                    Config.message(time.user, function(err, resp) {
+                                        console.log(err);
+                                        callback2(null, { message: "Done" });
+                                    });
+                                } else {
                                     callback2(null, { message: "Done" });
-                                });
+                                }
                             }
                         ], function(err, respo) {
                             console.log(err);

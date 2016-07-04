@@ -78,21 +78,31 @@ var models = {
                                     });
                                 },
                                 function(callback1) {
-                                    Config.email(emailData2, function(err, json) {
-                                        if (err) {
-                                            console.log(err);
-                                            callback1(err, null);
-                                        } else {
-                                            callback1(null, {
-                                                message: "Done"
-                                            });
-                                        }
-                                    });
+                                    if (emailData2.email) {
+                                        Config.email(emailData2, function(err, json) {
+                                            if (err) {
+                                                console.log(err);
+                                                callback1(err, null);
+                                            } else {
+                                                callback1(null, {
+                                                    message: "Done"
+                                                });
+                                            }
+                                        });
+                                    } else {
+                                        callback1(null, {
+                                            message: "Done"
+                                        });
+                                    }
                                 },
                                 function(callback1) {
-                                    Config.message2({ mobile: emailData.mobile, content: emailData.content2 }, function(err, data2) {
+                                    if (emailData.mobile) {
+                                        Config.message2({ mobile: emailData.mobile, content: emailData.content2 }, function(err, data2) {
+                                            callback1(null, { message: "Done" });
+                                        });
+                                    } else {
                                         callback1(null, { message: "Done" });
-                                    });
+                                    }
                                 }
                             ],
                             function(err, asyncrespo) {
@@ -236,21 +246,28 @@ var models = {
                             } else {
                                 async.parallel([
                                     function(callback1) {
-                                        var emailData = {};
-                                        emailData.email = data.email;
-                                        emailData.filename = 'dummy.ejs';
-                                        emailData.name = data.username;
-                                        emailData.content = "Your request has been sent across to the expert. Please await for our confirmation";
-                                        emailData.subject = "Booking Status";
-                                        Config.email(emailData, function(err, json) {
-                                            if (err) {
-                                                callback1(err, null);
-                                            } else {
-                                                callback1(null, {
-                                                    message: "Done"
-                                                });
-                                            }
-                                        });
+                                        if (data.email) {
+                                            var emailData = {};
+                                            emailData.email = data.email;
+                                            emailData.filename = 'dummy.ejs';
+                                            emailData.name = data.username;
+                                            emailData.content = "Your request has been sent across to the expert. Please await for our confirmation";
+                                            emailData.subject = "Booking Status";
+                                            Config.email(emailData, function(err, json) {
+                                                if (err) {
+                                                    console.log(err);
+                                                    callback1(err, null);
+                                                } else {
+                                                    callback1(null, {
+                                                        message: "Done"
+                                                    });
+                                                }
+                                            });
+                                        } else {
+                                            callback1(null, {
+                                                message: "Done"
+                                            });
+                                        }
                                     },
                                     function(callback1) {
                                         Notification.saveData({
@@ -259,6 +276,7 @@ var models = {
                                             image: data.userimage
                                         }, function(err, notRespo) {
                                             if (err) {
+                                                console.log(err);
                                                 callback1(err, null);
                                             } else {
                                                 callback1(null, {
@@ -276,6 +294,7 @@ var models = {
                                         emailData2.subject = "Booking Status";
                                         Config.email(emailData2, function(err, emailRespo) {
                                             if (err) {
+                                                console.log(err);
                                                 callback1(err, null);
                                             } else {
                                                 callback1(null, {
@@ -286,21 +305,28 @@ var models = {
                                     },
 
                                     function(callback1) {
-                                        data.content2 = "Hi! You have received a request for a discussion. Please login to check and confirm. Thanks.";
-                                        Config.message2({
-                                            mobile: data.mobile,
-                                            content: data.content2
-                                        }, function(err, data2) {
-                                            if (err) {
-                                                callback1(null, {
-                                                    message: "Done"
-                                                });
-                                            } else {
-                                                callback1(null, {
-                                                    message: "Done"
-                                                });
-                                            }
-                                        });
+                                        if (data.mobile) {
+                                            data.content2 = "Hi! You have received a request for a discussion. Please login to check and confirm. Thanks.";
+                                            Config.message2({
+                                                mobile: data.mobile,
+                                                content: data.content2
+                                            }, function(err, data2) {
+                                                if (err) {
+                                                    console.log(err);
+                                                    callback1(null, {
+                                                        message: "Done"
+                                                    });
+                                                } else {
+                                                    callback1(null, {
+                                                        message: "Done"
+                                                    });
+                                                }
+                                            });
+                                        } else {
+                                            callback1(null, {
+                                                message: "Done"
+                                            });
+                                        }
                                     }
                                 ], function(err, asyncrespo) {
                                     if (err) {
