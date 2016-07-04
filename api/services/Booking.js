@@ -78,31 +78,21 @@ var models = {
                                     });
                                 },
                                 function(callback1) {
-                                    if (emailData2.email) {
-                                        Config.email(emailData2, function(err, json) {
-                                            if (err) {
-                                                console.log(err);
-                                                callback1(err, null);
-                                            } else {
-                                                callback1(null, {
-                                                    message: "Done"
-                                                });
-                                            }
-                                        });
-                                    } else {
-                                        callback1(null, {
-                                            message: "Done"
-                                        });
-                                    }
+                                    Config.email(emailData2, function(err, json) {
+                                        if (err) {
+                                            console.log(err);
+                                            callback1(err, null);
+                                        } else {
+                                            callback1(null, {
+                                                message: "Done"
+                                            });
+                                        }
+                                    });
                                 },
                                 function(callback1) {
-                                    if (emailData.mobile) {
-                                        Config.message2({ mobile: emailData.mobile, content: emailData.content2 }, function(err, data2) {
-                                            callback1(null, { message: "Done" });
-                                        });
-                                    } else {
+                                    Config.message2({ mobile: emailData.mobile, content: emailData.content2 }, function(err, data2) {
                                         callback1(null, { message: "Done" });
-                                    }
+                                    });
                                 }
                             ],
                             function(err, asyncrespo) {
@@ -170,16 +160,16 @@ var models = {
                             emailData.email = data.email;
                             emailData.filename = 'dummy.ejs';
                             emailData.name = data.expertname;
-                            emailData.content = "We have sent your response to the user. We will get back to you once the call is confirmed.";
+                            emailData.content = "Hi, we have sent your reply to the User, we will revert once the call is confirmed.";
                             emailData.subject = "Booking Status";
                             var emailData2 = {};
                             emailData2.email = data.useremail;
                             emailData2.filename = 'dummy.ejs';
                             emailData2.name = data.username;
-                            emailData2.content = "You have received a response from the expert regarding your request. Please login to check.";
+                            emailData2.content = "Hi, the expert has replied to your request, please login to check. (http://wohlig.co.in/jacknows/#/login)";
                             emailData2.subject = "Booking Status";
                             emailData.mobile = data.mobile;
-                            emailData.content2 = "You have received a response from the expert regarding your request. Please login to check.";
+                            emailData.content2 = "Hi, the expert has replied to your request, please login to check. (http://wohlig.co.in/jacknows/#/login)";
                             callMail(emailData, emailData2);
                             break;
                         case "reject":
@@ -187,16 +177,16 @@ var models = {
                             emailData.email = data.email;
                             emailData.filename = 'dummy.ejs';
                             emailData.name = data.expertname;
-                            emailData.content = "We have sent your response to the user. We will get back to you once the call is confirmed.";
+                            emailData.content = "Hi, we have sent your reply to the User, we will revert once the call is confirmed.";
                             emailData.subject = "Booking Status";
                             var emailData2 = {};
                             emailData2.email = data.useremail;
                             emailData2.filename = 'dummy.ejs';
                             emailData2.name = data.username;
-                            emailData2.content = "You have received a response from the expert regarding your request. Please login to check.";
+                            emailData2.content = "Hi, the expert has replied to your request, please login to check. (http://wohlig.co.in/jacknows/#/login)";
                             emailData2.subject = "Booking Status";
                             emailData.mobile = data.mobile;
-                            emailData.content2 = "You have received a response from the expert regarding your request. Please login to check.";
+                            emailData.content2 = "Hi, the expert has replied to your request, please login to check. (http://wohlig.co.in/jacknows/#/login)";
                             callMail(emailData, emailData2);
                             break;
                         case "paid":
@@ -206,13 +196,13 @@ var models = {
                             emailData.email = data.expertemail;
                             emailData.filename = 'dummy.ejs';
                             emailData.name = data.expertname;
-                            emailData.content = "The call with " + data.username + " is confirmed. We will connect you with the user on " + timestamp + " IST.";
+                            emailData.content = "Your call with " + data.username + " is confirmed for " + timestamp + " IST.";
                             emailData.subject = "Booking Status";
                             var emailData2 = {};
                             emailData2.email = data.email;
                             emailData2.filename = 'dummy.ejs';
                             emailData2.name = data.username;
-                            emailData2.content = "Thank you for the payment. Your call with " + data.expertname + " is confirmed. We will connect you with the expert at " + timestamp + " IST.";
+                            emailData2.content = "Thanks for making the payment, your call with " + data.expertname + "  is confimed for " + timestamp + " IST.";
                             emailData2.subject = "Booking Status";
                             emailData.mobile = data.mobile;
                             emailData.content2 = emailData.content;
@@ -246,28 +236,21 @@ var models = {
                             } else {
                                 async.parallel([
                                     function(callback1) {
-                                        if (data.email) {
-                                            var emailData = {};
-                                            emailData.email = data.email;
-                                            emailData.filename = 'dummy.ejs';
-                                            emailData.name = data.username;
-                                            emailData.content = "Your request has been sent across to the expert. Please await for our confirmation";
-                                            emailData.subject = "Booking Status";
-                                            Config.email(emailData, function(err, json) {
-                                                if (err) {
-                                                    console.log(err);
-                                                    callback1(err, null);
-                                                } else {
-                                                    callback1(null, {
-                                                        message: "Done"
-                                                    });
-                                                }
-                                            });
-                                        } else {
-                                            callback1(null, {
-                                                message: "Done"
-                                            });
-                                        }
+                                        var emailData = {};
+                                        emailData.email = data.email;
+                                        emailData.filename = 'dummy.ejs';
+                                        emailData.name = data.username;
+                                        emailData.content = "Thanks, your request has been sent to the expert. We will get back to you once they revert.";
+                                        emailData.subject = "Booking Status";
+                                        Config.email(emailData, function(err, json) {
+                                            if (err) {
+                                                callback1(err, null);
+                                            } else {
+                                                callback1(null, {
+                                                    message: "Done"
+                                                });
+                                            }
+                                        });
                                     },
                                     function(callback1) {
                                         Notification.saveData({
@@ -276,7 +259,6 @@ var models = {
                                             image: data.userimage
                                         }, function(err, notRespo) {
                                             if (err) {
-                                                console.log(err);
                                                 callback1(err, null);
                                             } else {
                                                 callback1(null, {
@@ -290,11 +272,10 @@ var models = {
                                         emailData2.email = data.expertemail;
                                         emailData2.filename = 'dummy.ejs';
                                         emailData2.name = data.expertname;
-                                        emailData2.content = "Hi! You have received a request for a discussion. Please login to check and confirm. Thanks.";
+                                        emailData2.content = "Hi, you have received a request from a user, please login to check. (http://wohlig.co.in/jacknows/#/login)";
                                         emailData2.subject = "Booking Status";
                                         Config.email(emailData2, function(err, emailRespo) {
                                             if (err) {
-                                                console.log(err);
                                                 callback1(err, null);
                                             } else {
                                                 callback1(null, {
@@ -305,28 +286,21 @@ var models = {
                                     },
 
                                     function(callback1) {
-                                        if (data.mobile) {
-                                            data.content2 = "Hi! You have received a request for a discussion. Please login to check and confirm. Thanks.";
-                                            Config.message2({
-                                                mobile: data.mobile,
-                                                content: data.content2
-                                            }, function(err, data2) {
-                                                if (err) {
-                                                    console.log(err);
-                                                    callback1(null, {
-                                                        message: "Done"
-                                                    });
-                                                } else {
-                                                    callback1(null, {
-                                                        message: "Done"
-                                                    });
-                                                }
-                                            });
-                                        } else {
-                                            callback1(null, {
-                                                message: "Done"
-                                            });
-                                        }
+                                        data.content2 = "Hi, you have received a request from a user, please login to check. (http://wohlig.co.in/jacknows/#/login)";
+                                        Config.message2({
+                                            mobile: data.mobile,
+                                            content: data.content2
+                                        }, function(err, data2) {
+                                            if (err) {
+                                                callback1(null, {
+                                                    message: "Done"
+                                                });
+                                            } else {
+                                                callback1(null, {
+                                                    message: "Done"
+                                                });
+                                            }
+                                        });
                                     }
                                 ], function(err, asyncrespo) {
                                     if (err) {
