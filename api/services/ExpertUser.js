@@ -9,6 +9,7 @@ var Schema = mongoose.Schema;
 var md5 = require('MD5');
 var moment = require('moment');
 var objectid = require("mongodb").ObjectId;
+var db = require("mongodb").Db;
 
 var schema = new Schema({
     name: String,
@@ -404,6 +405,26 @@ var models = {
                 callback(null, deleted);
             }
         });
+    },
+    deleteEdu: function(data, callback) {
+        ExpertUser.update({
+            "educationalQualification._id": data._id
+        }, {
+            $pull: {
+                "educationalQualification": {
+                    "_id": objectid(data._id)
+                }
+            }
+        }, function(err, updated) {
+            console.log(updated);
+            if (err) {
+                console.log(err);
+                callback(err, null);
+            } else {
+                callback(null, updated);
+            }
+        });
+
     },
     getOneEducationQualification: function(data, callback) {
         ExpertUser.aggregate([{
