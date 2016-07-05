@@ -428,6 +428,534 @@ module.exports = {
             });
         }
     },
+// ----------------------------------Awards-----------------------------------------
+
+deleteAward: function(req, res) {
+    if (req.body) {
+        if (req.body._id && req.body._id != "") {
+            //	console.log("not valid");
+            ExpertUser.deleteAward(req.body, function(err, respo) {
+                if (err) {
+                    res.json({
+                        value: false,
+                        data: err
+                    });
+                } else {
+                    res.json({
+                        value: true,
+                        data: respo
+                    });
+                }
+            });
+        } else {
+            res.json({
+                value: false,
+                data: "Invalid Id"
+            });
+        }
+    } else {
+        res.json({
+            value: false,
+            data: "Invalid call"
+        });
+    }
+},
+saveAward: function(req, res) {
+    if (req.body) {
+        ExpertUser.saveAward(req.body, function(err, respo) {
+            if (err) {
+                res.json({
+                    value: false,
+                    data: err
+                });
+            } else {
+                res.json({
+                    value: true,
+                    data: respo
+                });
+            }
+        });
+    } else {
+        res.json({
+            value: false,
+            data: "Invalid call"
+        });
+    }
+},
+getOneAward: function(req, res) {
+    if (req.body) {
+        if (req.body._id && req.body._id != "") {
+            ExpertUser.getOneAward(req.body, function(err, respo) {
+                if (err) {
+                    res.json({
+                        value: false,
+                        data: err
+                    });
+                } else {
+                    res.json({
+                        value: true,
+                        data: respo
+                    });
+                }
+            });
+        } else {
+            res.json({
+                value: false,
+                data: "Invalid Id"
+            });
+        }
+    } else {
+        res.json({
+            value: false,
+            data: "Invalid call"
+        });
+    }
+},
+
+
+// -----------------------------------End of Awards---------------------------------------
+
+
+// ----------------------------------Experience-----------------------------------------
+
+deleteExperience: function(req, res) {
+    if (req.body) {
+        if (req.body._id && req.body._id != "") {
+            //	console.log("not valid");
+            ExpertUser.deleteExperience(req.body, function(err, respo) {
+                if (err) {
+                    res.json({
+                        value: false,
+                        data: err
+                    });
+                } else {
+                    res.json({
+                        value: true,
+                        data: respo
+                    });
+                }
+            });
+        } else {
+            res.json({
+                value: false,
+                data: "Invalid Id"
+            });
+        }
+    } else {
+        res.json({
+            value: false,
+            data: "Invalid call"
+        });
+    }
+},
+saveExperience: function(req, res) {
+    if (req.body) {
+        ExpertUser.saveExperience(req.body, function(err, respo) {
+            if (err) {
+                res.json({
+                    value: false,
+                    data: err
+                });
+            } else {
+                res.json({
+                    value: true,
+                    data: respo
+                });
+            }
+        });
+    } else {
+        res.json({
+            value: false,
+            data: "Invalid call"
+        });
+    }
+},
+getOneExperience: function(req, res) {
+    if (req.body) {
+        if (req.body._id && req.body._id != "") {
+            ExpertUser.getOneExperience(req.body, function(err, respo) {
+                if (err) {
+                    res.json({
+                        value: false,
+                        data: err
+                    });
+                } else {
+                    res.json({
+                        value: true,
+                        data: respo
+                    });
+                }
+            });
+        } else {
+            res.json({
+                value: false,
+                data: "Invalid Id"
+            });
+        }
+    } else {
+        res.json({
+            value: false,
+            data: "Invalid call"
+        });
+    }
+},
+
+
+// -----------------------------------End of Experience---------------------------------------
+
+
+// ----------------------------------Call Settings-----------------------------------------
+
+deleteCallSettings: function(req, res) {
+    if (req.body) {
+        if (req.body._id && req.body._id != "") {
+            //	console.log("not valid");
+            ExpertUser.deleteCallSettings(req.body, function(err, respo) {
+                if (err) {
+                    res.json({
+                        value: false,
+                        data: err
+                    });
+                } else {
+                    res.json({
+                        value: true,
+                        data: respo
+                    });
+                }
+            });
+        } else {
+            res.json({
+                value: false,
+                data: "Invalid Id"
+            });
+        }
+    } else {
+        res.json({
+            value: false,
+            data: "Invalid call"
+        });
+    }
+},
+saveCallSettings: function(req, res) {
+    if (req.body) {
+        ExpertUser.saveCallSettings(req.body, function(err, respo) {
+            if (err) {
+                res.json({
+                    value: false,
+                    data: err
+                });
+            } else {
+                res.json({
+                    value: true,
+                    data: respo
+                });
+            }
+        });
+    } else {
+        res.json({
+            value: false,
+            data: "Invalid call"
+        });
+    }
+},
+getOneCallSettings: function(req, res) {
+    if (req.body) {
+        if (req.body._id && req.body._id != "") {
+            ExpertUser.getOneCallSettings(req.body, function(err, respo) {
+                if (err) {
+                    res.json({
+                        value: false,
+                        data: err
+                    });
+                } else {
+                    res.json({
+                        value: true,
+                        data: respo
+                    });
+                }
+            });
+        } else {
+            res.json({
+                value: false,
+                data: "Invalid Id"
+            });
+        }
+    } else {
+        res.json({
+            value: false,
+            data: "Invalid call"
+        });
+    }
+},
+
+
+// -----------------------------------End of Call Settings---------------------------------------
+
+
+// ----------------------------------video Links-----------------------------------------
+
+deleteVideoLinks: function(req, res) {
+    if (req.body) {
+        if (req.body._id && req.body._id != "") {
+            //	console.log("not valid");
+            ExpertUser.deleteVideoLinks(req.body, function(err, respo) {
+                if (err) {
+                    res.json({
+                        value: false,
+                        data: err
+                    });
+                } else {
+                    res.json({
+                        value: true,
+                        data: respo
+                    });
+                }
+            });
+        } else {
+            res.json({
+                value: false,
+                data: "Invalid Id"
+            });
+        }
+    } else {
+        res.json({
+            value: false,
+            data: "Invalid call"
+        });
+    }
+},
+saveCallVideoLinks: function(req, res) {
+    if (req.body) {
+        ExpertUser.saveCallVideoLinks(req.body, function(err, respo) {
+            if (err) {
+                res.json({
+                    value: false,
+                    data: err
+                });
+            } else {
+                res.json({
+                    value: true,
+                    data: respo
+                });
+            }
+        });
+    } else {
+        res.json({
+            value: false,
+            data: "Invalid call"
+        });
+    }
+},
+getOneVideoLinks: function(req, res) {
+    if (req.body) {
+        if (req.body._id && req.body._id != "") {
+            ExpertUser.getOneVideoLinks(req.body, function(err, respo) {
+                if (err) {
+                    res.json({
+                        value: false,
+                        data: err
+                    });
+                } else {
+                    res.json({
+                        value: true,
+                        data: respo
+                    });
+                }
+            });
+        } else {
+            res.json({
+                value: false,
+                data: "Invalid Id"
+            });
+        }
+    } else {
+        res.json({
+            value: false,
+            data: "Invalid call"
+        });
+    }
+},
+
+
+// -----------------------------------End of Call video Links---------------------------------------
+
+
+
+// ----------------------------------publication Links-----------------------------------------
+
+deletePublicationLinks: function(req, res) {
+    if (req.body) {
+        if (req.body._id && req.body._id != "") {
+            //	console.log("not valid");
+            ExpertUser.deletePublicationLinks(req.body, function(err, respo) {
+                if (err) {
+                    res.json({
+                        value: false,
+                        data: err
+                    });
+                } else {
+                    res.json({
+                        value: true,
+                        data: respo
+                    });
+                }
+            });
+        } else {
+            res.json({
+                value: false,
+                data: "Invalid Id"
+            });
+        }
+    } else {
+        res.json({
+            value: false,
+            data: "Invalid call"
+        });
+    }
+},
+savePublicationLinks: function(req, res) {
+    if (req.body) {
+        ExpertUser.savePublicationLinks(req.body, function(err, respo) {
+            if (err) {
+                res.json({
+                    value: false,
+                    data: err
+                });
+            } else {
+                res.json({
+                    value: true,
+                    data: respo
+                });
+            }
+        });
+    } else {
+        res.json({
+            value: false,
+            data: "Invalid call"
+        });
+    }
+},
+getOnePublicationLinks: function(req, res) {
+    if (req.body) {
+        if (req.body._id && req.body._id != "") {
+            ExpertUser.getOnePublicationLinks(req.body, function(err, respo) {
+                if (err) {
+                    res.json({
+                        value: false,
+                        data: err
+                    });
+                } else {
+                    res.json({
+                        value: true,
+                        data: respo
+                    });
+                }
+            });
+        } else {
+            res.json({
+                value: false,
+                data: "Invalid Id"
+            });
+        }
+    } else {
+        res.json({
+            value: false,
+            data: "Invalid call"
+        });
+    }
+},
+
+
+// -----------------------------------End of Call publication Links---------------------------------------
+
+
+
+// ----------------------------------Add photos-----------------------------------------
+
+deleteAddPhotos: function(req, res) {
+    if (req.body) {
+        if (req.body._id && req.body._id != "") {
+            //	console.log("not valid");
+            ExpertUser.deleteAddPhotos(req.body, function(err, respo) {
+                if (err) {
+                    res.json({
+                        value: false,
+                        data: err
+                    });
+                } else {
+                    res.json({
+                        value: true,
+                        data: respo
+                    });
+                }
+            });
+        } else {
+            res.json({
+                value: false,
+                data: "Invalid Id"
+            });
+        }
+    } else {
+        res.json({
+            value: false,
+            data: "Invalid call"
+        });
+    }
+},
+saveAddPhotos: function(req, res) {
+    if (req.body) {
+        ExpertUser.saveAddPhotos(req.body, function(err, respo) {
+            if (err) {
+                res.json({
+                    value: false,
+                    data: err
+                });
+            } else {
+                res.json({
+                    value: true,
+                    data: respo
+                });
+            }
+        });
+    } else {
+        res.json({
+            value: false,
+            data: "Invalid call"
+        });
+    }
+},
+getOneAddPhotos: function(req, res) {
+    if (req.body) {
+        if (req.body._id && req.body._id != "") {
+            ExpertUser.getOneAddPhotos(req.body, function(err, respo) {
+                if (err) {
+                    res.json({
+                        value: false,
+                        data: err
+                    });
+                } else {
+                    res.json({
+                        value: true,
+                        data: respo
+                    });
+                }
+            });
+        } else {
+            res.json({
+                value: false,
+                data: "Invalid Id"
+            });
+        }
+    } else {
+        res.json({
+            value: false,
+            data: "Invalid call"
+        });
+    }
+},
+
+
+// -----------------------------------End of Call Add photos---------------------------------------
 
 
 };
