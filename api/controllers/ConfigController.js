@@ -6,6 +6,7 @@
  */
 var fs = require("fs");
 var moment = require('moment');
+var checksum = require('./checksum');
 module.exports = {
     saveData: function(req, res) {
         if (req.body) {
@@ -272,6 +273,63 @@ module.exports = {
             res.json({
                 value: false,
                 data: { message: "Invalid params. Please provide status" }
+            });
+        }
+    },
+    callfunc: function(req, res) {
+        if (req.body) {
+            if (req.session.user) {
+                if (req.session.user.mobile && req.session.user.email) {
+                    var genParams = {};
+                    genParams.CHANNEL_ID = 'WEB';
+                    genParams.CUST_ID = req.session.user._id;
+                    genParams.INDUSTRY_TYPE_ID = 'Retail';
+                    // genParams.MID=;
+                    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+                    for (var i = 0; i < 8; i++) {
+                        genParams.ORDER_ID += possible.charAt(Math.floor(Math.random() * possible.length));
+                    }
+                    genParams.TXN_AMOUNT = req.body.amount;
+                    genParams.WEBSITE = 'Retail';
+                    // checksum.genchecksum(function(err, params) {
+                    //     if (err) {
+                    //         console.log(err);
+                    //         res.json({
+                    //             value: false,
+                    //             data: err
+                    //         });
+                    //     } else {
+                    //     }
+                    // });
+                } else {
+                    res.json({
+                        value: false,
+                        data: "Please update mobile-number and email"
+                    });
+                }
+            } else {
+                res.json({
+                    value: false,
+                    data: "User not logged-in"
+                });
+            }
+        } else {
+            res.json({
+                value: false,
+                data: "Invalid Call"
+            });
+        }
+    },
+    response: function(req, res) {
+        if (req.body) {
+            res.json({
+                value: true,
+                data: "API Called successfully"
+            });
+        } else {
+            res.json({
+                value: false,
+                data: "Invalid Call"
             });
         }
     }
