@@ -61,7 +61,7 @@ var models = {
         });
     },
     deleteData: function(data, callback) {
-        notification.findOneAndRemove({
+        Notification.findOneAndRemove({
             _id: data._id
         }, function(err, deleted) {
             if (err) {

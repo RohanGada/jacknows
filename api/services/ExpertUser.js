@@ -451,24 +451,43 @@ var models = {
         });
     },
     saveEducationQualification: function(data, callback) {
-        data._id = objectid(data._id);
-        tobechanged = {};
-        var attribute = "educationalQualification.$.";
-        _.forIn(data, function(value, key) {
-            tobechanged[attribute + key] = value;
-        });
-        ExpertUser.update({
-            "educationalQualification._id": data._id
-        }, {
-            $set: tobechanged
-        }, function(err, updated) {
-            if (err) {
-                console.log(err);
-                callback(err, null);
-            } else {
-                callback(null, updated);
-            }
-        });
+        var user = data.user;
+        delete data.user;
+        if (!data._id) {
+            ExpertUser.update({
+                _id: user
+            }, {
+                $push: {
+                    educationalQualification: data
+                }
+            }, function(err, updated) {
+              if (err) {
+                  console.log(err);
+                  callback(err, null);
+              } else {
+                  callback(null, updated);
+              }
+            });
+        } else {
+            data._id = objectid(data._id);
+            tobechanged = {};
+            var attribute = "educationalQualification.$.";
+            _.forIn(data, function(value, key) {
+                tobechanged[attribute + key] = value;
+            });
+            ExpertUser.update({
+                "educationalQualification._id": data._id
+            }, {
+                $set: tobechanged
+            }, function(err, updated) {
+                if (err) {
+                    console.log(err);
+                    callback(err, null);
+                } else {
+                    callback(null, updated);
+                }
+            });
+        }
     },
     forgotPassword: function(data, callback) {
         this.findOne({
