@@ -258,6 +258,7 @@ module.exports = {
                         data: err
                     });
                 } else {
+                    console.log(respo);
                     if (_.isEmpty(respo)) {
                         res.json({
                             value: false,
@@ -300,8 +301,10 @@ module.exports = {
                         INDUSTRY_TYPE_ID: 'Retail',
                         MID: 'GoFish30419544249686',
                         ORDER_ID: '52',
-                        TXN_AMOUNT: 1,
-                        WEBSITE: 'jacknows'
+                        TXN_AMOUNT: '1',
+                        WEBSITE: 'jacknows',
+                        MOBILE_NO: req.session.user.mobile.toString(),
+                        EMAIL: req.session.user.email.toString()
                     };
 
                     checksum.genchecksum(genParams, "7_Ew6zbUNTNvfJXv", function(err, genParams) {
@@ -317,7 +320,7 @@ module.exports = {
                             // genParams.ADDRESS_2 = req.body.expert.firstName;
                             // genParams.CITY = req.body.expert.mobileno;
                             // genParams.STATE = req.body.from;
-                            var abcd = "https://pguat.paytm.com/oltp-web/processTransaction?&REQUEST_TYPE=DEFAULT&CHANNEL_ID=WEB&CUST_ID=" + genParams.CUST_ID + "&EMAIL=" + req.session.user.email + "&INDUSTRY_TYPE_ID=Retail&MID=GoFish30419544249686&MOBILE_NO=" + req.session.user.mobile + "&ORDER_ID=" + genParams.ORDER_ID + "&TXN_AMOUNT=" + genParams.TXN_AMOUNT + "&WEBSITE=jacknows&CHECKSUMHASH=" + genParams.CHECKSUMHASH + "&CALLBACK_URL=http://jacknows.wohlig.com/config/response";
+                            var abcd = "https://pguat.paytm.com/oltp-web/processTransaction?&REQUEST_TYPE=DEFAULT&CHANNEL_ID=WEB&CUST_ID=" + genParams.CUST_ID + "&EMAIL=" + req.session.user.email + "&INDUSTRY_TYPE_ID=Retail&MID=GoFish30419544249686&MOBILE_NO=" + req.session.user.mobile + "&ORDER_ID=" + genParams.ORDER_ID + "&TXN_AMOUNT=" + genParams.TXN_AMOUNT + "&WEBSITE=jacknows&CHECKSUMHASH=" + genParams.CHECKSUMHASH;
                             res.json({
                                 value: true,
                                 data: abcd
