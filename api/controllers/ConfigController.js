@@ -259,15 +259,15 @@ module.exports = {
                     });
                 } else {
                     console.log(respo);
-                    if (_.isEmpty(respo)) {
-                        res.json({
-                            value: false,
-                            data: { message: "Call-Id not found" }
-                        });
-                    } else {
+                    if (respo.nModified == 1) {
                         res.json({
                             value: true,
                             data: { message: "Status updated successfully" }
+                        });
+                    } else {
+                        res.json({
+                            value: false,
+                            data: { message: "Call-Id not found" }
                         });
                     }
                 }
