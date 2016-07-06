@@ -406,6 +406,8 @@ var models = {
             }
         });
     },
+
+    // ------------------------educationalQualification-----------------------------
     deleteEdu: function(data, callback) {
         ExpertUser.update({
             "educationalQualification._id": data._id
@@ -461,12 +463,12 @@ var models = {
                     educationalQualification: data
                 }
             }, function(err, updated) {
-              if (err) {
-                  console.log(err);
-                  callback(err, null);
-              } else {
-                  callback(null, updated);
-              }
+                if (err) {
+                    console.log(err);
+                    callback(err, null);
+                } else {
+                    callback(null, updated);
+                }
             });
         } else {
             data._id = objectid(data._id);
@@ -489,6 +491,538 @@ var models = {
             });
         }
     },
+    // --------------------------end of educationalQualification-------------------------------
+
+
+    // ------------------------------------Awards---------------------------------------------------
+    deleteAward: function(data, callback) {
+        ExpertUser.update({
+            "awards._id": data._id
+        }, {
+            $pull: {
+                "awards": {
+                    "_id": objectid(data._id)
+                }
+            }
+        }, function(err, updated) {
+            console.log(updated);
+            if (err) {
+                console.log(err);
+                callback(err, null);
+            } else {
+                callback(null, updated);
+            }
+        });
+
+    },
+    getOneAward: function(data, callback) {
+        ExpertUser.aggregate([{
+            $unwind: "$awards"
+        }, {
+            $match: {
+                "awards._id": objectid(data._id)
+            }
+        }, {
+            $project: {
+                awards: 1
+            }
+        }]).exec(function(err, respo) {
+            if (err) {
+                console.log(err);
+                callback(err, null);
+            } else if (respo && respo.length > 0 && respo[0].awards) {
+                callback(null, respo[0].awards);
+            } else {
+                callback({
+                    message: "No data found"
+                }, null);
+            }
+        });
+    },
+    saveAward: function(data, callback) {
+        var user = data.user;
+        delete data.user;
+        if (!data._id) {
+            ExpertUser.update({
+                _id: user
+            }, {
+                $push: {
+                    awards: data
+                }
+            }, function(err, updated) {
+                if (err) {
+                    console.log(err);
+                    callback(err, null);
+                } else {
+                    callback(null, updated);
+                }
+            });
+        } else {
+            data._id = objectid(data._id);
+            tobechanged = {};
+            var attribute = "awards.$.";
+            _.forIn(data, function(value, key) {
+                tobechanged[attribute + key] = value;
+            });
+            ExpertUser.update({
+                "awards._id": data._id
+            }, {
+                $set: tobechanged
+            }, function(err, updated) {
+                if (err) {
+                    console.log(err);
+                    callback(err, null);
+                } else {
+                    callback(null, updated);
+                }
+            });
+        }
+    },
+    // -----------------------------End of Awards--------------------------------------------------
+
+
+    // ------------------------------------Experience---------------------------------------------------
+    deleteExperience: function(data, callback) {
+        ExpertUser.update({
+            "experience._id": data._id
+        }, {
+            $pull: {
+                "experience": {
+                    "_id": objectid(data._id)
+                }
+            }
+        }, function(err, updated) {
+            console.log(updated);
+            if (err) {
+                console.log(err);
+                callback(err, null);
+            } else {
+                callback(null, updated);
+            }
+        });
+
+    },
+    getOneExperience: function(data, callback) {
+        ExpertUser.aggregate([{
+            $unwind: "$experience"
+        }, {
+            $match: {
+                "experience._id": objectid(data._id)
+            }
+        }, {
+            $project: {
+                experience: 1
+            }
+        }]).exec(function(err, respo) {
+            if (err) {
+                console.log(err);
+                callback(err, null);
+            } else if (respo && respo.length > 0 && respo[0].experience) {
+                callback(null, respo[0].experience);
+            } else {
+                callback({
+                    message: "No data found"
+                }, null);
+            }
+        });
+    },
+    saveExperience: function(data, callback) {
+        var user = data.user;
+        delete data.user;
+        if (!data._id) {
+            ExpertUser.update({
+                _id: user
+            }, {
+                $push: {
+                    experience: data
+                }
+            }, function(err, updated) {
+                if (err) {
+                    console.log(err);
+                    callback(err, null);
+                } else {
+                    callback(null, updated);
+                }
+            });
+        } else {
+            data._id = objectid(data._id);
+            tobechanged = {};
+            var attribute = "experience.$.";
+            _.forIn(data, function(value, key) {
+                tobechanged[attribute + key] = value;
+            });
+            ExpertUser.update({
+                "experience._id": data._id
+            }, {
+                $set: tobechanged
+            }, function(err, updated) {
+                if (err) {
+                    console.log(err);
+                    callback(err, null);
+                } else {
+                    callback(null, updated);
+                }
+            });
+        }
+    },
+    // -----------------------------End of Experience--------------------------------------------------
+
+    // ------------------------------------Call Settings---------------------------------------------------
+    deleteCallSettings: function(data, callback) {
+        ExpertUser.update({
+            "callSettings._id": data._id
+        }, {
+            $pull: {
+                "callSettings": {
+                    "_id": objectid(data._id)
+                }
+            }
+        }, function(err, updated) {
+            console.log(updated);
+            if (err) {
+                console.log(err);
+                callback(err, null);
+            } else {
+                callback(null, updated);
+            }
+        });
+
+    },
+    getOneCallSettings: function(data, callback) {
+        ExpertUser.aggregate([{
+            $unwind: "$callSettings"
+        }, {
+            $match: {
+                "callSettings._id": objectid(data._id)
+            }
+        }, {
+            $project: {
+                callSettings: 1
+            }
+        }]).exec(function(err, respo) {
+            if (err) {
+                console.log(err);
+                callback(err, null);
+            } else if (respo && respo.length > 0 && respo[0].callSettings) {
+                callback(null, respo[0].callSettings);
+            } else {
+                callback({
+                    message: "No data found"
+                }, null);
+            }
+        });
+    },
+    saveCallSettings: function(data, callback) {
+        var user = data.user;
+        delete data.user;
+        if (!data._id) {
+            ExpertUser.update({
+                _id: user
+            }, {
+                $push: {
+                    callSettings: data
+                }
+            }, function(err, updated) {
+                if (err) {
+                    console.log(err);
+                    callback(err, null);
+                } else {
+                    callback(null, updated);
+                }
+            });
+        } else {
+            data._id = objectid(data._id);
+            tobechanged = {};
+            var attribute = "callSettings.$.";
+            _.forIn(data, function(value, key) {
+                tobechanged[attribute + key] = value;
+            });
+            ExpertUser.update({
+                "callSettings._id": data._id
+            }, {
+                $set: tobechanged
+            }, function(err, updated) {
+                if (err) {
+                    console.log(err);
+                    callback(err, null);
+                } else {
+                    callback(null, updated);
+                }
+            });
+        }
+    },
+    // -----------------------------End of Call Settings--------------------------------------------------
+
+
+
+    // ------------------------------------video Links---------------------------------------------------
+    deleteCallSettings: function(data, callback) {
+        ExpertUser.update({
+            "videoLinks._id": data._id
+        }, {
+            $pull: {
+                "videoLinks": {
+                    "_id": objectid(data._id)
+                }
+            }
+        }, function(err, updated) {
+            console.log(updated);
+            if (err) {
+                console.log(err);
+                callback(err, null);
+            } else {
+                callback(null, updated);
+            }
+        });
+
+    },
+    getOneCallSettings: function(data, callback) {
+        ExpertUser.aggregate([{
+            $unwind: "$videoLinks"
+        }, {
+            $match: {
+                "videoLinks._id": objectid(data._id)
+            }
+        }, {
+            $project: {
+                videoLinks: 1
+            }
+        }]).exec(function(err, respo) {
+            if (err) {
+                console.log(err);
+                callback(err, null);
+            } else if (respo && respo.length > 0 && respo[0].videoLinks) {
+                callback(null, respo[0].videoLinks);
+            } else {
+                callback({
+                    message: "No data found"
+                }, null);
+            }
+        });
+    },
+    saveCallSettings: function(data, callback) {
+        var user = data.user;
+        delete data.user;
+        if (!data._id) {
+            ExpertUser.update({
+                _id: user
+            }, {
+                $push: {
+                    videoLinks: data
+                }
+            }, function(err, updated) {
+                if (err) {
+                    console.log(err);
+                    callback(err, null);
+                } else {
+                    callback(null, updated);
+                }
+            });
+        } else {
+            data._id = objectid(data._id);
+            tobechanged = {};
+            var attribute = "videoLinks.$.";
+            _.forIn(data, function(value, key) {
+                tobechanged[attribute + key] = value;
+            });
+            ExpertUser.update({
+                "videoLinks._id": data._id
+            }, {
+                $set: tobechanged
+            }, function(err, updated) {
+                if (err) {
+                    console.log(err);
+                    callback(err, null);
+                } else {
+                    callback(null, updated);
+                }
+            });
+        }
+    },
+    // -----------------------------End of video Links--------------------------------------------------
+
+
+
+
+
+    // ------------------------------------Publication Links---------------------------------------------------
+    deletePublicationLinks: function(data, callback) {
+        ExpertUser.update({
+            "publicationLinks._id": data._id
+        }, {
+            $pull: {
+                "publicationLinks": {
+                    "_id": objectid(data._id)
+                }
+            }
+        }, function(err, updated) {
+            console.log(updated);
+            if (err) {
+                console.log(err);
+                callback(err, null);
+            } else {
+                callback(null, updated);
+            }
+        });
+
+    },
+    getOnePublicationLinks: function(data, callback) {
+        ExpertUser.aggregate([{
+            $unwind: "$publicationLinks"
+        }, {
+            $match: {
+                "publicationLinks._id": objectid(data._id)
+            }
+        }, {
+            $project: {
+                publicationLinks: 1
+            }
+        }]).exec(function(err, respo) {
+            if (err) {
+                console.log(err);
+                callback(err, null);
+            } else if (respo && respo.length > 0 && respo[0].publicationLinks) {
+                callback(null, respo[0].publicationLinks);
+            } else {
+                callback({
+                    message: "No data found"
+                }, null);
+            }
+        });
+    },
+    savePublicationLinks: function(data, callback) {
+        var user = data.user;
+        delete data.user;
+        if (!data._id) {
+            ExpertUser.update({
+                _id: user
+            }, {
+                $push: {
+                    publicationLinks: data
+                }
+            }, function(err, updated) {
+                if (err) {
+                    console.log(err);
+                    callback(err, null);
+                } else {
+                    callback(null, updated);
+                }
+            });
+        } else {
+            data._id = objectid(data._id);
+            tobechanged = {};
+            var attribute = "publicationLinks.$.";
+            _.forIn(data, function(value, key) {
+                tobechanged[attribute + key] = value;
+            });
+            ExpertUser.update({
+                "publicationLinks._id": data._id
+            }, {
+                $set: tobechanged
+            }, function(err, updated) {
+                if (err) {
+                    console.log(err);
+                    callback(err, null);
+                } else {
+                    callback(null, updated);
+                }
+            });
+        }
+    },
+    // -----------------------------End of Publication Links--------------------------------------------------
+
+
+
+
+
+
+    // -----------------------------------Add Photos--------------------------------------------------
+    deleteAddPhotos: function(data, callback) {
+        ExpertUser.update({
+            "addPhotos._id": data._id
+        }, {
+            $pull: {
+                "addPhotos": {
+                    "_id": objectid(data._id)
+                }
+            }
+        }, function(err, updated) {
+            console.log(updated);
+            if (err) {
+                console.log(err);
+                callback(err, null);
+            } else {
+                callback(null, updated);
+            }
+        });
+
+    },
+    getOneAddPhotos: function(data, callback) {
+        ExpertUser.aggregate([{
+            $unwind: "$addPhotos"
+        }, {
+            $match: {
+                "addPhotos._id": objectid(data._id)
+            }
+        }, {
+            $project: {
+                addPhotos: 1
+            }
+        }]).exec(function(err, respo) {
+            if (err) {
+                console.log(err);
+                callback(err, null);
+            } else if (respo && respo.length > 0 && respo[0].addPhotos) {
+                callback(null, respo[0].addPhotos);
+            } else {
+                callback({
+                    message: "No data found"
+                }, null);
+            }
+        });
+    },
+    saveAddPhotos: function(data, callback) {
+        var user = data.user;
+        delete data.user;
+        if (!data._id) {
+            ExpertUser.update({
+                _id: user
+            }, {
+                $push: {
+                    addPhotos: data
+                }
+            }, function(err, updated) {
+                if (err) {
+                    console.log(err);
+                    callback(err, null);
+                } else {
+                    callback(null, updated);
+                }
+            });
+        } else {
+            data._id = objectid(data._id);
+            tobechanged = {};
+            var attribute = "addPhotos.$.";
+            _.forIn(data, function(value, key) {
+                tobechanged[attribute + key] = value;
+            });
+            ExpertUser.update({
+                "addPhotos._id": data._id
+            }, {
+                $set: tobechanged
+            }, function(err, updated) {
+                if (err) {
+                    console.log(err);
+                    callback(err, null);
+                } else {
+                    callback(null, updated);
+                }
+            });
+        }
+    },
+    // -----------------------------End of Add photos--------------------------------------------------
+
+
     forgotPassword: function(data, callback) {
         this.findOne({
             email: data.email
