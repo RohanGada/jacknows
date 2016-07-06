@@ -724,7 +724,7 @@ deleteVideoLinks: function(req, res) {
         });
     }
 },
-saveCallVideoLinks: function(req, res) {
+saveVideoLinks: function(req, res) {
     if (req.body) {
         ExpertUser.saveCallVideoLinks(req.body, function(err, respo) {
             if (err) {

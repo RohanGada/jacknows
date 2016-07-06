@@ -53,7 +53,17 @@ var schema = new Schema({
         }],
         index: true
     },
-    experience: Schema.Types.Mixed,
+    // experience: Schema.Types.Mixed,
+    experience: {
+        type: [{
+            experienceType: String,
+            jobDescription: String,
+            startDate: String,
+            endDate : String,
+            image1: String
+        }],
+        index: true
+    },
     awards: {
         type: [{
             awardsandhonors: String,
@@ -80,7 +90,17 @@ var schema = new Schema({
     },
     unavailableSettings: Schema.Types.Mixed,
     customSettings: Schema.Types.Mixed,
-    callSettings: Schema.Types.Mixed,
+    // callSettings: Schema.Types.Mixed,
+    callSettings: {
+        type: [{
+            callTime: String,
+            day: String,
+            city: String,
+            fromTime: String,
+            toTime: String
+        }],
+        index: true
+    },
     image: String,
     forgotId: String,
     forgotpassword: String,
@@ -700,12 +720,14 @@ var models = {
                 callSettings: 1
             }
         }]).exec(function(err, respo) {
+          console.log('respo callSettings',respo);
             if (err) {
                 console.log(err);
                 callback(err, null);
             } else if (respo && respo.length > 0 && respo[0].callSettings) {
                 callback(null, respo[0].callSettings);
             } else {
+              console.log('in else');
                 callback({
                     message: "No data found"
                 }, null);
@@ -756,7 +778,7 @@ var models = {
 
 
     // ------------------------------------video Links---------------------------------------------------
-    deleteCallSettings: function(data, callback) {
+    deleteVideoLinks: function(data, callback) {
         ExpertUser.update({
             "videoLinks._id": data._id
         }, {
@@ -776,7 +798,7 @@ var models = {
         });
 
     },
-    getOneCallSettings: function(data, callback) {
+    getOneVideoLinks: function(data, callback) {
         ExpertUser.aggregate([{
             $unwind: "$videoLinks"
         }, {
@@ -800,7 +822,7 @@ var models = {
             }
         });
     },
-    saveCallSettings: function(data, callback) {
+    saveVideoLinks: function(data, callback) {
         var user = data.user;
         delete data.user;
         if (!data._id) {
