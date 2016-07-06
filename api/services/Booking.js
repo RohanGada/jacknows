@@ -20,8 +20,8 @@ var schema = new Schema({
     },
     callTime: Date,
     status: String,
-    amount: String,
-    discountCoupon: String,
+    amount: Number,
+    discountCoupon: Number,
     finalAmount: String,
     callStartTime: Date,
     callEndTime: Date,
@@ -169,7 +169,7 @@ var models = {
                             emailData2.content = "Hi, the expert has replied to your request, please login to check. (http://wohlig.co.in/jacknows/#/login)";
                             emailData2.subject = "Booking Status";
                             emailData.mobile = data.mobile;
-                            emailData.content2 = "Hi, the expert has replied to your request, please login to check. (http://wohlig.co.in/jacknows/#/login)";
+                            emailData.content2 = "Hi, the expert has replied to your request, please login to check.";
                             callMail(emailData, emailData2);
                             break;
                         case "reject":
@@ -186,7 +186,7 @@ var models = {
                             emailData2.content = "Hi, the expert has replied to your request, please login to check. (http://wohlig.co.in/jacknows/#/login)";
                             emailData2.subject = "Booking Status";
                             emailData.mobile = data.mobile;
-                            emailData.content2 = "Hi, the expert has replied to your request, please login to check. (http://wohlig.co.in/jacknows/#/login)";
+                            emailData.content2 = "Hi, the expert has replied to your request, please login to check.";
                             callMail(emailData, emailData2);
                             break;
                         case "paid":
@@ -286,7 +286,7 @@ var models = {
                                     },
 
                                     function(callback1) {
-                                        data.content2 = "Hi, you have received a request from a user, please login to check. (http://wohlig.co.in/jacknows/#/login)";
+                                        data.content2 = "Hi, you have received a request from a user, please login to check.";
                                         Config.message2({
                                             mobile: data.mobile,
                                             content: data.content2
@@ -307,7 +307,6 @@ var models = {
                                         console.log(err);
                                         callback(err, null);
                                     } else {
-                                        console.log(err);
                                         callback(null, data2);
                                     }
                                 });
@@ -358,7 +357,7 @@ var models = {
             };
         }
 
-        Booking.find(matchobj).populate("expert", '-password -forgotpassword -__v ').exec(callback);
+        Booking.find(matchobj).populate("expert", '-password -forgotpassword -educationalQualification -awards -videoLinks -addPhotos -publicationLinks -experience -callSettings -__v ').exec(callback);
     },
 
     getExpertBooking: function(data, callback) {

@@ -6,6 +6,7 @@
   "keywords": [],
   "dependencies": {
     "MD5": "^1.3.0",
+    "crypto": "0.0.3",
     "ejs": "2.3.4",
     "fs": "0.0.2",
     "graceful-fs": "^4.1.4",
@@ -37,7 +38,8 @@
     "rc": "1.0.1",
     "sails": "^0.12.3",
     "sails-disk": "~0.10.9",
-    "sendgrid": "^2.0.0"
+    "sendgrid": "^2.0.0",
+    "util": "^0.10.3"
   },
   "scripts": {
     "debug": "node debug app.js",

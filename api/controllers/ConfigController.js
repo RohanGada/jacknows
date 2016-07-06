@@ -5,6 +5,7 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 var fs = require("fs");
+var request = require("request");
 var moment = require('moment');
 var checksum = require('./checksum');
 module.exports = {
@@ -241,12 +242,13 @@ module.exports = {
         });
     },
     callStatus: function(req, res) {
-        if (req.param && req.param.status && req.param.status != "" && req.param.callId && req.param.callId != "") {
+        console.log(req.query);
+        if (req.query && req.query.status && req.query.status != "" && req.query.callId && req.query.callId != "") {
             Booking.update({
-                callId: req.param.callId
+                callId: req.query.callId
             }, {
                 $set: {
-                    status: req.param.status
+                    status: req.query.status
                 }
             }, function(err, respo) {
                 if (err) {
@@ -276,31 +278,52 @@ module.exports = {
             });
         }
     },
-    callfunc: function(req, res) {
-        if (req.body) {
+    callPay: function(req, res) {
+        if (req.body && req.body.finalAmount) {
             if (req.session.user) {
                 if (req.session.user.mobile && req.session.user.email) {
-                    var genParams = {};
-                    genParams.CHANNEL_ID = 'WEB';
-                    genParams.CUST_ID = req.session.user._id;
-                    genParams.INDUSTRY_TYPE_ID = 'Retail';
-                    // genParams.MID=;
-                    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-                    for (var i = 0; i < 8; i++) {
-                        genParams.ORDER_ID += possible.charAt(Math.floor(Math.random() * possible.length));
-                    }
-                    genParams.TXN_AMOUNT = req.body.amount;
-                    genParams.WEBSITE = 'Retail';
-                    // checksum.genchecksum(function(err, params) {
-                    //     if (err) {
-                    //         console.log(err);
-                    //         res.json({
-                    //             value: false,
-                    //             data: err
-                    //         });
-                    //     } else {
-                    //     }
-                    // });
+                    // var genParams = {};
+                    // genParams.CHANNEL_ID = "WEB";
+                    // genParams.CUST_ID = req.session.user._id;
+                    // genParams.INDUSTRY_TYPE_ID = "Retail";
+                    // genParams.MID = "GoFish30419544249686";
+                    // var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+                    // genParams.ORDER_ID = "ORD";
+                    // for (var i = 0; i < 8; i++) {
+                    //     genParams.ORDER_ID += possible.charAt(Math.floor(Math.random() * possible.length));
+                    // }
+                    // genParams.TXN_AMOUNT = req.body.finalAmount;
+                    // genParams.WEBSITE = "jacknows";
+                    var genParams = {
+                        CHANNEL_ID: 'WEB',
+                        CUST_ID: '298233',
+                        INDUSTRY_TYPE_ID: 'Retail',
+                        MID: 'GoFish30419544249686',
+                        ORDER_ID: '52',
+                        TXN_AMOUNT: 1,
+                        WEBSITE: 'jacknows'
+                    };
+
+                    checksum.genchecksum(genParams, "7_Ew6zbUNTNvfJXv", function(err, genParams) {
+                        if (err) {
+                            console.log(err);
+                            res.json({
+                                value: false,
+                                data: err
+                            });
+                        } else {
+                            console.log(genParams);
+                            // genParams.ADDRESS_1 = req.body.expert.email;
+                            // genParams.ADDRESS_2 = req.body.expert.firstName;
+                            // genParams.CITY = req.body.expert.mobileno;
+                            // genParams.STATE = req.body.from;
+                            var abcd = "https://pguat.paytm.com/oltp-web/processTransaction?&REQUEST_TYPE=DEFAULT&CHANNEL_ID=WEB&CUST_ID=" + genParams.CUST_ID + "&EMAIL=" + req.session.user.email + "&INDUSTRY_TYPE_ID=Retail&MID=GoFish30419544249686&MOBILE_NO=" + req.session.user.mobile + "&ORDER_ID=" + genParams.ORDER_ID + "&TXN_AMOUNT=" + genParams.TXN_AMOUNT + "&WEBSITE=jacknows&CHECKSUMHASH=" + genParams.CHECKSUMHASH + "&CALLBACK_URL=http://jacknows.wohlig.com/config/response";
+                            res.json({
+                                value: true,
+                                data: abcd
+                            });
+                        }
+                    });
                 } else {
                     res.json({
                         value: false,
@@ -321,6 +344,7 @@ module.exports = {
         }
     },
     response: function(req, res) {
+        console.log(req.body);
         if (req.body) {
             res.json({
                 value: true,
