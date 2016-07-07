@@ -59,7 +59,7 @@ var schema = new Schema({
             experienceType: String,
             jobDescription: String,
             startDate: String,
-            endDate : String,
+            endDate: String,
             image1: String
         }],
         index: true
@@ -418,7 +418,11 @@ var models = {
     getOne: function(data, callback) {
         ExpertUser.findOne({
             _id: data._id
+        }, {
+            password: 0,
+            forgotpassword: 0
         }, function(err, deleted) {
+            console.log(deleted);
             if (err) {
                 callback(err, null);
             } else {
@@ -720,14 +724,14 @@ var models = {
                 callSettings: 1
             }
         }]).exec(function(err, respo) {
-          console.log('respo callSettings',respo);
+            console.log('respo callSettings', respo);
             if (err) {
                 console.log(err);
                 callback(err, null);
             } else if (respo && respo.length > 0 && respo[0].callSettings) {
                 callback(null, respo[0].callSettings);
             } else {
-              console.log('in else');
+                console.log('in else');
                 callback({
                     message: "No data found"
                 }, null);
@@ -1107,7 +1111,62 @@ var models = {
             }
         });
     },
-
+    findLimited: function(data, callback) {
+        var newreturns = {};
+        newreturns.data = [];
+        var check = new RegExp(data.search, "i");
+        data.pagenumber = parseInt(data.pagenumber);
+        data.pagesize = parseInt(data.pagesize);
+        async.parallel([
+                function(callback) {
+                    ExpertUser.count({
+                        firstName: {
+                            '$regex': check
+                        }
+                    }).exec(function(err, number) {
+                        if (err) {
+                            console.log(err);
+                            callback(err, null);
+                        } else if (number && number != "") {
+                            newreturns.total = number;
+                            newreturns.totalpages = Math.ceil(number / data.pagesize);
+                            callback(null, newreturns);
+                        } else {
+                            callback(null, newreturns);
+                        }
+                    });
+                },
+                function(callback) {
+                    ExpertUser.find({
+                        firstName: {
+                            '$regex': check
+                        }
+                    }, {
+                        password: 0
+                    }).skip(data.pagesize * (data.pagenumber - 1)).limit(data.pagesize).exec(function(err, data2) {
+                        if (err) {
+                            console.log(err);
+                            callback(err, null);
+                        } else if (data2 && data2.length > 0) {
+                            newreturns.data = data2;
+                            callback(null, newreturns);
+                        } else {
+                            callback(null, newreturns);
+                        }
+                    });
+                }
+            ],
+            function(err, data4) {
+                if (err) {
+                    console.log(err);
+                    callback(err, null);
+                } else if (data4) {
+                    callback(null, newreturns);
+                } else {
+                    callback(null, newreturns);
+                }
+            });
+    },
 
 };
 module.exports = _.assign(module.exports, models);

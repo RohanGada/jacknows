@@ -403,6 +403,48 @@ module.exports = {
         }, callback)(req, res);
     },
 
+    getLimited: function(req, res) {
+      function callback(err, data) {
+          Global.response(err, data, res);
+      }
+      if (req.body) {
+          if (req.body.pagesize && req.body.pagenumber) {
+              User.getLimited(req.body, res.callback);
+          } else {
+              res.json({
+                  value: false,
+                  data: "Invalid Params"
+              });
+          }
+      } else {
+          res.json({
+              value: false,
+              data: "Invalid Request"
+          });
+      }
+  },
+  getLimited: function(req, res) {
+      function callback(err, data) {
+          Global.response(err, data, res);
+      }
+      if (req.body) {
+          if (req.body.pagesize && req.body.pagenumber) {
+              User.findLimited(req.body, res.callback);
+          } else {
+              res.json({
+                  value: false,
+                  data: "Invalid Params"
+              });
+          }
+      } else {
+          res.json({
+              value: false,
+              data: "Invalid Request"
+          });
+      }
+  },
+
+
     // send: function(req, res) {
     //     sendgrid.send({
     //         to: req.body.email,

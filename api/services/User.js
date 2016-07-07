@@ -187,18 +187,20 @@ var models = {
             }
         });
     },
-    getOne: function(data, callback){
-      this.findOne({
-    _id: data._id
-      }).exec(function(err, data2){
-        if(err){
-          console.log(err);
-          callback(err, null)
-        }
-        else {
-          callback(null, data2);
-        }
-      });
+    getOne: function(data, callback) {
+        this.findOne({
+            _id: data._id
+        }, {
+            password: 0,
+            forgotpassword: 0
+        }).exec(function(err, data2) {
+            if (err) {
+                console.log(err);
+                callback(err, null)
+            } else {
+                callback(null, data2);
+            }
+        });
     },
     // getOne: function(data, callback) {
     //     this.findOne({}, {
@@ -334,12 +336,12 @@ var models = {
                                 console.log(err);
                                 callback(err, null);
                             } else {
-                              var emailData = {};
-                              emailData.email = data.email;
-                              console.log('data.email',data.email);
-                              emailData.content = "Your new password for the JacKnows website is: "+text+".Please note that this is a system generated password which will remain valid for 3 hours only. Kindly change it to something you would be more comfortable remembering at the earliest.";
-                              emailData.filename = "newsletter.ejs";
-                              emailData.subject = "Jacknows forgot password";
+                                var emailData = {};
+                                emailData.email = data.email;
+                                console.log('data.email', data.email);
+                                emailData.content = "Your new password for the JacKnows website is: " + text + ".Please note that this is a system generated password which will remain valid for 3 hours only. Kindly change it to something you would be more comfortable remembering at the earliest.";
+                                emailData.filename = "newsletter.ejs";
+                                emailData.subject = "Jacknows forgot password";
                                 // user.email = data.email;
                                 // user.filename = data.filename;
                                 Config.email(emailData, function(err, emailRespo) {
@@ -387,6 +389,123 @@ var models = {
             password: 0,
             forgotpassword: 0
         }).populate("findCategory.category").exec(callback);
+    },
+
+    getLimited: function(data, callback) {
+        data.pagenumber = parseInt(data.pagenumber);
+        data.pagesize = parseInt(data.pagesize);
+        var checkfor = new RegExp(data.search, "i");
+        var newreturns = {};
+        newreturns.data = [];
+        async.parallel([
+            function(callback1) {
+                User.count({
+                    email: {
+                        "$regex": checkfor
+                    }
+                }).exec(function(err, number) {
+                    if (err) {
+                        console.log(err);
+                        callback1(err, null);
+                    } else if (number) {
+                        newreturns.totalpages = Math.ceil(number / data.pagesize);
+                        callback1(null, newreturns);
+                    } else {
+                        newreturns.totalpages = 0;
+                        callback1(null, newreturns);
+                    }
+                });
+            },
+            function(callback1) {
+                User.find({
+                    email: {
+                        "$regex": checkfor
+                    }
+                }, {}).sort({
+                    email: 1
+                }).lean().exec(function(err, data2) {
+                    if (err) {
+                        console.log(err);
+                        callback1(err, null);
+                    } else {
+                        console.log(data2.length);
+                        if (data2 && data2.length > 0) {
+                            newreturns.data = data2;
+                            newreturns.pagenumber = data.pagenumber;
+                            callback1(null, newreturns);
+                        } else {
+                            callback1({
+                                message: "No data found"
+                            }, null);
+                        }
+                    }
+                });
+            }
+        ], function(err, respo) {
+            if (err) {
+                console.log(err);
+                callback(err, null);
+            } else {
+                callback(null, newreturns);
+            }
+        });
+    },
+
+    findLimited: function(data, callback) {
+        var newreturns = {};
+        newreturns.data = [];
+        var check = new RegExp(data.search, "i");
+        data.pagenumber = parseInt(data.pagenumber);
+        data.pagesize = parseInt(data.pagesize);
+        async.parallel([
+                function(callback) {
+                    User.count({
+                        firstName: {
+                            '$regex': check
+                        }
+                    }).exec(function(err, number) {
+                        if (err) {
+                            console.log(err);
+                            callback(err, null);
+                        } else if (number && number != "") {
+                            newreturns.total = number;
+                            newreturns.totalpages = Math.ceil(number / data.pagesize);
+                            callback(null, newreturns);
+                        } else {
+                            callback(null, newreturns);
+                        }
+                    });
+                },
+                function(callback) {
+                    User.find({
+                        firstName: {
+                            '$regex': check
+                        }
+                    }, {
+                        password: 0
+                    }).skip(data.pagesize * (data.pagenumber - 1)).limit(data.pagesize).exec(function(err, data2) {
+                        if (err) {
+                            console.log(err);
+                            callback(err, null);
+                        } else if (data2 && data2.length > 0) {
+                            newreturns.data = data2;
+                            callback(null, newreturns);
+                        } else {
+                            callback(null, newreturns);
+                        }
+                    });
+                }
+            ],
+            function(err, data4) {
+                if (err) {
+                    console.log(err);
+                    callback(err, null);
+                } else if (data4) {
+                    callback(null, newreturns);
+                } else {
+                    callback(null, newreturns);
+                }
+            });
     },
 };
 module.exports = _.assign(module.exports, models);
