@@ -242,7 +242,6 @@ module.exports = {
         });
     },
     callStatus: function(req, res) {
-        console.log(req.query);
         if (req.query && req.query.status && req.query.status != "" && req.query.callId && req.query.callId != "") {
             Booking.update({
                 callId: req.query.callId
@@ -283,30 +282,23 @@ module.exports = {
         if (req.body && req.body.finalAmount) {
             if (req.session.user) {
                 if (req.session.user.mobile && req.session.user.email) {
-                    // var genParams = {};
-                    // genParams.CHANNEL_ID = "WEB";
-                    // genParams.CUST_ID = req.session.user._id;
-                    // genParams.INDUSTRY_TYPE_ID = "Retail";
-                    // genParams.MID = "GoFish30419544249686";
-                    // var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-                    // genParams.ORDER_ID = "ORD";
-                    // for (var i = 0; i < 8; i++) {
-                    //     genParams.ORDER_ID += possible.charAt(Math.floor(Math.random() * possible.length));
-                    // }
-                    // genParams.TXN_AMOUNT = req.body.finalAmount;
-                    // genParams.WEBSITE = "jacknows";
                     var genParams = {
-                        CHANNEL_ID: 'WEB',
-                        CUST_ID: '298233',
-                        INDUSTRY_TYPE_ID: 'Retail',
-                        MID: 'GoFish30419544249686',
-                        ORDER_ID: '52',
-                        TXN_AMOUNT: '1',
-                        WEBSITE: 'jacknows',
-                        MOBILE_NO: req.session.user.mobile.toString(),
-                        EMAIL: req.session.user.email.toString()
+                        "CHANNEL_ID": "WEB",
+                        "CUST_ID": req.session.user._id + "",
+                        "EMAIL": req.session.user.email + "",
+                        "INDUSTRY_TYPE_ID": "Retail",
+                        "MID": "GoFish30419544249686",
+                        "MOBILE_NO": req.session.user.mobile + "",
+                        "ORDER_ID": req.body._id + "",
+                        "REQUEST_TYPE": "DEFAULT",
+                        "THEME": "merchant",
+                        "TXN_AMOUNT": "1",
+                        "WEBSITE": "jacknows"
                     };
-
+                    var abc = "https://pguat.paytm.com/oltp-web/processTransaction?";
+                    _.each(genParams, function(value, key) {
+                        abc += key + "=" + value + "&";
+                    });
                     checksum.genchecksum(genParams, "7_Ew6zbUNTNvfJXv", function(err, genParams) {
                         if (err) {
                             console.log(err);
@@ -315,15 +307,10 @@ module.exports = {
                                 data: err
                             });
                         } else {
-                            console.log(genParams);
-                            // genParams.ADDRESS_1 = req.body.expert.email;
-                            // genParams.ADDRESS_2 = req.body.expert.firstName;
-                            // genParams.CITY = req.body.expert.mobileno;
-                            // genParams.STATE = req.body.from;
-                            var abcd = "https://pguat.paytm.com/oltp-web/processTransaction?&REQUEST_TYPE=DEFAULT&CHANNEL_ID=WEB&CUST_ID=" + genParams.CUST_ID + "&EMAIL=" + req.session.user.email + "&INDUSTRY_TYPE_ID=Retail&MID=GoFish30419544249686&MOBILE_NO=" + req.session.user.mobile + "&ORDER_ID=" + genParams.ORDER_ID + "&TXN_AMOUNT=" + genParams.TXN_AMOUNT + "&WEBSITE=jacknows&CHECKSUMHASH=" + genParams.CHECKSUMHASH;
+                            abc += "CHECKSUMHASH=" + genParams.CHECKSUMHASH;
                             res.json({
                                 value: true,
-                                data: abcd
+                                data: abc
                             });
                         }
                     });
@@ -348,11 +335,94 @@ module.exports = {
     },
     response: function(req, res) {
         console.log(req.body);
-        if (req.body) {
-            res.json({
-                value: true,
-                data: "API Called successfully"
-            });
+        if (req.body && req.body.ORDERID) {
+            if (req.body.RESPCODE == "01") {
+                Booking.findOne({ _id: req.body.ORDERID }).populate("user").populate("expert").lean().exec(function(err, respo) {
+                    if (err) {
+                        console.log(err);
+                        res.json({
+                            value: false,
+                            data: err
+                        });
+                    } else {
+                        if (_.isEmpty(respo)) {
+                            console.log("No data found");
+                            res.json({
+                                value: false,
+                                data: "Booking not found"
+                            });
+                        } else {
+                            var reqParam = {};
+                            if (respo.user) {
+                                reqParam._id = req.body.ORDERID;
+                                reqParam.user = respo.user._id;
+                                reqParam.username = respo.user.firstName;
+                                reqParam.userimage = respo.user.image;
+                                reqParam.email = respo.user.email;
+                                reqParam.from = "user";
+                                reqParam.status = "paid";
+                                reqParam.mobile = respo.expert.mobileno;
+                                reqParam.expertemail = respo.expert.email;
+                                reqParam.expertname = respo.expert.firstName;
+                                callSave();
+                            } else {
+                                res.json({
+                                    value: false,
+                                    data: "User not loggd-in"
+                                });
+                            }
+
+                            function callSave() {
+                                Booking.saveData(reqParam, function(err, respo) {
+                                    if (err) {
+                                        res.json({
+                                            value: false,
+                                            data: err
+                                        });
+                                    } else {
+                                        if (respo._id) {
+                                            res.json({
+                                                value: true,
+                                                data: respo
+                                            });
+                                        } else {
+                                            res.json({
+                                                value: false,
+                                                data: respo
+                                            });
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
+            } else {
+                Booking.saveData({
+                    _id: req.body.ORDERID,
+                    status: "accept2",
+                    cancelReason: req.body.RESPMSG
+                }, function(err, respo) {
+                    if (err) {
+                        res.json({
+                            value: false,
+                            data: err
+                        });
+                    } else {
+                        if (respo._id) {
+                            res.json({
+                                value: true,
+                                data: respo
+                            });
+                        } else {
+                            res.json({
+                                value: false,
+                                data: respo
+                            });
+                        }
+                    }
+                });
+            }
         } else {
             res.json({
                 value: false,
