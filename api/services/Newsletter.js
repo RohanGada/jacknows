@@ -66,23 +66,23 @@ var models = {
                     if (err) {
                         callback(err, null);
                     } else {
-                      var emailData = {};
-                      emailData.email = data.email;
-                      console.log('data.email',data.email);
-                      emailData.content = "Newsletter demo.";
-                      emailData.filename = "newsletter.ejs";
-                      emailData.subject = "Jacknows Newsletter";
-                      Config.email(emailData, function(err, emailRespo) {
-                          if (err) {
-                              console.log(err);
-                              callback(err, null);
-                          } else {
-                              console.log(emailRespo);
-                              callback(null, {
-                                  comment: "Mail Sent"
-                              });
-                          }
-                      });
+                        var emailData = {};
+                        emailData.email = data.email;
+                        console.log('data.email', data.email);
+                        emailData.content = "Newsletter demo.";
+                        emailData.filename = "newsletter.ejs";
+                        emailData.subject = "Jacknows Newsletter";
+                        Config.email(emailData, function(err, emailRespo) {
+                            if (err) {
+                                console.log(err);
+                                callback(err, null);
+                            } else {
+                                console.log(emailRespo);
+                                callback(null, {
+                                    comment: "Mail Sent"
+                                });
+                            }
+                        });
                     }
                 });
             } else {
@@ -92,18 +92,17 @@ var models = {
             }
         });
     },
-    getOne: function(data, callback){
-      this.findOne({
-    _id: data._id
-      }).exec(function(err, data2){
-        if(err){
-          console.log(err);
-          callback(err, null)
-        }
-        else {
-          callback(null, data2);
-        }
-      });
+    getOne: function(data, callback) {
+        this.findOne({
+            _id: data._id
+        }).exec(function(err, data2) {
+            if (err) {
+                console.log(err);
+                callback(err, null)
+            } else {
+                callback(null, data2);
+            }
+        });
     },
 
     deleteData: function(data, callback) {
@@ -116,6 +115,63 @@ var models = {
                 callback(null, deleted)
             }
         });
+    },
+
+    findLimited: function(data, callback) {
+        var newreturns = {};
+        newreturns.data = [];
+        var check = new RegExp(data.search, "i");
+        data.pagenumber = parseInt(data.pagenumber);
+        data.pagesize = parseInt(data.pagesize);
+        async.parallel([
+                function(callback) {
+                    Newsletter.count({
+                        email: {
+                            '$regex': check
+                        }
+                    }).exec(function(err, number) {
+                        if (err) {
+                            console.log(err);
+                            callback(err, null);
+                        } else if (number && number != "") {
+                            newreturns.total = number;
+                            newreturns.totalpages = Math.ceil(number / data.pagesize);
+                            callback(null, newreturns);
+                        } else {
+                            callback(null, newreturns);
+                        }
+                    });
+                },
+                function(callback) {
+                    Newsletter.find({
+                        email: {
+                            '$regex': check
+                        }
+                    }, {
+                        password: 0
+                    }).skip(data.pagesize * (data.pagenumber - 1)).limit(data.pagesize).exec(function(err, data2) {
+                        if (err) {
+                            console.log(err);
+                            callback(err, null);
+                        } else if (data2 && data2.length > 0) {
+                            newreturns.data = data2;
+                            callback(null, newreturns);
+                        } else {
+                            callback(null, newreturns);
+                        }
+                    });
+                }
+            ],
+            function(err, data4) {
+                if (err) {
+                    console.log(err);
+                    callback(err, null);
+                } else if (data4) {
+                    callback(null, newreturns);
+                } else {
+                    callback(null, newreturns);
+                }
+            });
     },
 };
 module.exports = _.assign(module.exports, models);
