@@ -329,7 +329,7 @@ var models = {
         }
     },
     getAll: function(data, callback) {
-        this.find({}, {}, {}).lean().exec(function(err, deleted) {
+        this.find({}, {}, {}).populate("expert","firstName").populate("user","firstName").lean().exec(function(err, deleted) {
             if (err) {
                 callback(err, null);
             } else {
@@ -449,7 +449,7 @@ var models = {
                         }
                     }, {
                         password: 0
-                    }).skip(data.pagesize * (data.pagenumber - 1)).limit(data.pagesize).exec(function(err, data2) {
+                    }).skip(data.pagesize * (data.pagenumber - 1)).limit(data.pagesize).populate("expert","firstName").populate("user","firstName").exec(function(err, data2) {
                         if (err) {
                             console.log(err);
                             callback(err, null);

@@ -28,6 +28,28 @@ module.exports = {
             });
         }
     },
+    getAll: function(req, res) {
+        if (req.body) {
+            ExpertUser.getAll(req.body, function(err, respo) {
+                if (err) {
+                    res.json({
+                        value: false,
+                        data: err
+                    });
+                } else {
+                    res.json({
+                        value: true,
+                        data: respo
+                    });
+                }
+            });
+        } else {
+            res.json({
+                value: false,
+                data: "Invalid call"
+            });
+        }
+    },
     getEdu: function(req, res) {
         if (req.body) {
             ExpertUser.getEdu(req.body, function(err, respo) {
@@ -1009,6 +1031,98 @@ module.exports = {
     getLimitedEducation: function(req, res) {
         if (req.body) {
             ExpertUser.getLimitedEducation(req.body, function(err, respo) {
+                if (err) {
+                    res.json({
+                        value: false,
+                        data: err
+                    });
+                } else {
+                    res.json({
+                        value: true,
+                        data: respo
+                    });
+                }
+            });
+        } else {
+            res.json({
+                value: false,
+                data: "Invalid call"
+            });
+        }
+    },
+
+    getLimitedAwards: function(req, res) {
+        if (req.body) {
+            ExpertUser.getLimitedAwards(req.body, function(err, respo) {
+                if (err) {
+                    res.json({
+                        value: false,
+                        data: err
+                    });
+                } else {
+                    res.json({
+                        value: true,
+                        data: respo
+                    });
+                }
+            });
+        } else {
+            res.json({
+                value: false,
+                data: "Invalid call"
+            });
+        }
+    },
+
+    getLimitedExperience: function(req, res) {
+        if (req.body) {
+            ExpertUser.getLimitedExperience(req.body, function(err, respo) {
+                if (err) {
+                    res.json({
+                        value: false,
+                        data: err
+                    });
+                } else {
+                    res.json({
+                        value: true,
+                        data: respo
+                    });
+                }
+            });
+        } else {
+            res.json({
+                value: false,
+                data: "Invalid call"
+            });
+        }
+    },
+
+    getLimitedPublicationLink: function(req, res) {
+        if (req.body) {
+            ExpertUser.getLimitedPublicationLink(req.body, function(err, respo) {
+                if (err) {
+                    res.json({
+                        value: false,
+                        data: err
+                    });
+                } else {
+                    res.json({
+                        value: true,
+                        data: respo
+                    });
+                }
+            });
+        } else {
+            res.json({
+                value: false,
+                data: "Invalid call"
+            });
+        }
+    },
+
+    getLimitedAddPhotos: function(req, res) {
+        if (req.body) {
+            ExpertUser.getLimitedAddPhotos(req.body, function(err, respo) {
                 if (err) {
                     res.json({
                         value: false,
