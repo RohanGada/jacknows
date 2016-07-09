@@ -1246,7 +1246,7 @@ var models = {
                         }
                     }]).skip(data.pagesize * (data.pagenumber - 1)).limit(data.pagesize).exec(function(err, found) {
                          if (found && found.length>0) {
-                             newreturns.data = found[0].educationalQualification;
+                             newreturns.data.push(found[0].educationalQualification);
                              callback(null,newreturns);
                          } else if (err) {
                              console.log(err);
