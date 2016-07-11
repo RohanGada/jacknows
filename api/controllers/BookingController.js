@@ -9,7 +9,6 @@ var sendgrid = require('sendgrid')('');
 module.exports = {
     saveData: function(req, res) {
         if (req.body) {
-            console.log(req.body);
             if (req.body._id && req.body._id != "") {
                 if (req.body.from == "expert") {
                     if (req.session.expertuser) {
