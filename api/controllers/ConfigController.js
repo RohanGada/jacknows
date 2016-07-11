@@ -247,7 +247,7 @@ module.exports = {
                 callId: req.query.callId
             }, {
                 $set: {
-                    status: req.query.status.toLowerCase();
+                    status: req.query.status.toLowerCase()
                 }
             }, function(err, respo) {
                 if (err) {
