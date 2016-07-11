@@ -369,7 +369,7 @@ module.exports = {
         if (req.body && req.body.ORDERID) {
             res.json({
                 value: true,
-                data: "API called successfully"
+                data: req.body
             });
             // if (req.body.RESPCODE == "01") {
             //     Booking.findOne({ _id: req.body.ORDERID }).populate("user").populate("expert").lean().exec(function(err, respo) {
