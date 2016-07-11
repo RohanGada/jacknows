@@ -341,7 +341,7 @@ module.exports = {
             "INDUSTRY_TYPE_ID":"Retail",
             "MID":"GoFish30419544249686",
             "MOBILE_NO":"8898177321",
-            "ORDER_ID":"61",
+            "ORDER_ID":"62",
             "REQUEST_TYPE":"DEFAULT",
             "THEME":"merchant",
             "TXN_AMOUNT":"1",
