@@ -8,6 +8,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var md5 = require('MD5');
 var moment = require('moment');
+var lodash = require('lodash');
 var objectid = require("mongodb").ObjectId;
 var db = require("mongodb").Db;
 
@@ -309,6 +310,20 @@ var models = {
                 callback(err, null);
             } else {
                 callback(null, deleted);
+            }
+        });
+    },
+    getEdu: function(data, callback) {
+        ExpertUser.findOne({
+            _id: data._id
+        }, {
+            educationalQualification: 1
+        }, function(err, deleted) {
+            console.log(deleted);
+            if (err) {
+                callback(err, null);
+            } else {
+                callback(null, deleted.educationalQualification);
             }
         });
     },
@@ -1168,5 +1183,518 @@ var models = {
             });
     },
 
+
+    getLimitedEducation: function(data, callback) {
+        var newreturns = {};
+        newreturns.data = [];
+        var check = new RegExp(data.search, "i");
+        data.pagenumber = parseInt(data.pagenumber);
+        data.pagesize = parseInt(data.pagesize);
+        var skip = parseInt(data.pagesize * (data.pagenumber - 1));
+        async.parallel([
+                function(callback) {
+                    ExpertUser.aggregate([{
+                        $match: {
+                            _id: objectid(data._id)
+                        }
+                    }, {
+                        $unwind: "$educationalQualification"
+                    }, {
+                        $match: {
+                            "educationalQualification.degreeTitle": {
+                                '$regex': check
+                            }
+                        }
+                    }, {
+                        $group: {
+                            _id: null,
+                            count: {
+                                $sum: 1
+                            }
+                        }
+                    }, {
+                        $project: {
+                            count: 1
+                        }
+                    }]).exec(function(err, result) {
+                        console.log(result);
+                        if (result && result[0]) {
+                            newreturns.total = result[0].count;
+                            newreturns.totalpages = Math.ceil(result[0].count / data.pagesize);
+                            callback(null, newreturns);
+                        } else if (err) {
+                            console.log(err);
+                            callback(err, null);
+                        } else {
+                            callback({
+                                message: "Count of null"
+                            }, null);
+                        }
+                    });
+                },
+                function(callback) {
+                    ExpertUser.aggregate([{
+                        $match: {
+                            _id: objectid(data._id)
+                        }
+                    }, {
+                        $unwind: "$educationalQualification"
+                    }, {
+                        $match: {
+                            "educationalQualification.degreeTitle": {
+                                $regex: check
+                            }
+                        }
+                    }, {
+                        $group: {
+                            _id: "_id",
+                            educationalQualification: {
+                                $push: "$educationalQualification"
+                            }
+                        }
+                    }, {
+                        $project: {
+                            _id: 0,
+                            educationalQualification: {
+                                $slice: ["$educationalQualification", skip, data.pagesize]
+                            }
+                        }
+                    }]).exec(function(err, found) {
+                        if (found && found.length > 0) {
+                            newreturns.data = found[0].educationalQualification;
+                            callback(null, newreturns);
+                        } else if (err) {
+                            console.log(err);
+                            callback(err, null);
+                        } else {
+                            callback({
+                                message: "Count of null"
+                            }, null);
+                        }
+                    });
+                }
+            ],
+            function(err, data4) {
+                if (err) {
+                    console.log(err);
+                    callback(err, null);
+                } else if (data4) {
+                    callback(null, newreturns);
+                } else {
+                    callback(null, newreturns);
+                }
+            });
+    },
+
+
+    getLimitedAwards: function(data, callback) {
+        var newreturns = {};
+        newreturns.data = [];
+        var check = new RegExp(data.search, "i");
+        data.pagenumber = parseInt(data.pagenumber);
+        data.pagesize = parseInt(data.pagesize);
+        var skip = parseInt(data.pagesize * (data.pagenumber - 1));
+        async.parallel([
+                function(callback) {
+                    ExpertUser.aggregate([{
+                        $match: {
+                            _id: objectid(data._id)
+                        }
+                    }, {
+                        $unwind: "$awards"
+                    }, {
+                        $match: {
+                            "awards.awardsandhonors": {
+                                '$regex': check
+                            }
+                        }
+                    }, {
+                        $group: {
+                            _id: null,
+                            count: {
+                                $sum: 1
+                            }
+                        }
+                    }, {
+                        $project: {
+                            count: 1
+                        }
+                    }]).exec(function(err, result) {
+                        console.log(result);
+                        if (result && result[0]) {
+                            newreturns.total = result[0].count;
+                            newreturns.totalpages = Math.ceil(result[0].count / data.pagesize);
+                            callback(null, newreturns);
+                        } else if (err) {
+                            console.log(err);
+                            callback(err, null);
+                        } else {
+                            callback({
+                                message: "Count of null"
+                            }, null);
+                        }
+                    });
+                },
+                function(callback) {
+                    ExpertUser.aggregate([{
+                        $match: {
+                            _id: objectid(data._id)
+                        }
+                    }, {
+                        $unwind: "$awards"
+                    }, {
+                        $match: {
+                            "awards.awardsandhonors": {
+                                $regex: check
+                            }
+                        }
+                    }, {
+                        $group: {
+                            _id: "_id",
+                            awards: {
+                                $push: "$awards"
+                            }
+                        }
+                    }, {
+                        $project: {
+                            _id: 0,
+                            awards: {
+                                $slice: ["$awards", skip, data.pagesize]
+                            }
+                        }
+                    }]).exec(function(err, found) {
+                        if (found && found.length > 0) {
+                            newreturns.data = found[0].awards;
+                            callback(null, newreturns);
+                        } else if (err) {
+                            console.log(err);
+                            callback(err, null);
+                        } else {
+                            callback({
+                                message: "Count of null"
+                            }, null);
+                        }
+                    });
+                }
+            ],
+            function(err, data4) {
+                if (err) {
+                    console.log(err);
+                    callback(err, null);
+                } else if (data4) {
+                    callback(null, newreturns);
+                } else {
+                    callback(null, newreturns);
+                }
+            });
+    },
+
+    getLimitedExperience: function(data, callback) {
+        var newreturns = {};
+        newreturns.data = [];
+        var check = new RegExp(data.search, "i");
+        data.pagenumber = parseInt(data.pagenumber);
+        data.pagesize = parseInt(data.pagesize);
+        var skip = parseInt(data.pagesize * (data.pagenumber - 1));
+        async.parallel([
+                function(callback) {
+                    ExpertUser.aggregate([{
+                        $match: {
+                            _id: objectid(data._id)
+                        }
+                    }, {
+                        $unwind: "$experience"
+                    }, {
+                        $match: {
+                            "experience.jobDescription": {
+                                '$regex': check
+                            }
+                        }
+                    }, {
+                        $group: {
+                            _id: null,
+                            count: {
+                                $sum: 1
+                            }
+                        }
+                    }, {
+                        $project: {
+                            count: 1
+                        }
+                    }]).exec(function(err, result) {
+                        console.log(result);
+                        if (result && result[0]) {
+                            newreturns.total = result[0].count;
+                            newreturns.totalpages = Math.ceil(result[0].count / data.pagesize);
+                            callback(null, newreturns);
+                        } else if (err) {
+                            console.log(err);
+                            callback(err, null);
+                        } else {
+                            callback({
+                                message: "Count of null"
+                            }, null);
+                        }
+                    });
+                },
+                function(callback) {
+                    ExpertUser.aggregate([{
+                        $match: {
+                            _id: objectid(data._id)
+                        }
+                    }, {
+                        $unwind: "$experience"
+                    }, {
+                        $match: {
+                            "experience.jobDescription": {
+                                $regex: check
+                            }
+                        }
+                    }, {
+                        $group: {
+                            _id: "_id",
+                            experience: {
+                                $push: "$experience"
+                            }
+                        }
+                    }, {
+                        $project: {
+                            _id: 0,
+                            experience: {
+                                $slice: ["$experience", skip, data.pagesize]
+                            }
+                        }
+                    }]).exec(function(err, found) {
+                        if (found && found.length > 0) {
+                            newreturns.data = found[0].experience;
+                            callback(null, newreturns);
+                        } else if (err) {
+                            console.log(err);
+                            callback(err, null);
+                        } else {
+                            callback({
+                                message: "Count of null"
+                            }, null);
+                        }
+                    });
+                }
+            ],
+            function(err, data4) {
+                if (err) {
+                    console.log(err);
+                    callback(err, null);
+                } else if (data4) {
+                    callback(null, newreturns);
+                } else {
+                    callback(null, newreturns);
+                }
+            });
+    },
+
+
+        getLimitedPublicationLink: function(data, callback) {
+            var newreturns = {};
+            newreturns.data = [];
+            var check = new RegExp(data.search, "i");
+            data.pagenumber = parseInt(data.pagenumber);
+            data.pagesize = parseInt(data.pagesize);
+            var skip = parseInt(data.pagesize * (data.pagenumber - 1));
+            async.parallel([
+                    function(callback) {
+                        ExpertUser.aggregate([{
+                            $match: {
+                                _id: objectid(data._id)
+                            }
+                        }, {
+                            $unwind: "$publicationLinks"
+                        }, {
+                            $match: {
+                                "publicationLinks.name": {
+                                    '$regex': check
+                                }
+                            }
+                        }, {
+                            $group: {
+                                _id: null,
+                                count: {
+                                    $sum: 1
+                                }
+                            }
+                        }, {
+                            $project: {
+                                count: 1
+                            }
+                        }]).exec(function(err, result) {
+                            console.log(result);
+                            if (result && result[0]) {
+                                newreturns.total = result[0].count;
+                                newreturns.totalpages = Math.ceil(result[0].count / data.pagesize);
+                                callback(null, newreturns);
+                            } else if (err) {
+                                console.log(err);
+                                callback(err, null);
+                            } else {
+                                callback({
+                                    message: "Count of null"
+                                }, null);
+                            }
+                        });
+                    },
+                    function(callback) {
+                        ExpertUser.aggregate([{
+                            $match: {
+                                _id: objectid(data._id)
+                            }
+                        }, {
+                            $unwind: "$publicationLinks"
+                        }, {
+                            $match: {
+                                "publicationLinks.name": {
+                                    $regex: check
+                                }
+                            }
+                        }, {
+                            $group: {
+                                _id: "_id",
+                                publicationLinks: {
+                                    $push: "$publicationLinks"
+                                }
+                            }
+                        }, {
+                            $project: {
+                                _id: 0,
+                                publicationLinks: {
+                                    $slice: ["$publicationLinks", skip, data.pagesize]
+                                }
+                            }
+                        }]).exec(function(err, found) {
+                            if (found && found.length > 0) {
+                                newreturns.data = found[0].publicationLinks;
+                                callback(null, newreturns);
+                            } else if (err) {
+                                console.log(err);
+                                callback(err, null);
+                            } else {
+                                callback({
+                                    message: "Count of null"
+                                }, null);
+                            }
+                        });
+                    }
+                ],
+                function(err, data4) {
+                    if (err) {
+                        console.log(err);
+                        callback(err, null);
+                    } else if (data4) {
+                        callback(null, newreturns);
+                    } else {
+                        callback(null, newreturns);
+                    }
+                });
+        },
+
+
+        getLimitedAddPhotos: function(data, callback) {
+            var newreturns = {};
+            newreturns.data = [];
+            var check = new RegExp(data.search, "i");
+            data.pagenumber = parseInt(data.pagenumber);
+            data.pagesize = parseInt(data.pagesize);
+            var skip = parseInt(data.pagesize * (data.pagenumber - 1));
+            async.parallel([
+                    function(callback) {
+                        ExpertUser.aggregate([{
+                            $match: {
+                                _id: objectid(data._id)
+                            }
+                        }, {
+                            $unwind: "$addPhotos"
+                        }, {
+                            $match: {
+                                "addPhotos.image2": {
+                                    '$regex': check
+                                }
+                            }
+                        }, {
+                            $group: {
+                                _id: null,
+                                count: {
+                                    $sum: 1
+                                }
+                            }
+                        }, {
+                            $project: {
+                                count: 1
+                            }
+                        }]).exec(function(err, result) {
+                            console.log(result);
+                            if (result && result[0]) {
+                                newreturns.total = result[0].count;
+                                newreturns.totalpages = Math.ceil(result[0].count / data.pagesize);
+                                callback(null, newreturns);
+                            } else if (err) {
+                                console.log(err);
+                                callback(err, null);
+                            } else {
+                                callback({
+                                    message: "Count of null"
+                                }, null);
+                            }
+                        });
+                    },
+                    function(callback) {
+                        ExpertUser.aggregate([{
+                            $match: {
+                                _id: objectid(data._id)
+                            }
+                        }, {
+                            $unwind: "$addPhotos"
+                        }, {
+                            $match: {
+                                "addPhotos.image2": {
+                                    $regex: check
+                                }
+                            }
+                        }, {
+                            $group: {
+                                _id: "_id",
+                                addPhotos: {
+                                    $push: "$addPhotos"
+                                }
+                            }
+                        }, {
+                            $project: {
+                                _id: 0,
+                                addPhotos: {
+                                    $slice: ["$addPhotos", skip, data.pagesize]
+                                }
+                            }
+                        }]).exec(function(err, found) {
+                            if (found && found.length > 0) {
+                                newreturns.data = found[0].addPhotos;
+                                callback(null, newreturns);
+                            } else if (err) {
+                                console.log(err);
+                                callback(err, null);
+                            } else {
+                                callback({
+                                    message: "Count of null"
+                                }, null);
+                            }
+                        });
+                    }
+                ],
+                function(err, data4) {
+                    if (err) {
+                        console.log(err);
+                        callback(err, null);
+                    } else if (data4) {
+                        callback(null, newreturns);
+                    } else {
+                        callback(null, newreturns);
+                    }
+                });
+        },
 };
 module.exports = _.assign(module.exports, models);
