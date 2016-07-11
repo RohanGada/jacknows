@@ -247,7 +247,7 @@ module.exports = {
                 callId: req.query.callId
             }, {
                 $set: {
-                    status: req.query.status
+                    status: req.query.status.toLowerCase();
                 }
             }, function(err, respo) {
                 if (err) {
@@ -279,74 +279,35 @@ module.exports = {
         }
     },
     callPay: function(req, res) {
-        if (req.body && req.body.finalAmount) {
-            if (req.session.user) {
-                if (req.session.user.mobile && req.session.user.email) {
-                    var genParams = {
-                        "CHANNEL_ID": "WEB",
-                        "CUST_ID": req.session.user._id + "",
-                        "EMAIL": req.session.user.email + "",
-                        "INDUSTRY_TYPE_ID": "Retail",
-                        "MID": "GoFish30419544249686",
-                        "MOBILE_NO": req.session.user.mobile + "",
-                        "ORDER_ID": req.body._id + "",
-                        "REQUEST_TYPE": "DEFAULT",
-                        "THEME": "merchant",
-                        "TXN_AMOUNT": "1",
-                        "WEBSITE": "jacknows"
-                    };
-                    var abc = "https://pguat.paytm.com/oltp-web/processTransaction?";
-                    _.each(genParams, function(value, key) {
-                        abc += key + "=" + value + "&";
-                    });
-                    checksum.genchecksum(genParams, "7_Ew6zbUNTNvfJXv", function(err, genParams) {
-                        if (err) {
-                            console.log(err);
-                            res.json({
-                                value: false,
-                                data: err
-                            });
-                        } else {
-                            abc += "CHECKSUMHASH=" + genParams.CHECKSUMHASH;
-                            res.json({
-                                value: true,
-                                data: abc
-                            });
-                        }
-                    });
-                } else {
-                    res.json({
-                        value: false,
-                        data: "Please update mobile-number and email"
-                    });
-                }
-            } else {
-                res.json({
-                    value: false,
-                    data: "User not logged-in"
-                });
-            }
-        } else {
-            res.json({
-                value: false,
-                data: "Invalid Call"
-            });
-        }
-    },
-    dummy: function(req, res) {
+        // if (req.query && req.query._id) {
+        //     if (req.session.user) {
+        //         if (req.session.user.mobile && req.session.user.email) {
+        //             Booking.findOne({
+        //                 _id: req.query._id
+        //             }, {
+        //                 _id: 0,
+        //                 finalAmount: 1
+        //             }).exec(function(err, respo) {
+        //                 if (err) {
+        //                     console.log(err);
+        //                     res.json(err, null);
+        //                 } else if (_.isEmpty(respo)) {
+        //                     res.json({ message: "Booking was not found" }, null);
+        //                 } else {
         var genParams = {
-            "CHANNEL_ID":"WEB",
-            "CUST_ID":"111",
-            "EMAIL":"vignesh@wohlig.com",
-            "INDUSTRY_TYPE_ID":"Retail",
-            "MID":"GoFish30419544249686",
-            "MOBILE_NO":"8898177321",
-            "ORDER_ID":"62",
-            "REQUEST_TYPE":"DEFAULT",
-            "THEME":"merchant",
-            "TXN_AMOUNT":"1",
-            "WEBSITE":"jacknows"
+            "CHANNEL_ID": "WEB",
+            "CUST_ID": "112",
+            "EMAIL": "vignesh@wohlig.com",
+            "INDUSTRY_TYPE_ID": "Retail",
+            "MID": "GoFish30419544249686",
+            "MOBILE_NO": "8898177321",
+            "ORDER_ID": req.body.ORDER_ID,
+            "REQUEST_TYPE": "DEFAULT",
+            "THEME": "merchant",
+            "TXN_AMOUNT": "123",
+            "WEBSITE": "jacknows"
         };
+        console.log(genParams);
         var abc = "https://pguat.paytm.com/oltp-web/processTransaction?";
         _.each(genParams, function(value, key) {
             abc += key + "=" + value + "&";
@@ -360,9 +321,32 @@ module.exports = {
                 });
             } else {
                 abc += "CHECKSUMHASH=" + genParams.CHECKSUMHASH;
-                res.redirect(abc);
+                res.json({
+                    value: true,
+                    data: abc
+                });
             }
         });
+        //                 }
+        //             });
+        //         } else {
+        //             res.json({
+        //                 value: false,
+        //                 data: "Please update mobile-number and email"
+        //             });
+        //         }
+        //     } else {
+        //         res.json({
+        //             value: false,
+        //             data: "User not logged-in"
+        //         });
+        //     }
+        // } else {
+        //     res.json({
+        //         value: false,
+        //         data: "Invalid Call"
+        //     });
+        // }
     },
     response: function(req, res) {
         console.log(req.body);
@@ -435,7 +419,7 @@ module.exports = {
             // } else {
             //     Booking.saveData({
             //         _id: req.body.ORDERID,
-            //         status: "accept2",
+            //         status: "failure",
             //         cancelReason: req.body.RESPMSG
             //     }, function(err, respo) {
             //         if (err) {

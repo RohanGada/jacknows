@@ -53,13 +53,19 @@ var schema = new Schema({
 module.exports = mongoose.model('Booking', schema);
 var models = {
     saveData: function(data, callback) {
+        var updateObj = {};
+        if (data.status == "failure") {
+            updateObj = data;
+        } else {
+            updateObj = {
+                status: data.status
+            };
+        }
         var booking = this(data);
         if (data._id) {
             this.findOneAndUpdate({
                 _id: data._id
-            }, {
-                status: data.status
-            }).lean().exec(function(err, data2) {
+            }, updateObj).lean().exec(function(err, data2) {
                 if (err) {
                     callback(err, null);
                 } else {
@@ -215,6 +221,11 @@ var models = {
                             emailData.content2 = emailData.content;
                             callMail(emailData, emailData2);
                             break;
+                        case "failure":
+                            callback(null, {
+                                message: "Status Updated"
+                            });
+                            break;
                         default:
                             callback({
                                 message: "Wrong status"
@@ -329,7 +340,7 @@ var models = {
         }
     },
     getAll: function(data, callback) {
-        this.find({}, {}, {}).populate("expert","firstName").populate("user","firstName").lean().exec(function(err, deleted) {
+        this.find({}, {}, {}).populate("expert", "firstName").populate("user", "firstName").lean().exec(function(err, deleted) {
             if (err) {
                 callback(err, null);
             } else {
@@ -449,7 +460,7 @@ var models = {
                         }
                     }, {
                         password: 0
-                    }).skip(data.pagesize * (data.pagenumber - 1)).limit(data.pagesize).populate("expert","firstName").populate("user","firstName").exec(function(err, data2) {
+                    }).skip(data.pagesize * (data.pagenumber - 1)).limit(data.pagesize).populate("expert", "firstName").populate("user", "firstName").exec(function(err, data2) {
                         if (err) {
                             console.log(err);
                             callback(err, null);
