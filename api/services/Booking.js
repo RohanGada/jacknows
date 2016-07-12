@@ -54,18 +54,11 @@ module.exports = mongoose.model('Booking', schema);
 var models = {
     saveData: function(data, callback) {
         var updateObj = {};
-        if (data.status == "failure") {
-            updateObj = data;
-        } else {
-            updateObj = {
-                status: data.status
-            };
-        }
         var booking = this(data);
         if (data._id) {
             this.findOneAndUpdate({
                 _id: data._id
-            }, updateObj).lean().exec(function(err, data2) {
+            }, data).lean().exec(function(err, data2) {
                 if (err) {
                     callback(err, null);
                 } else {

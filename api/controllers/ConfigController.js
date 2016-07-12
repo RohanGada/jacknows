@@ -378,6 +378,7 @@ module.exports = {
                             console.log(respo);
                             if (respo.user) {
                                 reqParam._id = req.body.MERC_UNQ_REF;
+                                reqParam.txnid = req.body.BANKTXNID;
                                 reqParam.user = respo.user._id;
                                 reqParam.username = respo.user.firstName;
                                 reqParam.userimage = respo.user.image;
