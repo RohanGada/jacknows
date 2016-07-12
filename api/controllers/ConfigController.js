@@ -279,169 +279,173 @@ module.exports = {
         }
     },
     callPay: function(req, res) {
-        // if (req.query && req.query._id) {
-        //     if (req.session.user) {
-        //         if (req.session.user.mobile && req.session.user.email) {
-        //             Booking.findOne({
-        //                 _id: req.query._id
-        //             }, {
-        //                 _id: 0,
-        //                 finalAmount: 1
-        //             }).exec(function(err, respo) {
-        //                 if (err) {
-        //                     console.log(err);
-        //                     res.json(err, null);
-        //                 } else if (_.isEmpty(respo)) {
-        //                     res.json({ message: "Booking was not found" }, null);
-        //                 } else {
-        var genParams = {
-            "CHANNEL_ID": "WEB",
-            "CUST_ID": "112",
-            "EMAIL": "vignesh@wohlig.com",
-            "INDUSTRY_TYPE_ID": "Retail",
-            "MID": "GoFish30419544249686",
-            "MOBILE_NO": "8898177321",
-            "ORDER_ID": req.body.ORDER_ID,
-            "REQUEST_TYPE": "DEFAULT",
-            "THEME": "merchant",
-            "TXN_AMOUNT": "123",
-            "WEBSITE": "jacknows"
-        };
-        console.log(genParams);
-        var abc = "https://pguat.paytm.com/oltp-web/processTransaction?";
-        _.each(genParams, function(value, key) {
-            abc += key + "=" + value + "&";
-        });
-        checksum.genchecksum(genParams, "7_Ew6zbUNTNvfJXv", function(err, genParams) {
-            if (err) {
-                console.log(err);
+        if (req.body && req.body._id) {
+            if (req.session.user) {
+                if (req.session.user.mobile && req.session.user.email) {
+                    Booking.findOne({
+                        _id: req.body._id
+                    }, {
+                        _id: 0,
+                        finalAmount: 1
+                    }).exec(function(err, respo) {
+                        if (err) {
+                            console.log(err);
+                            res.json(err, null);
+                        } else if (_.isEmpty(respo)) {
+                            res.json({ message: "Booking was not found" }, null);
+                        } else {
+                            var genParams = {
+                                "CHANNEL_ID": "WEB",
+                                "CUST_ID": req.session.user._id,
+                                "EMAIL": req.session.user.email,
+                                "INDUSTRY_TYPE_ID": "Retail",
+                                "MID": "GoFish30419544249686",
+                                "MERC_UNQ_REF": req.body._id,
+                                "MOBILE_NO": req.session.user.mobile,
+                                "ORDER_ID": "ORD-",
+                                "REQUEST_TYPE": "DEFAULT",
+                                "THEME": "merchant",
+                                "TXN_AMOUNT": respo.finalAmount,
+                                "WEBSITE": "jacknows"
+                            };
+                            var possible = "abcdefghijklmnopqrstuvwxyz1234567890";
+                            for (var i = 0; i < 8; i++) {
+                                genParams.ORDER_ID += possible.charAt(Math.floor(Math.random() * possible.length));
+                            }
+                            var abc = "https://pguat.paytm.com/oltp-web/processTransaction?";
+                            _.each(genParams, function(value, key) {
+                                abc += key + "=" + value + "&";
+                            });
+                            checksum.genchecksum(genParams, "7_Ew6zbUNTNvfJXv", function(err, genParams) {
+                                if (err) {
+                                    console.log(err);
+                                    res.json({
+                                        value: false,
+                                        data: err
+                                    });
+                                } else {
+                                    abc += "CHECKSUMHASH=" + encodeURIComponent(genParams.CHECKSUMHASH);
+                                    res.json({
+                                        value: true,
+                                        data: abc
+                                    });
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    res.json({
+                        value: false,
+                        data: "Please update mobile-number and email"
+                    });
+                }
+            } else {
                 res.json({
                     value: false,
-                    data: err
-                });
-            } else {
-                abc += "CHECKSUMHASH=" + genParams.CHECKSUMHASH;
-                res.json({
-                    value: true,
-                    data: abc
+                    data: "User not logged-in"
                 });
             }
-        });
-        //                 }
-        //             });
-        //         } else {
-        //             res.json({
-        //                 value: false,
-        //                 data: "Please update mobile-number and email"
-        //             });
-        //         }
-        //     } else {
-        //         res.json({
-        //             value: false,
-        //             data: "User not logged-in"
-        //         });
-        //     }
-        // } else {
-        //     res.json({
-        //         value: false,
-        //         data: "Invalid Call"
-        //     });
-        // }
+        } else {
+            res.json({
+                value: false,
+                data: "Invalid Call"
+            });
+        }
     },
     response: function(req, res) {
-        console.log(req.body);
-        if (req.body && req.body.ORDERID) {
-            res.json({
-                value: true,
-                data: req.body
-            });
-            // if (req.body.RESPCODE == "01") {
-            //     Booking.findOne({ _id: req.body.ORDERID }).populate("user").populate("expert").lean().exec(function(err, respo) {
-            //         if (err) {
-            //             console.log(err);
-            //             res.json({
-            //                 value: false,
-            //                 data: err
-            //             });
-            //         } else {
-            //             if (_.isEmpty(respo)) {
-            //                 console.log("No data found");
-            //                 res.json({
-            //                     value: false,
-            //                     data: "Booking not found"
-            //                 });
-            //             } else {
-            //                 var reqParam = {};
-            //                 if (respo.user) {
-            //                     reqParam._id = req.body.ORDERID;
-            //                     reqParam.user = respo.user._id;
-            //                     reqParam.username = respo.user.firstName;
-            //                     reqParam.userimage = respo.user.image;
-            //                     reqParam.email = respo.user.email;
-            //                     reqParam.from = "user";
-            //                     reqParam.status = "paid";
-            //                     reqParam.mobile = respo.expert.mobileno;
-            //                     reqParam.expertemail = respo.expert.email;
-            //                     reqParam.expertname = respo.expert.firstName;
-            //                     callSave();
-            //                 } else {
-            //                     res.json({
-            //                         value: false,
-            //                         data: "User not loggd-in"
-            //                     });
-            //                 }
+        if (req.body && req.body.MERC_UNQ_REF) {
+            // res.json({
+            //     value: true,
+            //     data: req.body
+            // });
+            if (req.body.RESPCODE == "01") {
+                Booking.findOne({ _id: req.body.MERC_UNQ_REF }).populate("user").populate("expert").lean().exec(function(err, respo) {
+                    if (err) {
+                        console.log(err);
+                        res.json({
+                            value: false,
+                            data: err
+                        });
+                    } else {
+                        if (_.isEmpty(respo)) {
+                            console.log("No data found");
+                            res.json({
+                                value: false,
+                                data: "Booking not found"
+                            });
+                        } else {
+                            var reqParam = {};
+                            console.log(respo);
+                            if (respo.user) {
+                                reqParam._id = req.body.MERC_UNQ_REF;
+                                reqParam.user = respo.user._id;
+                                reqParam.username = respo.user.firstName;
+                                reqParam.userimage = respo.user.image;
+                                reqParam.email = respo.user.email;
+                                reqParam.from = "user";
+                                reqParam.status = "paid";
+                                reqParam.mobile = respo.expert.mobileno;
+                                reqParam.expertemail = respo.expert.email;
+                                reqParam.expertname = respo.expert.firstName;
+                                callSave();
+                            } else {
+                                res.json({
+                                    value: false,
+                                    data: "User not found"
+                                });
+                            }
 
-            //                 function callSave() {
-            //                     Booking.saveData(reqParam, function(err, respo) {
-            //                         if (err) {
-            //                             res.json({
-            //                                 value: false,
-            //                                 data: err
-            //                             });
-            //                         } else {
-            //                             if (respo._id) {
-            //                                 res.json({
-            //                                     value: true,
-            //                                     data: respo
-            //                                 });
-            //                             } else {
-            //                                 res.json({
-            //                                     value: false,
-            //                                     data: respo
-            //                                 });
-            //                             }
-            //                         }
-            //                     });
-            //                 }
-            //             }
-            //         }
-            //     });
-            // } else {
-            //     Booking.saveData({
-            //         _id: req.body.ORDERID,
-            //         status: "failure",
-            //         cancelReason: req.body.RESPMSG
-            //     }, function(err, respo) {
-            //         if (err) {
-            //             res.json({
-            //                 value: false,
-            //                 data: err
-            //             });
-            //         } else {
-            //             if (respo._id) {
-            //                 res.json({
-            //                     value: true,
-            //                     data: respo
-            //                 });
-            //             } else {
-            //                 res.json({
-            //                     value: false,
-            //                     data: respo
-            //                 });
-            //             }
-            //         }
-            //     });
-            // }
+                            function callSave() {
+                                Booking.saveData(reqParam, function(err, respo) {
+                                    if (err) {
+                                        res.json({
+                                            value: false,
+                                            data: err
+                                        });
+                                    } else {
+                                        if (respo._id) {
+                                            res.json({
+                                                value: true,
+                                                data: respo
+                                            });
+                                        } else {
+                                            res.json({
+                                                value: false,
+                                                data: respo
+                                            });
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
+            } else {
+                Booking.saveData({
+                    _id: req.body.MERC_UNQ_REF,
+                    status: "failure",
+                    cancelReason: req.body.RESPMSG
+                }, function(err, respo) {
+                    if (err) {
+                        res.json({
+                            value: false,
+                            data: err
+                        });
+                    } else {
+                        if (respo._id) {
+                            res.json({
+                                value: true,
+                                data: respo
+                            });
+                        } else {
+                            res.json({
+                                value: false,
+                                data: respo
+                            });
+                        }
+                    }
+                });
+            }
         } else {
             res.json({
                 value: false,
