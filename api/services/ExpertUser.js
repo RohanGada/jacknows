@@ -1698,3 +1698,58 @@ var models = {
         },
 };
 module.exports = _.assign(module.exports, models);
+// getLimitedEducation: function(data, callback) {
+//         var newreturns = {};
+//         newreturns.data = [];
+//         var check = new RegExp(data.search, "i");
+//         data.pagenumber = parseInt(data.pagenumber);
+//         data.pagesize = parseInt(data.pagesize);
+//         var skip = parseInt(data.pagesize * (data.pagenumber - 1));
+//         // async.parallel([
+//         //         function(callback) {
+//         ExpertUser.aggregate([{
+//             $match: {
+//                 _id: objectid(data._id)
+//             }
+//         }, {
+//             $unwind: "$educationalQualification"
+//         }, {
+//             $match: {
+//                 "educationalQualification.degreeTitle": {
+//                     '$regex': check
+//                 }
+//             }
+//         }, {
+//             $group: {
+//                 _id: "$_id",
+//                 count: {
+//                     $sum: 1
+//                 },
+//                 educationalQualification: {
+//                     $push: "$educationalQualification"
+//                 }
+//             }
+//         }, {
+//             $project: {
+//                 _id: 0,
+//                 count: 1,
+//                 educationalQualification: {
+//                     $slice: ["$educationalQualification", skip, data.pagesize]
+//                 }
+//             }
+//         }]).exec(function(err, result) {
+//             if (result && result[0]) {
+//                 newreturns.total = result[0].count;
+//                 newreturns.totalpages = Math.ceil(result[0].count / data.pagesize);
+//                 newreturns.data = result[0].educationalQualification;
+//                 callback(null, newreturns);
+//             } else if (err) {
+//                 console.log(err);
+//                 callback(err, null);
+//             } else {
+//                 callback({
+//                     message: "Count of null"
+//                 }, null);
+//             }
+//         });
+//     },

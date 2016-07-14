@@ -23,7 +23,6 @@
 process.chdir(__dirname);
 var mongoose;
 mongoose = require('mongoose');
- var nodemailer = require("nodemailer");
 mongoose.connect('mongodb://localhost:27017/Jacknows', function(err, data) {
     if (err) {
         console.log(err);
