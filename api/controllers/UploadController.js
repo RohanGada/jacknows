@@ -11,27 +11,36 @@ module.exports = {
             Config.GlobalCallback(err, fileNames, res);
         }
         var fileNames = [];
-        req.file("file").upload({
-            maxBytes: 10000000 // 10 MB Storage 1 MB = 10^6
-        }, function(err, uploadedFile) {
-            if (uploadedFile && uploadedFile.length > 0) {
-                async.each(uploadedFile, function(n, callback) {
-                    Config.uploadFile(n.fd, function(err, value) {
-                        if (err) {
-                            callback(err);
-                        } else {
-                            fileNames.push(value.name);
-                            callback(null);
-                        }
+        var reqFile = req.file('file');
+        if (reqFile._files.length > 0) {
+            req.file("file").upload({
+                maxBytes: 10000000 // 10 MB Storage 1 MB = 10^6
+            }, function(err, uploadedFile) {
+                if (uploadedFile && uploadedFile.length > 0) {
+                    async.each(uploadedFile, function(n, callback) {
+                        Config.uploadFile(n.fd, function(err, value) {
+                            if (err) {
+                                callback(err);
+                            } else {
+                                fileNames.push(value.name);
+                                callback(null);
+                            }
+                        });
+                    }, callback2);
+                } else {
+                    callback2(null, {
+                        value: false,
+                        data: "No files selected"
                     });
-                }, callback2);
-            } else {
-                callback2(null, {
-                    value: false,
-                    data: "No files selected"
-                });
-            }
-        });
+                }
+            });
+        } else {
+            reqFile.upload(function() {});
+            res.json({
+                value: false,
+                data: "Please select file to upload"
+            });
+        }
     },
     readFile: function(req, res) {
         Config.readUploaded(req.query.file, req.query.width, req.query.height, req.query.style, res);
