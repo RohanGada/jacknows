@@ -468,6 +468,7 @@ module.exports = {
                     data: err
                 });
             } else {
+                console.log(updated);
                 res.json({
                     value: false,
                     data: updated
