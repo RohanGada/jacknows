@@ -444,5 +444,35 @@ module.exports = {
                 data: "Invalid Call"
             });
         }
+    },
+    checkFailed: function(req, res) {
+        Booking.update({
+            callTime: {
+                $lt: new Date()
+            },
+            status: {
+                $in: ["pending"]
+            }
+        }, {
+            $set: {
+                status: "failure",
+                cancelReason: "Time expired"
+            }
+        }, {
+            multi: true
+        }, function(err, updated) {
+            if (err) {
+                console.log(err);
+                res.json({
+                    value: false,
+                    data: err
+                });
+            } else {
+                res.json({
+                    value: false,
+                    data: updated
+                });
+            }
+        });
     }
 };
