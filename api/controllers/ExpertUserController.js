@@ -104,7 +104,7 @@ module.exports = {
     delete: function(req, res) {
         if (req.body) {
             if (req.body._id && req.body._id != "") {
-                //	console.log("not valid");
+                //  console.log("not valid");
                 ExpertUser.deleteData(req.body, function(err, respo) {
                     if (err) {
                         res.json({
@@ -134,7 +134,7 @@ module.exports = {
     deleteEdu: function(req, res) {
         if (req.body) {
             if (req.body._id && req.body._id != "") {
-                //	console.log("not valid");
+                //  console.log("not valid");
                 ExpertUser.deleteEdu(req.body, function(err, respo) {
                     if (err) {
                         res.json({
@@ -212,7 +212,6 @@ module.exports = {
                     value: false
                 });
             } else {
-                console.log(data);
                 req.session.expertuser = data;
                 res.json({
                     data: "Profile Edited",
@@ -484,7 +483,7 @@ module.exports = {
     deleteAward: function(req, res) {
         if (req.body) {
             if (req.body._id && req.body._id != "") {
-                //	console.log("not valid");
+                //  console.log("not valid");
                 ExpertUser.deleteAward(req.body, function(err, respo) {
                     if (err) {
                         res.json({
@@ -572,7 +571,7 @@ module.exports = {
     deleteExperience: function(req, res) {
         if (req.body) {
             if (req.body._id && req.body._id != "") {
-                //	console.log("not valid");
+                //  console.log("not valid");
                 ExpertUser.deleteExperience(req.body, function(err, respo) {
                     if (err) {
                         res.json({
@@ -660,7 +659,7 @@ module.exports = {
     deleteCallSettings: function(req, res) {
         if (req.body) {
             if (req.body._id && req.body._id != "") {
-                //	console.log("not valid");
+                //  console.log("not valid");
                 ExpertUser.deleteCallSettings(req.body, function(err, respo) {
                     if (err) {
                         res.json({
@@ -748,7 +747,7 @@ module.exports = {
     deleteVideoLinks: function(req, res) {
         if (req.body) {
             if (req.body._id && req.body._id != "") {
-                //	console.log("not valid");
+                //  console.log("not valid");
                 ExpertUser.deleteVideoLinks(req.body, function(err, respo) {
                     if (err) {
                         res.json({
@@ -837,7 +836,7 @@ module.exports = {
     deletePublicationLinks: function(req, res) {
         if (req.body) {
             if (req.body._id && req.body._id != "") {
-                //	console.log("not valid");
+                //  console.log("not valid");
                 ExpertUser.deletePublicationLinks(req.body, function(err, respo) {
                     if (err) {
                         res.json({
@@ -926,7 +925,7 @@ module.exports = {
     deleteAddPhotos: function(req, res) {
         if (req.body) {
             if (req.body._id && req.body._id != "") {
-                //	console.log("not valid");
+                //  console.log("not valid");
                 ExpertUser.deleteAddPhotos(req.body, function(err, respo) {
                     if (err) {
                         res.json({

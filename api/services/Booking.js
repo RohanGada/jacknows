@@ -90,6 +90,16 @@ var models = {
                                 },
                                 function(callback1) {
                                     Config.message2({
+                                        mobile: emailData2.mobile,
+                                        content: emailData2.content2
+                                    }, function(err, data2) {
+                                        callback1(null, {
+                                            message: "Done"
+                                        });
+                                    });
+                                },
+                                function(callback1) {
+                                    Config.message2({
                                         mobile: emailData.mobile,
                                         content: emailData.content2
                                     }, function(err, data2) {
@@ -109,6 +119,9 @@ var models = {
                                         callMe(data, data2);
                                     } else if (booking.status == "reject") {
                                         data.message = data.expertname + " has rejected your request.";
+                                        callMe(data, data2);
+                                    } else if (booking.status == "failure") {
+                                        data.message = "Booking with " + data.username + " was cancelled.";
                                         callMe(data, data2);
                                     } else {
                                         data.message = data.username + " has completed Payment.";
@@ -132,6 +145,12 @@ var models = {
                                 notification: data.message,
                                 image: data.expertimage
                             };
+                        } else if (booking.status == "failure") {
+                            saveObj = {
+                                user: data2.expert,
+                                notification: data.message,
+                                image: data.userimage
+                            };
                         } else {
                             saveObj = {
                                 expert: data2.expert,
@@ -144,6 +163,7 @@ var models = {
                                 callback(err, null);
                             } else {
                                 if (booking.status == "paid") {
+                                    // callback(null, data2);
                                     Config.checkCall({
                                         _id: data._id
                                     }, function(err, scheduRes) {
@@ -167,6 +187,8 @@ var models = {
                             emailData.filename = 'dummy.ejs';
                             emailData.name = data.expertname;
                             emailData.content = "Hi, we have sent your reply to the User, we will revert once the call is confirmed.";
+                            emailData.mobile = data.expertmobile;
+                            emailData.content2 = "Hi, we have sent your reply to the User, we will revert once the call is confirmed.";
                             emailData.subject = "Booking Status";
                             var emailData2 = {};
                             emailData2.email = data.useremail;
@@ -174,8 +196,8 @@ var models = {
                             emailData2.name = data.username;
                             emailData2.content = "Hi, the expert has replied to your request, please login to check. (http://wohlig.co.in/jacknows/#/login)";
                             emailData2.subject = "Booking Status";
-                            emailData.mobile = data.mobile;
-                            emailData.content2 = "Hi, the expert has replied to your request, please login to check.";
+                            emailData2.mobile = data.mobile;
+                            emailData2.content2 = "Hi, the expert has replied to your request, please login to check.";
                             callMail(emailData, emailData2);
                             break;
                         case "reject":
@@ -185,14 +207,16 @@ var models = {
                             emailData.name = data.expertname;
                             emailData.content = "Hi, we have sent your reply to the User, we will revert once the call is confirmed.";
                             emailData.subject = "Booking Status";
+                            emailData.mobile = data.expertmobile;
+                            emailData.content2 = "Hi, we have sent your reply to the User, we will revert once the call is confirmed.";
                             var emailData2 = {};
                             emailData2.email = data.useremail;
                             emailData2.filename = 'dummy.ejs';
                             emailData2.name = data.username;
                             emailData2.content = "Hi, the expert has replied to your request, please login to check. (http://wohlig.co.in/jacknows/#/login)";
                             emailData2.subject = "Booking Status";
-                            emailData.mobile = data.mobile;
-                            emailData.content2 = "Hi, the expert has replied to your request, please login to check.";
+                            emailData2.mobile = data.mobile;
+                            emailData2.content2 = "Hi, the expert has replied to your request, please login to check.";
                             callMail(emailData, emailData2);
                             break;
                         case "paid":
@@ -203,6 +227,8 @@ var models = {
                             emailData.filename = 'dummy.ejs';
                             emailData.name = data.expertname;
                             emailData.content = "Your call with " + data.username + " is confirmed for " + timestamp + " IST.";
+                            emailData.mobile = data.expertmobile;
+                            emailData.content2 = "Your call with " + data.username + " is confirmed for " + timestamp + " IST.";
                             emailData.subject = "Booking Status";
                             var emailData2 = {};
                             emailData2.email = data.email;
@@ -210,14 +236,28 @@ var models = {
                             emailData2.name = data.username;
                             emailData2.content = "Thanks for making the payment, your call with " + data.expertname + "  is confimed for " + timestamp + " IST.";
                             emailData2.subject = "Booking Status";
-                            emailData.mobile = data.mobile;
-                            emailData.content2 = emailData.content;
+                            emailData2.mobile = data.mobile;
+                            emailData2.content2 = "Thanks for making the payment, your call with " + data.expertname + "  is confimed for " + timestamp + " IST.";
                             callMail(emailData, emailData2);
                             break;
                         case "failure":
-                            callback(null, {
-                                message: "Status Updated"
-                            });
+                            var emailData = {};
+                            emailData.email = data.expertemail;
+                            emailData.filename = 'dummy.ejs';
+                            emailData.name = data.expertname;
+                            emailData.content = "Your booking with " + data.username + " was cancelled";
+                            emailData.mobile = data.expertmobile;
+                            emailData.content2 = "Your booking with " + data.username + " was cancelled";
+                            emailData.subject = "Booking Status";
+                            var emailData2 = {};
+                            emailData2.email = data.email;
+                            emailData2.filename = 'dummy.ejs';
+                            emailData2.name = data.username;
+                            emailData2.content = "Your booking with " + data.expertname + " was cancelled";
+                            emailData2.subject = "Booking Status";
+                            emailData2.mobile = data.mobile;
+                            emailData2.content2 = "Your booking with " + data.expertname + " was cancelled";
+                            callMail(emailData, emailData2);
                             break;
                         default:
                             callback({
@@ -295,11 +335,27 @@ var models = {
                                             }
                                         });
                                     },
-
                                     function(callback1) {
                                         data.content2 = "Hi, you have received a request from a user, please login to check.";
                                         Config.message2({
                                             mobile: data.mobile,
+                                            content: data.content2
+                                        }, function(err, data2) {
+                                            if (err) {
+                                                callback1(null, {
+                                                    message: "Done"
+                                                });
+                                            } else {
+                                                callback1(null, {
+                                                    message: "Done"
+                                                });
+                                            }
+                                        });
+                                    },
+                                    function(callback1) {
+                                        data.content2 = "Thanks, your request has been sent to the expert. We will get back to you once they revert.";
+                                        Config.message2({
+                                            mobile: data.usermobile,
                                             content: data.content2
                                         }, function(err, data2) {
                                             if (err) {
@@ -358,7 +414,7 @@ var models = {
             matchobj = {
                 user: data.user,
                 status: {
-                    $in: ["completed", "reject", "refunded"]
+                    $in: ["complete", "reject", "refund"]
                 }
             }
         } else {
@@ -370,14 +426,13 @@ var models = {
 
         Booking.find(matchobj).populate("expert", '-password -forgotpassword -educationalQualification -awards -videoLinks -addPhotos -publicationLinks -experience -callSettings -__v ').exec(callback);
     },
-
     getExpertBooking: function(data, callback) {
         var matchobj = "";
         if (data.status == "") {
             matchobj = {
                 expert: data.expertuser,
                 status: {
-                    $in: ["completed", "reject", "refunded"]
+                    $in: ["complete", "reject", "refund"]
                 }
             }
         } else {

@@ -353,100 +353,91 @@ module.exports = {
         }
     },
     response: function(req, res) {
+        console.log(req.body);
         if (req.body && req.body.MERC_UNQ_REF) {
             // res.json({
             //     value: true,
             //     data: req.body
             // });
-            if (req.body.RESPCODE == "01") {
-                Booking.findOne({ _id: req.body.MERC_UNQ_REF }).populate("user").populate("expert").lean().exec(function(err, respo) {
-                    if (err) {
-                        console.log(err);
+            Booking.findOne({ _id: req.body.MERC_UNQ_REF }).populate("user").populate("expert").lean().exec(function(err, respo) {
+                if (err) {
+                    console.log(err);
+                    res.json({
+                        value: false,
+                        data: err
+                    });
+                } else {
+                    if (_.isEmpty(respo)) {
+                        console.log("No data found");
                         res.json({
                             value: false,
-                            data: err
+                            data: "Booking not found"
                         });
                     } else {
-                        if (_.isEmpty(respo)) {
-                            console.log("No data found");
-                            res.json({
-                                value: false,
-                                data: "Booking not found"
-                            });
-                        } else {
-                            var reqParam = {};
-                            console.log(respo);
-                            if (respo.user) {
+                        var reqParam = {};
+                        console.log(respo);
+                        if (respo.user) {
+                            if (req.body.RESPCODE == "01") {
                                 reqParam._id = req.body.MERC_UNQ_REF;
-                                reqParam.txnid = req.body.BANKTXNID;
+                                reqParam.transactionID = req.body.BANKTXNID;
                                 reqParam.user = respo.user._id;
                                 reqParam.username = respo.user.firstName;
                                 reqParam.userimage = respo.user.image;
                                 reqParam.email = respo.user.email;
+                                reqParam.mobile = respo.user.mobile;
                                 reqParam.from = "user";
                                 reqParam.status = "paid";
-                                reqParam.mobile = respo.expert.mobileno;
+                                reqParam.expertmobile = respo.expert.mobileno;
                                 reqParam.expertemail = respo.expert.email;
                                 reqParam.expertname = respo.expert.firstName;
                                 callSave();
                             } else {
-                                res.json({
-                                    value: false,
-                                    data: "User not found"
-                                });
+                                reqParam.cancelReason = req.body.RESPMSG
+                                reqParam._id = req.body.MERC_UNQ_REF;
+                                reqParam.user = respo.user._id;
+                                reqParam.username = respo.user.firstName;
+                                reqParam.userimage = respo.user.image;
+                                reqParam.email = respo.user.email;
+                                reqParam.mobile = respo.user.mobile;
+                                reqParam.from = "user";
+                                reqParam.status = "failure";
+                                reqParam.expertmobile = respo.expert.mobileno;
+                                reqParam.expertemail = respo.expert.email;
+                                reqParam.expertname = respo.expert.firstName;
+                                callSave();
                             }
-
-                            function callSave() {
-                                Booking.saveData(reqParam, function(err, respo) {
-                                    if (err) {
-                                        res.json({
-                                            value: false,
-                                            data: err
-                                        });
-                                    } else {
-                                        if (respo._id) {
-                                            res.json({
-                                                value: true,
-                                                data: respo
-                                            });
-                                        } else {
-                                            res.json({
-                                                value: false,
-                                                data: respo
-                                            });
-                                        }
-                                    }
-                                });
-                            }
-                        }
-                    }
-                });
-            } else {
-                Booking.saveData({
-                    _id: req.body.MERC_UNQ_REF,
-                    status: "failure",
-                    cancelReason: req.body.RESPMSG
-                }, function(err, respo) {
-                    if (err) {
-                        res.json({
-                            value: false,
-                            data: err
-                        });
-                    } else {
-                        if (respo._id) {
-                            res.json({
-                                value: true,
-                                data: respo
-                            });
                         } else {
                             res.json({
                                 value: false,
-                                data: respo
+                                data: "User not found"
+                            });
+                        }
+
+                        function callSave() {
+                            Booking.saveData(reqParam, function(err, respo) {
+                                if (err) {
+                                    res.json({
+                                        value: false,
+                                        data: err
+                                    });
+                                } else {
+                                    if (respo._id) {
+                                        res.json({
+                                            value: true,
+                                            data: respo
+                                        });
+                                    } else {
+                                        res.json({
+                                            value: false,
+                                            data: respo
+                                        });
+                                    }
+                                }
                             });
                         }
                     }
-                });
-            }
+                }
+            });
         } else {
             res.json({
                 value: false,

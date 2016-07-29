@@ -122,7 +122,6 @@ var models = {
                 "mobileno": data.mobileno
             }]
         }).exec(function(err, data2) {
-            console.log(data2);
             if (err) {
                 callback(err, data);
             } else {
@@ -144,7 +143,6 @@ var models = {
                                     console.log(err);
                                     callback(err, null);
                                 } else {
-                                    console.log(emailRespo);
                                     callback(null, data3);
                                 }
                             });
@@ -437,7 +435,6 @@ var models = {
             password: 0,
             forgotpassword: 0
         }, function(err, deleted) {
-            console.log(deleted);
             if (err) {
                 callback(err, null);
             } else {
