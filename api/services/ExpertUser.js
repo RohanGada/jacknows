@@ -19,7 +19,7 @@ var schema = new Schema({
     email: String,
     password: String,
     name: String,
-    age: String,
+    age: Number,
     gender: String,
     mobileno: String,
     addressDetails: String,
@@ -1092,7 +1092,7 @@ var models = {
                                 var emailData = {};
                                 emailData.email = data.email;
                                 console.log('data.email', data.email);
-                                emailData.content = "Your password for Jacknows website is " + text + ".";
+                                emailData.content = "Your new password for the JacKnows website is: " + text + ".Please note that this is a system generated password which will remain valid for 3 hours only. Kindly change it to something you would be more comfortable remembering at the earliest.";
                                 emailData.filename = "newsletter.ejs";
                                 emailData.subject = "Jacknows forgot password";
                                 // user.email = data.email;
