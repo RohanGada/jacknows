@@ -10,10 +10,11 @@ var Schema = mongoose.Schema;
 var schema = new Schema({
     category: String,
     query: String,
-    user: {
-        type: Schema.Types.ObjectId,
-        ref: 'User'
-    },
+    email:String,
+    // user: {
+    //     type: Schema.Types.ObjectId,
+    //     ref: 'User'
+    // },
 
 });
 module.exports = mongoose.model('Findexpert', schema);

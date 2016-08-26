@@ -8,8 +8,8 @@
 module.exports = {
     saveData: function(req, res) {
         if (req.body) {
-            if (req.session.user) {
-                req.body.user = req.session.user._id;
+            // if (req.session.user) {
+            //     req.body.user = req.session.user._id;
                 Findexpert.saveData(req.body, function(err, respo) {
                     if (err) {
                         res.json({
@@ -23,12 +23,12 @@ module.exports = {
                         });
                     }
                 });
-            } else {
-                res.json({
-                    value: false,
-                    data: "User not loggd-in"
-                });
-            }
+            // } else {
+            //     res.json({
+            //         value: false,
+            //         data: "User not loggd-in"
+            //     });
+            // }
         } else {
             res.json({
                 value: false,
