@@ -24,6 +24,7 @@ var schema = new Schema({
     mobileno: String,
     addressDetails: String,
     callTime: String,
+    agreeTerms: Boolean,
     image: {
         type: String,
         default: ""

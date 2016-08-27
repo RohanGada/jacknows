@@ -353,6 +353,7 @@ module.exports = {
                 });
             } else {
                 if (data._id) {
+                  // console.log("google", data);
                     req.session.user = data;
                     req.session.save(function(err) {
                         if (err) {

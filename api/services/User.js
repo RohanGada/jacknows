@@ -25,6 +25,7 @@ var schema = new Schema({
     mobile: String,
     additionalInfo: String,
     forgotpassword: String,
+    agreeTerms: Boolean,
     image: {
         type: String,
         default: ""
