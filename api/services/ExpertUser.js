@@ -180,23 +180,23 @@ var models = {
                                     callback(err, null);
                                 } else {
                                     callback(null, data3);
-                                    Otp.saveData({
-                                        contact:expertuser.mobileno
-                                      },function (err,data) {
-                                        if(err){
-                                          callback(err,null);
-                                        }else if(data){
-                                          expertuser.save(function(err, data3) {
-                                              if (err) {
-                                                  callback(err, null);
-                                              } else {
-                                                  callback(null, data3);
-                                              }
-                                          });
-                                        }else{
-                                          callback(null,null);
-                                        }
-                                      });
+                                    // Otp.saveData({
+                                    //     contact:expertuser.mobileno
+                                    //   },function (err,data) {
+                                    //     if(err){
+                                    //       callback(err,null);
+                                    //     }else if(data){
+                                    //       expertuser.save(function(err, data3) {
+                                    //           if (err) {
+                                    //               callback(err, null);
+                                    //           } else {
+                                    //               callback(null, data3);
+                                    //           }
+                                    //       });
+                                    //     }else{
+                                    //       callback(null,null);
+                                    //     }
+                                    //   });
                                 }
                             });
                         }
