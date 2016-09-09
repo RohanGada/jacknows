@@ -186,7 +186,7 @@ var models = {
                                         if(err){
                                           callback(err,null);
                                         }else if(data){
-                                          user.save(function(err, data3) {
+                                          expertuser.save(function(err, data3) {
                                               if (err) {
                                                   callback(err, null);
                                               } else {
