@@ -13,11 +13,32 @@ var objectid = require("mongodb").ObjectId;
 var db = require("mongodb").Db;
 
 var schema = new Schema({
+  referralCode: {
+    type: String,
+    default: ""
+},
+points: {
+    type: Number,
+    default: 0
+},
+referred: {
+    type: [{
+        user: {
+            type: Schema.Types.ObjectId,
+            ref: 'ExpertUser'
+        }
+    }],
+    index: true
+},
     name: String,
     firstName: String,
     lastName: String,
     email: String,
     verifyemail: String,
+    verifyotp:{
+    type:Boolean,
+    default:false
+  },
     forVerification: {
         type: Boolean,
         default: false
@@ -138,18 +159,44 @@ var models = {
                         if (err) {
                             callback(err, null);
                         } else {
+                          var text = "";
+                               var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+                               for (var i = 0; i < 12; i++) {
+                                   text += possible.charAt(Math.floor(Math.random() * possible.length));
+                               }
+                               expertuser.verifyemail = md5(text);
                             var emailData = {};
                             emailData.email = data.email;
-                            emailData.filename = 'dummy.ejs';
+                            emailData.filename = "emailverify.ejs";
                             emailData.name = data.firstName;
-                            emailData.content = "Thank you for sharing your details with us. Our expert on-boarding team will get back to you at the earliest.";
-                            emailData.subject = "Signup in Jacknows";
+                            emailData.content = "Thank you for sharing your details with us. Our expert on-boarding team will get back to you at the earliest.Please click on the button below to verify your email :";
+                            emailData.subject = "Signup in Jacknows with Email Verification";
+                             var encryptVerEm =  text + "00x00" + ExpertUser.encrypt(data.email, 9);
+                             console.log(encryptVerEm);
+                                emailData.link = "http://wohlig.co.in/jacknows/#/verifyemail/"+encryptVerEm;
                             Config.email(emailData, function(err, emailRespo) {
                                 if (err) {
                                     console.log(err);
                                     callback(err, null);
                                 } else {
                                     callback(null, data3);
+                                    Otp.saveData({
+                                        contact:expertuser.mobileno
+                                      },function (err,data) {
+                                        if(err){
+                                          callback(err,null);
+                                        }else if(data){
+                                          user.save(function(err, data3) {
+                                              if (err) {
+                                                  callback(err, null);
+                                              } else {
+                                                  callback(null, data3);
+                                              }
+                                          });
+                                        }else{
+                                          callback(null,null);
+                                        }
+                                      });
                                 }
                             });
                         }
@@ -1710,6 +1757,53 @@ var models = {
                     callback(null, newreturns);
                 }
             });
+    },
+
+
+    emailVerification: function(data, callback) {
+        var splitIt = data.verifyemail.split("00x00");
+        var verify = splitIt[0];
+        var email = "";
+        if (splitIt[1])
+            {
+               email = ExpertUser.decrypt(splitIt[1], 9);
+            }
+        ExpertUser.findOneAndUpdate({
+            verifyemail: md5(verify),
+            email: email
+        }, {
+            $set: {
+                "verifyemail": ""
+            }
+        }, function(err, data2) {
+            if (err) {
+                callback(err, null);
+            } else {
+              console.log(data2);
+                if (!data2 && _.isEmpty(data2)) {
+                    callback("User already verified", null);
+                } else {
+                  if(data2.verifyotp !== true){
+                    callback("Please complete mobile verification",null);
+                  }else{
+                    var updated = data2.toObject();
+                    updated.verifyemail = "";
+                    delete updated._id;
+                    ExpertUser.saveData(updated, function(err, data2) {
+                        if (err) {
+                            console.log(err);
+                            callback(err, null);
+                        } else {
+                            console.log(data2);
+
+                            callback(null, data2);
+                        }
+                    });
+                  }
+                }
+            }
+        });
+
     },
 };
 module.exports = _.assign(module.exports, models);

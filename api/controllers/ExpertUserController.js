@@ -1141,6 +1141,22 @@ module.exports = {
             });
         }
     },
-
+    emailVerification:function(req,res){
+      if (req.body) {
+        if (req.body.verifyemail && req.body.verifyemail !== ""){
+          ExpertUser.emailVerification(req.body, res.callback);
+        }else{
+          res.json({
+            value: false,
+            data: "invalid params"
+          });
+        }
+      } else {
+        res.json({
+          value: false,
+          data: "Invalid Request"
+        });
+      }
+    },
 
 };
