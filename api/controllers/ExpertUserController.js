@@ -1026,6 +1026,46 @@ module.exports = {
             });
         }
     },
+    getLimitedApproved: function(req, res) {
+        function callback(err, data) {
+            Global.response(err, data, res);
+        }
+        if (req.body) {
+            if (req.body.pagesize && req.body.pagenumber) {
+                ExpertUser.findLimitedApproved(req.body, res.callback);
+            } else {
+                res.json({
+                    value: false,
+                    data: "Invalid Params"
+                });
+            }
+        } else {
+            res.json({
+                value: false,
+                data: "Invalid Request"
+            });
+        }
+    },
+    getLimitedUnapproved: function(req, res) {
+        function callback(err, data) {
+            Global.response(err, data, res);
+        }
+        if (req.body) {
+            if (req.body.pagesize && req.body.pagenumber) {
+                ExpertUser.findLimitedUnapproved(req.body, res.callback);
+            } else {
+                res.json({
+                    value: false,
+                    data: "Invalid Params"
+                });
+            }
+        } else {
+            res.json({
+                value: false,
+                data: "Invalid Request"
+            });
+        }
+    },
 
     getLimitedEducation: function(req, res) {
         if (req.body) {

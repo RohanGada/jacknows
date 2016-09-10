@@ -13,14 +13,6 @@ var objectid = require("mongodb").ObjectId;
 var db = require("mongodb").Db;
 
 var schema = new Schema({
-  referralCode: {
-    type: String,
-    default: ""
-},
-points: {
-    type: Number,
-    default: 0
-},
 referred: {
     type: [{
         user: {
@@ -42,6 +34,7 @@ referred: {
     forVerification: {
         type: Boolean,
         default: false
+        //value:"false"
     },
     password: String,
     name: String,
@@ -1293,6 +1286,124 @@ var models = {
                 }
             });
     },
+    findLimitedApproved: function(data, callback) {
+        var newreturns = {};
+        newreturns.data = [];
+        var check = new RegExp(data.search, "i");
+        data.pagenumber = parseInt(data.pagenumber);
+        data.pagesize = parseInt(data.pagesize);
+        async.parallel([
+                function(callback) {
+                    ExpertUser.count({
+                        firstName: {
+                            '$regex': check
+                        },
+                        forVerification : true
+                    }).exec(function(err, number) {
+                        if (err) {
+                            console.log(err);
+                            callback(err, null);
+                        } else if (number && number != "") {
+                            newreturns.total = number;
+                            newreturns.totalpages = Math.ceil(number / data.pagesize);
+                            callback(null, newreturns);
+                        } else {
+                            callback(null, newreturns);
+                        }
+                    });
+                },
+                function(callback) {
+                    ExpertUser.find({
+                        firstName: {
+                            '$regex': check
+                        },
+                        forVerification : true
+                    }, {
+                        password: 0
+                    }).skip(data.pagesize * (data.pagenumber - 1)).limit(data.pagesize).exec(function(err, data2) {
+                        if (err) {
+                            console.log(err);
+                            callback(err, null);
+                        } else if (data2 && data2.length > 0) {
+                            newreturns.data = data2;
+                            callback(null, newreturns);
+                        } else {
+                            callback(null, newreturns);
+                        }
+                    });
+                }
+            ],
+            function(err, data4) {
+                if (err) {
+                    console.log(err);
+                    callback(err, null);
+                } else if (data4) {
+                    callback(null, newreturns);
+                } else {
+                    callback(null, newreturns);
+                }
+            });
+    },
+    findLimitedUnapproved: function(data, callback) {
+        var newreturns = {};
+        newreturns.data = [];
+        var check = new RegExp(data.search, "i");
+        data.pagenumber = parseInt(data.pagenumber);
+        data.pagesize = parseInt(data.pagesize);
+        async.parallel([
+                function(callback) {
+                    ExpertUser.count({
+                        firstName: {
+                            '$regex': check
+                        },
+                        forVerification : false
+                    }).exec(function(err, number) {
+                        if (err) {
+                            console.log(err);
+                            callback(err, null);
+                        } else if (number && number != "") {
+                            newreturns.total = number;
+                            newreturns.totalpages = Math.ceil(number / data.pagesize);
+                            callback(null, newreturns);
+                        } else {
+                            callback(null, newreturns);
+                        }
+                    });
+                },
+                function(callback) {
+                    ExpertUser.find({
+                        firstName: {
+                            '$regex': check
+                        },
+                        forVerification : false
+                    }, {
+                        password: 0
+                    }).skip(data.pagesize * (data.pagenumber - 1)).limit(data.pagesize).exec(function(err, data2) {
+                        if (err) {
+                            console.log(err);
+                            callback(err, null);
+                        } else if (data2 && data2.length > 0) {
+                            newreturns.data = data2;
+                            callback(null, newreturns);
+                        } else {
+                            callback(null, newreturns);
+                        }
+                    });
+                }
+            ],
+            function(err, data4) {
+                if (err) {
+                    console.log(err);
+                    callback(err, null);
+                } else if (data4) {
+                    callback(null, newreturns);
+                } else {
+                    callback(null, newreturns);
+                }
+            });
+    },
+
+
 
 
     getLimitedEducation: function(data, callback) {
