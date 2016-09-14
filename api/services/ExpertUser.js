@@ -13,28 +13,32 @@ var objectid = require("mongodb").ObjectId;
 var db = require("mongodb").Db;
 
 var schema = new Schema({
-referred: {
-    type: [{
-        user: {
-            type: Schema.Types.ObjectId,
-            ref: 'ExpertUser'
-        }
-    }],
-    index: true
-},
+    referred: {
+        type: [{
+            user: {
+                type: Schema.Types.ObjectId,
+                ref: 'ExpertUser'
+            }
+        }],
+        index: true
+    },
+    isVerify: {
+        type: Boolean,
+        default: false
+    },
     name: String,
     firstName: String,
     lastName: String,
     email: String,
     verifyemail: String,
-    verifyotp:{
-    type:Boolean,
-    default:false
-  },
+    verifyotp: {
+        type: Boolean,
+        default: false
+    },
     forVerification: {
         type: Boolean,
         default: false
-        //value:"false"
+            //value:"false"
     },
     password: String,
     name: String,
@@ -466,18 +470,18 @@ var models = {
                         areaOfExpertise: {
                             '$regex': check
                         }
-                    },{
-                      city: {
-                        '$regex': check
-                      }
-                    },{
-                      description :{
-                        '$regex': check
-                      }
-                    },{
-                      specilization :{
-                        '$regex': check
-                      }
+                    }, {
+                        city: {
+                            '$regex': check
+                        }
+                    }, {
+                        description: {
+                            '$regex': check
+                        }
+                    }, {
+                        specilization: {
+                            '$regex': check
+                        }
                     }],
                     city: {
                         $in: data.location
@@ -510,6 +514,7 @@ var models = {
                         console.log(err);
                         callback(err, null);
                     } else {
+                      console.log("bbb",matchobj);
                         if (data3.length > 0) {
                             newreturns.data = data3;
                             _.each(data3, function(z) {
@@ -527,6 +532,31 @@ var models = {
                             callback(null, newreturns);
                         } else {
                             callback(null, []);
+                            // ExpertUser.find({}, {}, {}, function(err, data3) {
+                            //     if (err) {
+                            //         callback(err, null);
+                            //     } else {
+                            //       if (data3.length > 0) {
+                            //           newreturns.data = data3;
+                            //           _.each(data3, function(z) {
+                            //               if (z.areaOfExpertise && z.areaOfExpertise != "") {
+                            //                   var index = newreturns.arr.expertise.indexOf(z.areaOfExpertise);
+                            //                   if (index == -1)
+                            //                       newreturns.arr.expertise.push(z.areaOfExpertise);
+                            //               }
+                            //               if (z.city && z.city != "") {
+                            //                   var index = newreturns.arr.location.indexOf(z.city);
+                            //                   if (index == -1)
+                            //                       newreturns.arr.location.push(z.city);
+                            //               }
+                            //           });
+                            //           newreturns.message = "No data found";
+                            //           callback(null, newreturns);
+                            //       }else{
+                            //         callback(null, []);
+                            //       }
+                            //     }
+                            // });
                         }
                     }
                 });
@@ -1298,7 +1328,7 @@ var models = {
                         firstName: {
                             '$regex': check
                         },
-                        forVerification : true
+                        forVerification: true
                     }).exec(function(err, number) {
                         if (err) {
                             console.log(err);
@@ -1317,7 +1347,7 @@ var models = {
                         firstName: {
                             '$regex': check
                         },
-                        forVerification : true
+                        forVerification: true
                     }, {
                         password: 0
                     }).skip(data.pagesize * (data.pagenumber - 1)).limit(data.pagesize).exec(function(err, data2) {
@@ -1356,7 +1386,7 @@ var models = {
                         firstName: {
                             '$regex': check
                         },
-                        forVerification : false
+                        forVerification: false
                     }).exec(function(err, number) {
                         if (err) {
                             console.log(err);
@@ -1375,7 +1405,7 @@ var models = {
                         firstName: {
                             '$regex': check
                         },
-                        forVerification : false
+                        forVerification: false
                     }, {
                         password: 0
                     }).skip(data.pagesize * (data.pagenumber - 1)).limit(data.pagesize).exec(function(err, data2) {
@@ -1924,10 +1954,9 @@ var models = {
         var splitIt = data.verifyemail.split("00x00");
         var verify = splitIt[0];
         var email = "";
-        if (splitIt[1])
-            {
-               email = ExpertUser.decrypt(splitIt[1], 9);
-            }
+        if (splitIt[1]) {
+            email = ExpertUser.decrypt(splitIt[1], 9);
+        }
         ExpertUser.findOneAndUpdate({
             verifyemail: md5(verify),
             email: email
@@ -1939,27 +1968,27 @@ var models = {
             if (err) {
                 callback(err, null);
             } else {
-              console.log(data2);
+                console.log(data2);
                 if (!data2 && _.isEmpty(data2)) {
                     callback("User already verified", null);
                 } else {
-                  if(data2.verifyotp !== true){
-                    callback("Please complete mobile verification",null);
-                  }else{
-                    var updated = data2.toObject();
-                    updated.verifyemail = "";
-                    delete updated._id;
-                    ExpertUser.saveData(updated, function(err, data2) {
-                        if (err) {
-                            console.log(err);
-                            callback(err, null);
-                        } else {
-                            console.log(data2);
+                    if (data2.verifyotp !== true) {
+                        callback("Please complete mobile verification", null);
+                    } else {
+                        var updated = data2.toObject();
+                        updated.verifyemail = "";
+                        delete updated._id;
+                        ExpertUser.saveData(updated, function(err, data2) {
+                            if (err) {
+                                console.log(err);
+                                callback(err, null);
+                            } else {
+                                console.log(data2);
 
-                            callback(null, data2);
-                        }
-                    });
-                  }
+                                callback(null, data2);
+                            }
+                        });
+                    }
                 }
             }
         });
