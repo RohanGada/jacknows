@@ -132,81 +132,6 @@ var schema = new Schema({
 });
 module.exports = mongoose.model('ExpertUser', schema);
 var models = {
-    // register: function(data, callback) {
-    //     if (data.password && data.password != "") {
-    //         data.password = md5(data.password);
-    //     }
-    //     data.name = data.firstName + " " + data.lastName;
-    //     var expertuser = this(data);
-    //     expertuser.email = data.email;
-    //     this.count({
-    //         $or: [{
-    //             "email": data.email
-    //         }, {
-    //             "mobileno": data.mobileno
-    //         }]
-    //     }).exec(function(err, data2) {
-    //         if (err) {
-    //             callback(err, data);
-    //         } else {
-    //             // console.log(_.isEmpty(data));
-    //             if (data2 == 0) {
-    //                 expertuser.save(function(err, data3) {
-    //                     data3.password = '';
-    //                     if (err) {
-    //                         callback(err, null);
-    //                     } else {
-    //                       var text = "";
-    //                            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    //                            for (var i = 0; i < 12; i++) {
-    //                                text += possible.charAt(Math.floor(Math.random() * possible.length));
-    //                            }
-    //                            expertuser.verifyemail = md5(text);
-    //                         var emailData = {};
-    //                         emailData.email = data.email;
-    //                         emailData.filename = "dummy.ejs";
-    //                         emailData.name = data.firstName;
-    //                         emailData.content = "Thank you for sharing your details with us. Our expert on-boarding team will get back to you at the earliest.Please click on the button below to verify your email :";
-    //                         emailData.subject = "Signup in Jacknows with Email Verification";
-    //                          var encryptVerEm =  text + "00x00" + ExpertUser.encrypt(data.email, 9);
-    //                          console.log(encryptVerEm);
-    //                             emailData.link = "http://wohlig.co.in/jacknows/#/verifyemail/"+encryptVerEm;
-    //                         Config.email(emailData, function(err, emailRespo) {
-    //                             if (err) {
-    //                                 console.log(err);
-    //                                 callback(err, null);
-    //                             } else {
-    //                                 callback(null, data3);
-    //                                 Otp.saveData({
-    //                                     contact:expertuser.mobileno
-    //                                   },function (err,data) {
-    //                                     if(err){
-    //                                       callback(err,null);
-    //                                     }else if(data){
-    //                                       expertuser.save(function(err, data3) {
-    //                                           if (err) {
-    //                                               callback(err, null);
-    //                                           } else {
-    //                                               callback(null, data3);
-    //                                           }
-    //                                       });
-    //                                     }else{
-    //                                       callback(null,null);
-    //                                     }
-    //                                   });
-    //                             }
-    //                         });
-    //                     }
-    //                 });
-    //             } else {
-    //                 callback({
-    //                     message: "Expert already Exists"
-    //                 }, false);
-    //             }
-    //         }
-    //     });
-    // },
-
     register: function(data, callback) {
         if (data.password && data.password != "") {
             data.password = md5(data.password);
@@ -231,18 +156,45 @@ var models = {
                         if (err) {
                             callback(err, null);
                         } else {
+                          var text = "";
+                               var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+                               for (var i = 0; i < 12; i++) {
+                                   text += possible.charAt(Math.floor(Math.random() * possible.length));
+                               }
+                               expertuser.verifyemail = md5(text);
                             var emailData = {};
                             emailData.email = data.email;
-                            emailData.filename = 'dummy.ejs';
+                            emailData.filename = "dummy.ejs";
                             emailData.name = data.firstName;
-                            emailData.content = "Thank you for sharing your details with us. Our expert on-boarding team will get back to you at the earliest.";
-                            emailData.subject = "Signup in Jacknows";
+                            var encryptVerEm =  text + "00x00" + ExpertUser.encrypt(data.email, 9);
+                            console.log(encryptVerEm);
+                               emailData.link = "http://localhost:8080/#/verifyemail/"+encryptVerEm;
+                            emailData.content = "Thank you for sharing your details with us. Our expert on-boarding team will get back to you at the earliest.Please click on the button below to verify your email :" + emailData.link;
+                            emailData.subject = "Signup in Jacknows with Email Verification";
+
                             Config.email(emailData, function(err, emailRespo) {
                                 if (err) {
                                     console.log(err);
                                     callback(err, null);
                                 } else {
                                     callback(null, data3);
+                                    Otp.saveData({
+                                        contact:expertuser.mobileno
+                                      },function (err,data) {
+                                        if(err){
+                                          callback(err,null);
+                                        }else if(data){
+                                          expertuser.save(function(err, data3) {
+                                              if (err) {
+                                                  callback(err, null);
+                                              } else {
+                                                  callback(null, data3);
+                                              }
+                                          });
+                                        }else{
+                                          callback(null,null);
+                                        }
+                                      });
                                 }
                             });
                         }
@@ -255,6 +207,68 @@ var models = {
             }
         });
     },
+    encrypt: function(plaintext, shiftAmount) {
+        var ciphertext = "";
+        for (var i = 0; i < plaintext.length; i++) {
+            var plainCharacter = plaintext.charCodeAt(i);
+            if (plainCharacter >= 97 && plainCharacter <= 122) {
+                ciphertext += String.fromCharCode((plainCharacter - 97 + shiftAmount) % 26 + 97);
+            } else if (plainCharacter >= 65 && plainCharacter <= 90) {
+                ciphertext += String.fromCharCode((plainCharacter - 65 + shiftAmount) % 26 + 65);
+            } else {
+                ciphertext += String.fromCharCode(plainCharacter);
+            }
+        }
+        return ciphertext;
+    },
+    // register: function(data, callback) {
+    //     if (data.password && data.password != "") {
+    //         data.password = md5(data.password);
+    //     }
+    //     data.name = data.firstName + " " + data.lastName;
+    //     var expertuser = this(data);
+    //     expertuser.email = data.email;
+    //     this.count({
+    //         $or: [{
+    //             "email": data.email
+    //         }, {
+    //             "mobileno": data.mobileno
+    //         }]
+    //     }).exec(function(err, data2) {
+    //         if (err) {
+    //             callback(err, data);
+    //         } else {
+    //             // console.log(_.isEmpty(data));
+    //             if (data2 == 0) {
+    //                 expertuser.save(function(err, data3) {
+    //                     data3.password = '';
+    //                     if (err) {
+    //                         callback(err, null);
+    //                     } else {
+    //                         var emailData = {};
+    //                         emailData.email = data.email;
+    //                         emailData.filename = 'dummy.ejs';
+    //                         emailData.name = data.firstName;
+    //                         emailData.content = "Thank you for sharing your details with us. Our expert on-boarding team will get back to you at the earliest.";
+    //                         emailData.subject = "Signup in Jacknows";
+    //                         Config.email(emailData, function(err, emailRespo) {
+    //                             if (err) {
+    //                                 console.log(err);
+    //                                 callback(err, null);
+    //                             } else {
+    //                                 callback(null, data3);
+    //                             }
+    //                         });
+    //                     }
+    //                 });
+    //             } else {
+    //                 callback({
+    //                     message: "Expert already Exists"
+    //                 }, false);
+    //             }
+    //         }
+    //     });
+    // },
     editProfile: function(data, callback) {
         delete data.password;
         delete data.forgotpassword;
