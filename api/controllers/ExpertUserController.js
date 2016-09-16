@@ -249,7 +249,7 @@ module.exports = {
                     req.session.expertuser = data;
 
                     res.json({
-                        data: "Login Successful",
+                        data: data,
                         value: true
                     });
                 } else {
@@ -299,7 +299,7 @@ module.exports = {
         if (req.body) {
             if (req.session.expertuser) {
                 req.body._id = req.session.expertuser._id;
-                if (req.body.password && req.body.password != "" && req.body.changePassword && req.body.changePassword != "") {
+                if (req.body.changePassword && req.body.changePassword != "") {
                     ExpertUser.changePassword(req.body, function(err, data) {
                         if (err) {
                             console.log(err);

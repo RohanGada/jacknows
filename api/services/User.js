@@ -226,11 +226,11 @@ var models = {
         });
     },
     changePassword: function(data, callback) {
-        data.password = md5(data.password);
+        // data.password = md5(data.password);
         data.changePassword = md5(data.changePassword);
         this.findOneAndUpdate({
             _id: data._id,
-            password: data.password
+            // password: data.password
         }, {
             password: data.changePassword
         }).lean().exec(function(err, data2) {
@@ -248,6 +248,29 @@ var models = {
             }
         });
     },
+    // changePassword: function(data, callback) {
+    //     data.password = md5(data.password);
+    //     data.changePassword = md5(data.changePassword);
+    //     this.findOneAndUpdate({
+    //         _id: data._id,
+    //         password: data.password
+    //     }, {
+    //         password: data.changePassword
+    //     }).lean().exec(function(err, data2) {
+    //         if (err) {
+    //             callback(err, null);
+    //         } else {
+    //             if (_.isEmpty(data2)) {
+    //                 callback(null, {});
+    //             } else {
+    //                 delete data2.password;
+    //                 delete data2.forgotpassword;
+    //                 delete data2._id;
+    //                 callback(null, data2);
+    //             }
+    //         }
+    //     });
+    // },
     login: function(data, callback) {
         data.password = md5(data.password);
         User.findOne({

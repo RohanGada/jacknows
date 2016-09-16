@@ -196,7 +196,7 @@ module.exports = {
                     req.session.user = data;
 
                     res.json({
-                        data: "Login Successful",
+                        data: data,
                         value: true
                     });
                 } else {
@@ -245,7 +245,7 @@ module.exports = {
         if (req.body) {
             if (req.session.user) {
                 req.body._id = req.session.user._id;
-                if (req.body.password && req.body.password != "" && req.body.changePassword && req.body.changePassword != "") {
+                if (req.body.changePassword && req.body.changePassword != "") {
                     User.changePassword(req.body, function(err, data2) {
                         if (err) {
                             console.log(err);
@@ -286,6 +286,51 @@ module.exports = {
             });
         }
     },
+    // changePassword: function(req, res) {
+    //     if (req.body) {
+    //         if (req.session.user) {
+    //             req.body._id = req.session.user._id;
+    //             if (req.body.password && req.body.password != "" && req.body.changePassword && req.body.changePassword != "") {
+    //                 User.changePassword(req.body, function(err, data2) {
+    //                     if (err) {
+    //                         console.log(err);
+    //                         res.json({
+    //                             value: false,
+    //                             data: err
+    //                         });
+    //                     } else {
+    //                         if (data2.email) {
+    //                             res.json({
+    //                                 value: true,
+    //                                 data: data2
+    //                             });
+    //                         } else {
+    //                             res.json({
+    //                                 value: false,
+    //                                 data: {}
+    //                             });
+    //                         }
+    //                     }
+    //                 });
+    //             } else {
+    //                 res.json({
+    //                     value: false,
+    //                     data: "Invalid Params"
+    //                 });
+    //             }
+    //         } else {
+    //             res.json({
+    //                 value: false,
+    //                 data: "User not loggd-in"
+    //             });
+    //         }
+    //     } else {
+    //         res.json({
+    //             value: false,
+    //             data: "Invalid call"
+    //         });
+    //     }
+    // },
     forgotPassword: function(req, res) {
         if (req.body) {
             if (req.body.email && req.body.email != "") {

@@ -275,11 +275,11 @@ var models = {
     },
 
     changePassword: function(data, callback) {
-        data.password = md5(data.password);
+        // data.password = md5(data.password);
         data.changePassword = md5(data.changePassword);
         this.findOneAndUpdate({
             _id: data._id,
-            password: data.password
+            // password: data.password
         }, {
             password: data.changePassword
         }, function(err, data2) {
