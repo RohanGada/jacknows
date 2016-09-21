@@ -183,16 +183,18 @@ var models = {
                                       },function (err,data) {
                                         if(err){
                                           callback(err,null);
-                                        }else if(data){
-                                          expertuser.save(function(err, data3) {
-                                              if (err) {
-                                                  callback(err, null);
-                                              } else {
-                                                  callback(null, data3);
-                                              }
-                                          });
-                                        }else{
-                                          callback(null,null);
+                                        }
+                                        // else if(data){
+                                        //   expertuser.save(function(err, data3) {
+                                        //       if (err) {
+                                        //           callback(err, null);
+                                        //       } else {
+                                        //           callback(null, data3);
+                                        //       }
+                                        //   });
+                                        // }
+                                        else{
+                                          callback(null,data);
                                         }
                                       });
                                 }
@@ -1962,7 +1964,20 @@ var models = {
                 }
             });
     },
-
+    decrypt: function(ciphertext, shiftAmount) {
+        var plaintext = "";
+        for (var i = 0; i < ciphertext.length; i++) {
+            var cipherCharacter = ciphertext.charCodeAt(i);
+            if (cipherCharacter >= 97 && cipherCharacter <= 122) {
+                plaintext += String.fromCharCode((cipherCharacter - 97 - shiftAmount + 26) % 26 + 97);
+            } else if (cipherCharacter >= 65 && cipherCharacter <= 90) {
+                plaintext += String.fromCharCode((cipherCharacter - 65 - shiftAmount + 26) % 26 + 65);
+            } else {
+                plaintext += String.fromCharCode(cipherCharacter);
+            }
+        }
+        return plaintext;
+    },
 
     emailVerification: function(data, callback) {
         var splitIt = data.verifyemail.split("00x00");
