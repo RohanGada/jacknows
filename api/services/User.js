@@ -11,6 +11,20 @@ var moment = require('moment');
 
 
 var schema = new Schema({
+  isVerify: {
+      type: Boolean,
+      default: false
+  },
+  verifyemail: String,
+  verifyotp: {
+      type: Boolean,
+      default: false
+  },
+  forVerification: {
+      type: Boolean,
+      default: false
+          //value:"false"
+  },
     name: String,
     email: String,
     password: String,
@@ -94,48 +108,179 @@ var models = {
     //     });
     // },
 
+    // register: function(data, callback) {
+    //     if (data.password && data.password != "") {
+    //         data.password = md5(data.password);
+    //     }
+    //     var user = this(data);
+    //     user.email = data.email;
+    //     this.count({
+    //         "email": user.email
+    //     }).exec(function(err, data2) {
+    //         if (err) {
+    //             callback(err, data);
+    //         } else {
+    //             if (data2 === 0) {
+    //                 console.log(data2);
+    //                 user.save(function(err, data3) {
+    //                     data3.password = '';
+    //                     if (err) {
+    //                         callback(err, null);
+    //                     } else {
+    //                         var emailData = {};
+    //                         emailData.email = data.email;
+    //                         emailData.name = data.firstName;
+    //                         emailData.content = "Thank you for signing up with us! We hope you have a great experience on this platform. Please take a moment to leave your feedback.";
+    //                         emailData.filename = "dummy.ejs";
+    //                         emailData.subject = "Signup in Jacknows";
+    //                         Config.email(emailData, function(err, emailRespo) {
+    //                             if (err) {
+    //                                 console.log(err);
+    //                                 callback(err, null);
+    //                             } else {
+    //                                 console.log(emailRespo);
+    //                                 callback(null, data3);
+    //                             }
+    //                         });
+    //                     }
+    //                 });
+    //             } else {
+    //                 callback("User already Exists", false);
+    //             }
+    //         }
+    //     });
+    // },
+
+
     register: function(data, callback) {
         if (data.password && data.password != "") {
             data.password = md5(data.password);
         }
-        var user = this(data);
-        user.email = data.email;
-        this.count({
-            "email": user.email
-        }).exec(function(err, data2) {
+      var user = this(data);
+      user.email = data.email;
+         this.count({
+             "email": user.email
+         }).exec(function(err, data2) {
             if (err) {
                 callback(err, data);
             } else {
-                if (data2 === 0) {
-                    console.log(data2);
+                // console.log(_.isEmpty(data));
+                if (data2 == 0) {
                     user.save(function(err, data3) {
                         data3.password = '';
                         if (err) {
                             callback(err, null);
                         } else {
+                            var text = "";
+                            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+                            for (var i = 0; i < 12; i++) {
+                                text += possible.charAt(Math.floor(Math.random() * possible.length));
+                            }
+                            user.verifyemail = md5(text);
                             var emailData = {};
                             emailData.email = data.email;
-                            emailData.name = data.firstName;
-                            emailData.content = "Thank you for signing up with us! We hope you have a great experience on this platform. Please take a moment to leave your feedback.";
                             emailData.filename = "dummy.ejs";
-                            emailData.subject = "Signup in Jacknows";
+                            emailData.name = data.firstName;
+                            var encryptVerEm = text + "00x00" + ExpertUser.encrypt(data.email, 9);
+                            console.log(encryptVerEm);
+                            emailData.link = "http://localhost:8080/#/verifyemail/" + encryptVerEm;
+                            emailData.content = "Thank you for signing up with us! We hope you have a great experience on this platform. Please take a moment to leave your feedback.Please click on the button below to verify your email :" + emailData.link;
+                            emailData.subject = "Signup in Jacknows with Email Verification";
+
                             Config.email(emailData, function(err, emailRespo) {
                                 if (err) {
                                     console.log(err);
                                     callback(err, null);
                                 } else {
-                                    console.log(emailRespo);
-                                    callback(null, data3);
+                                    // callback(null, data3);
+                                    Otp.saveData({
+                                        contact: user.mobileno
+                                    }, function(err, data) {
+                                        if (err) {
+                                            callback(err, null);
+                                        } else if (data) {
+                                            user.save(function(err, data3) {
+                                                if (err) {
+                                                    callback(err, null);
+                                                } else {
+                                                    callback(null, data3);
+                                                }
+                                            });
+                                        } else {
+                                            callback(null, data);
+                                        }
+                                    });
                                 }
                             });
+                            // ExpertUser.findOneAndUpdate({
+                            //     _id: data3._id,
+                            // }, {
+                            //     text: ''
+                            // }, function(err, data12) {
+                            //     if (err) {
+                            //         callback(err, null);
+                            //     } else {
+                            //
+                            //         callback(null, data12);
+                            //
+                            //     }
+                            // });
                         }
                     });
+
                 } else {
-                    callback("User already Exists", false);
+                    callback({
+                        message: "Expert already Exists"
+                    }, false);
                 }
             }
         });
     },
+    emailVerification: function(data, callback) {
+        var splitIt = data.verifyemail.split("00x00");
+        var verify = splitIt[0];
+        var email = "";
+        if (splitIt[1]) {
+            email = User.decrypt(splitIt[1], 9);
+        }
+        User.findOneAndUpdate({
+            verifyemail: md5(verify),
+            email: email
+        }, {
+            $set: {
+                "verifyemail": ""
+            }
+        }, function(err, data2) {
+            if (err) {
+                callback(err, null);
+            } else {
+                console.log(data2);
+                if (!data2 && _.isEmpty(data2)) {
+                    callback("User already verified", null);
+                } else {
+                    if (data2.verifyotp !== true) {
+                        callback("Please complete mobile verification", null);
+                    } else {
+                        var updated = data2.toObject();
+                        updated.verifyemail = "";
+                        delete updated._id;
+                        User.saveData(updated, function(err, data2) {
+                            if (err) {
+                                console.log(err);
+                                callback(err, null);
+                            } else {
+                                console.log(data2);
+
+                                callback(null, data2);
+                            }
+                        });
+                    }
+                }
+            }
+        });
+
+    },
+    
     editProfile: function(data, callback) {
         delete data.password;
         delete data.forgotpassword;

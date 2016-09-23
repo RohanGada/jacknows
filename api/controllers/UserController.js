@@ -31,6 +31,35 @@ module.exports = {
             });
         }
     },
+    emailVerification:function(req,res){
+      if (req.body) {
+        if (req.body.verifyemail && req.body.verifyemail !== ""){
+          User.emailVerification(req.body, function(err, respo) {
+              if (err) {
+                  res.json({
+                      value: false,
+                      data: err
+                  });
+              } else {
+                  res.json({
+                      value: true,
+                      data: respo
+                  });
+              }
+          });
+        }else{
+          res.json({
+            value: false,
+            data: "invalid params"
+          });
+        }
+      } else {
+        res.json({
+          value: false,
+          data: "Invalid Request"
+        });
+      }
+    },
     getAll: function(req, res) {
         if (req.body) {
             User.getAll(req.body, function(err, respo) {

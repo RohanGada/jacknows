@@ -13,16 +13,11 @@ var objectid = require("mongodb").ObjectId;
 var db = require("mongodb").Db;
 
 var schema = new Schema({
-    referred: {
-        type: [{
-            user: {
-                type: Schema.Types.ObjectId,
-                ref: 'ExpertUser'
-            }
-        }],
-        index: true
-    },
     isVerify: {
+        type: Boolean,
+        default: false
+    },
+    verifyExpert: {
         type: Boolean,
         default: false
     },
@@ -156,19 +151,19 @@ var models = {
                         if (err) {
                             callback(err, null);
                         } else {
-                          var text = "";
-                               var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-                               for (var i = 0; i < 12; i++) {
-                                   text += possible.charAt(Math.floor(Math.random() * possible.length));
-                               }
-                               expertuser.verifyemail = md5(text);
+                            var text = "";
+                            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+                            for (var i = 0; i < 12; i++) {
+                                text += possible.charAt(Math.floor(Math.random() * possible.length));
+                            }
+                            expertuser.verifyemail = md5(text);
                             var emailData = {};
                             emailData.email = data.email;
                             emailData.filename = "dummy.ejs";
                             emailData.name = data.firstName;
-                            var encryptVerEm =  text + "00x00" + ExpertUser.encrypt(data.email, 9);
+                            var encryptVerEm = text + "00x00" + ExpertUser.encrypt(data.email, 9);
                             console.log(encryptVerEm);
-                               emailData.link = "http://localhost:8080/#/verifyemail/"+encryptVerEm;
+                            emailData.link = "http://localhost:8080/#/verifyemail/" + encryptVerEm;
                             emailData.content = "Thank you for sharing your details with us. Our expert on-boarding team will get back to you at the earliest.Please click on the button below to verify your email :" + emailData.link;
                             emailData.subject = "Signup in Jacknows with Email Verification";
 
@@ -177,30 +172,42 @@ var models = {
                                     console.log(err);
                                     callback(err, null);
                                 } else {
-                                    callback(null, data3);
+                                    // callback(null, data3);
                                     Otp.saveData({
-                                        contact:expertuser.mobileno
-                                      },function (err,data) {
-                                        if(err){
-                                          callback(err,null);
+                                        contact: expertuser.mobileno
+                                    }, function(err, data) {
+                                        if (err) {
+                                            callback(err, null);
+                                        } else if (data) {
+                                            expertuser.save(function(err, data3) {
+                                                if (err) {
+                                                    callback(err, null);
+                                                } else {
+                                                    callback(null, data3);
+                                                }
+                                            });
+                                        } else {
+                                            callback(null, data);
                                         }
-                                        // else if(data){
-                                        //   expertuser.save(function(err, data3) {
-                                        //       if (err) {
-                                        //           callback(err, null);
-                                        //       } else {
-                                        //           callback(null, data3);
-                                        //       }
-                                        //   });
-                                        // }
-                                        else{
-                                          callback(null,data);
-                                        }
-                                      });
+                                    });
                                 }
                             });
+                            // ExpertUser.findOneAndUpdate({
+                            //     _id: data3._id,
+                            // }, {
+                            //     text: ''
+                            // }, function(err, data12) {
+                            //     if (err) {
+                            //         callback(err, null);
+                            //     } else {
+                            //
+                            //         callback(null, data12);
+                            //
+                            //     }
+                            // });
                         }
                     });
+
                 } else {
                     callback({
                         message: "Expert already Exists"
@@ -508,7 +515,9 @@ var models = {
                     priceForService: {
                         $gte: data.minprice,
                         $lte: data.maxprice
-                    }
+                    },
+                    verifyExpert: true
+
                 };
                 if (!data.location || (data.location && data.location.length == 0)) {
                     delete matchobj["city"];
@@ -530,7 +539,7 @@ var models = {
                         console.log(err);
                         callback(err, null);
                     } else {
-                      console.log("bbb",matchobj);
+                        console.log("bbb", matchobj);
                         if (data3.length > 0) {
                             newreturns.data = data3;
                             _.each(data3, function(z) {
