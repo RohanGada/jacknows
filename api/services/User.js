@@ -265,6 +265,52 @@ var models = {
         return plaintext;
     },
 
+    // emailVerification: function(data, callback) {
+    //     var splitIt = data.verifyemail.split("00x00");
+    //     var verify = splitIt[0];
+    //     var email = "";
+    //     if (splitIt[1]) {
+    //         email = User.decrypt(splitIt[1], 9);
+    //     }
+    //     User.findOneAndUpdate({
+    //         verifyemail: md5(verify),
+    //         email: email
+    //     }, {
+    //         $set: {
+    //             "verifyemail": "",
+    //             "isVerify":true
+    //         }
+    //     }, function(err, data2) {
+    //         if (err) {
+    //             callback(err, null);
+    //         } else {
+    //             console.log(data2);
+    //             if (!data2 && _.isEmpty(data2)) {
+    //                 callback("User already verified", null);
+    //             } else {
+    //                 // if (data2.verifyotp !== true) {
+    //                 //     callback("Please complete mobile verification", null);
+    //                 // } else {
+    //                     var updated = data2.toObject();
+    //                     updated.verifyemail = "";
+    //                     delete updated._id;
+    //                     User.saveData(updated, function(err, data2) {
+    //                         if (err) {
+    //                             console.log(err);
+    //                             callback(err, null);
+    //                         } else {
+    //                             console.log(data2);
+    //
+    //                             callback(null, data2);
+    //                         }
+    //                     });
+    //                 // }
+    //             }
+    //         }
+    //     });
+    //
+    // },
+
     emailVerification: function(data, callback) {
         var splitIt = data.verifyemail.split("00x00");
         var verify = splitIt[0];
@@ -272,13 +318,14 @@ var models = {
         if (splitIt[1]) {
             email = User.decrypt(splitIt[1], 9);
         }
+        console.log("email", email);
         User.findOneAndUpdate({
             verifyemail: md5(verify),
             email: email
         }, {
             $set: {
                 "verifyemail": "",
-                "isVerify":true
+                "isVerify": true
             }
         }, function(err, data2) {
             if (err) {
@@ -291,26 +338,24 @@ var models = {
                     // if (data2.verifyotp !== true) {
                     //     callback("Please complete mobile verification", null);
                     // } else {
-                        var updated = data2.toObject();
-                        updated.verifyemail = "";
-                        delete updated._id;
-                        User.saveData(updated, function(err, data2) {
-                            if (err) {
-                                console.log(err);
-                                callback(err, null);
-                            } else {
-                                console.log(data2);
+                    var updated = data2.toObject();
+                    updated.verifyemail = "";
+                    delete updated._id;
+                    User.saveData(updated, function(err, data2) {
+                        if (err) {
+                            console.log(err);
+                            callback(err, null);
+                        } else {
+                            console.log(data2);
 
-                                callback(null, data2);
-                            }
-                        });
+                            callback(null, data2);
+                        }
+                    });
                     // }
                 }
             }
         });
-
-    },
-
+      },
     editProfile: function(data, callback) {
         delete data.password;
         delete data.forgotpassword;
@@ -450,8 +495,9 @@ var models = {
         data.password = md5(data.password);
         User.findOne({
             email: data.email,
-            password: data.password,
-            isVerify: true
+            password: data.password
+            // ,
+            // isVerify: true
         }).exec(function(err, res) {
             if (err) {
                 callback(err, null);
