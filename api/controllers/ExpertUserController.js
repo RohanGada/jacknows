@@ -178,8 +178,6 @@ module.exports = {
                     value: false
                 });
             } else {
-                req.session.expertuser = {};
-                req.session.expertuser = data;
                 setTimeout(function() {
                     res.json({
                         data: "Expert Registered",
@@ -256,7 +254,7 @@ module.exports = {
                     req.session.expertuser = {};
 
                     res.json({
-                        data: {},
+                        data: data,
                         value: false
                     });
                 }
@@ -1181,34 +1179,36 @@ module.exports = {
             });
         }
     },
-    emailVerification:function(req,res){
-      if (req.body) {
-        if (req.body.verifyemail && req.body.verifyemail !== ""){
-          ExpertUser.emailVerification(req.body, function(err, respo) {
-              if (err) {
-                  res.json({
-                      value: false,
-                      data: err
-                  });
-              } else {
-                  res.json({
-                      value: true,
-                      data: respo
-                  });
-              }
-          });
-        }else{
-          res.json({
-            value: false,
-            data: "invalid params"
-          });
+    emailVerification: function(req, res) {
+        if (req.body) {
+            if (req.body.verifyemail && req.body.verifyemail !== "") {
+                ExpertUser.emailVerification(req.body, function(err, respo) {
+                    if (err) {
+                        res.json({
+                            value: false,
+                            data: err
+                        });
+                    } else {
+                      req.session.expertuser = {};
+                      req.session.expertuser = respo;
+                        res.json({
+                            value: true,
+                            data: respo
+                        });
+                    }
+                });
+            } else {
+                res.json({
+                    value: false,
+                    data: "invalid params"
+                });
+            }
+        } else {
+            res.json({
+                value: false,
+                data: "Invalid Request"
+            });
         }
-      } else {
-        res.json({
-          value: false,
-          data: "Invalid Request"
-        });
-      }
     },
 
 };

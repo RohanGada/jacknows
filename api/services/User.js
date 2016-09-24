@@ -11,20 +11,20 @@ var moment = require('moment');
 
 
 var schema = new Schema({
-  isVerify: {
-      type: Boolean,
-      default: false
-  },
-  verifyemail: String,
-  verifyotp: {
-      type: Boolean,
-      default: false
-  },
-  forVerification: {
-      type: Boolean,
-      default: false
-          //value:"false"
-  },
+    isVerify: {
+        type: Boolean,
+        default: false
+    },
+    verifyemail: String,
+    verifyotp: {
+        type: Boolean,
+        default: false
+    },
+    forVerification: {
+        type: Boolean,
+        default: false
+            //value:"false"
+    },
     name: String,
     email: String,
     password: String,
@@ -156,18 +156,18 @@ var models = {
         if (data.password && data.password != "") {
             data.password = md5(data.password);
         }
-      var user = this(data);
-      user.email = data.email;
-         this.count({
-             "email": user.email
-         }).exec(function(err, data2) {
+        var user = this(data);
+        user.email = data.email;
+        this.count({
+            "email": user.email
+        }).exec(function(err, data2) {
             if (err) {
                 callback(err, data);
             } else {
                 // console.log(_.isEmpty(data));
                 if (data2 == 0) {
                     user.save(function(err, data3) {
-                        data3.password = '';
+                        // data3.password = '';
                         if (err) {
                             callback(err, null);
                         } else {
@@ -236,6 +236,35 @@ var models = {
             }
         });
     },
+    encrypt: function(plaintext, shiftAmount) {
+        var ciphertext = "";
+        for (var i = 0; i < plaintext.length; i++) {
+            var plainCharacter = plaintext.charCodeAt(i);
+            if (plainCharacter >= 97 && plainCharacter <= 122) {
+                ciphertext += String.fromCharCode((plainCharacter - 97 + shiftAmount) % 26 + 97);
+            } else if (plainCharacter >= 65 && plainCharacter <= 90) {
+                ciphertext += String.fromCharCode((plainCharacter - 65 + shiftAmount) % 26 + 65);
+            } else {
+                ciphertext += String.fromCharCode(plainCharacter);
+            }
+        }
+        return ciphertext;
+    },
+    decrypt: function(ciphertext, shiftAmount) {
+        var plaintext = "";
+        for (var i = 0; i < ciphertext.length; i++) {
+            var cipherCharacter = ciphertext.charCodeAt(i);
+            if (cipherCharacter >= 97 && cipherCharacter <= 122) {
+                plaintext += String.fromCharCode((cipherCharacter - 97 - shiftAmount + 26) % 26 + 97);
+            } else if (cipherCharacter >= 65 && cipherCharacter <= 90) {
+                plaintext += String.fromCharCode((cipherCharacter - 65 - shiftAmount + 26) % 26 + 65);
+            } else {
+                plaintext += String.fromCharCode(cipherCharacter);
+            }
+        }
+        return plaintext;
+    },
+
     emailVerification: function(data, callback) {
         var splitIt = data.verifyemail.split("00x00");
         var verify = splitIt[0];
@@ -248,7 +277,8 @@ var models = {
             email: email
         }, {
             $set: {
-                "verifyemail": ""
+                "verifyemail": "",
+                "isVerify":true
             }
         }, function(err, data2) {
             if (err) {
@@ -258,9 +288,9 @@ var models = {
                 if (!data2 && _.isEmpty(data2)) {
                     callback("User already verified", null);
                 } else {
-                    if (data2.verifyotp !== true) {
-                        callback("Please complete mobile verification", null);
-                    } else {
+                    // if (data2.verifyotp !== true) {
+                    //     callback("Please complete mobile verification", null);
+                    // } else {
                         var updated = data2.toObject();
                         updated.verifyemail = "";
                         delete updated._id;
@@ -274,13 +304,13 @@ var models = {
                                 callback(null, data2);
                             }
                         });
-                    }
+                    // }
                 }
             }
         });
 
     },
-    
+
     editProfile: function(data, callback) {
         delete data.password;
         delete data.forgotpassword;
@@ -420,62 +450,79 @@ var models = {
         data.password = md5(data.password);
         User.findOne({
             email: data.email,
-            password: data.password
-        }, function(err, data2) {
+            password: data.password,
+            isVerify: true
+        }).exec(function(err, res) {
             if (err) {
-                console.log(err);
-                callback(er, null);
+                callback(err, null);
             } else {
-                if (_.isEmpty(data2)) {
+                if (res) {
                     User.findOne({
                         email: data.email,
-                        forgotpassword: data.password
-                    }, function(err, data4) {
+                        password: data.password
+                    }, function(err, data2) {
                         if (err) {
                             console.log(err);
-                            callback(err, null);
+                            callback(er, null);
                         } else {
-                            if (_.isEmpty(data4)) {
-                                callback(null, {
-                                    comment: "User Not Found"
-                                });
-                            } else {
-                                User.findOneAndUpdate({
-                                    _id: data4._id
-                                }, {
-                                    password: data.password,
-                                    forgotpassword: ""
-                                }, function(err, data5) {
+                            if (_.isEmpty(data2)) {
+                                User.findOne({
+                                    email: data.email,
+                                    forgotpassword: data.password
+                                }, function(err, data4) {
                                     if (err) {
                                         console.log(err);
                                         callback(err, null);
                                     } else {
-                                        data5.password = "";
-                                        data5.forgotpassword = "";
-                                        callback(null, data5);
+                                        if (_.isEmpty(data4)) {
+                                            callback(null, {
+                                                comment: "User Not Found"
+                                            });
+                                        } else {
+                                            User.findOneAndUpdate({
+                                                _id: data4._id
+                                            }, {
+                                                password: data.password,
+                                                forgotpassword: ""
+                                            }, function(err, data5) {
+                                                if (err) {
+                                                    console.log(err);
+                                                    callback(err, null);
+                                                } else {
+                                                    data5.password = "";
+                                                    data5.forgotpassword = "";
+                                                    callback(null, data5);
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+                            } else {
+                                User.findOneAndUpdate({
+                                    _id: data2._id
+                                }, {
+                                    forgotpassword: ""
+                                }, function(err, data3) {
+                                    if (err) {
+                                        console.log(err);
+                                        callback(err, null);
+                                    } else {
+                                        data3.password = "";
+                                        data3.forgotpassword = "";
+                                        callback(null, data3);
                                     }
                                 });
                             }
                         }
                     });
                 } else {
-                    User.findOneAndUpdate({
-                        _id: data2._id
-                    }, {
-                        forgotpassword: ""
-                    }, function(err, data3) {
-                        if (err) {
-                            console.log(err);
-                            callback(err, null);
-                        } else {
-                            data3.password = "";
-                            data3.forgotpassword = "";
-                            callback(null, data3);
-                        }
+                    callback(null, {
+                        comment: "User not Verified"
                     });
                 }
             }
-        });
+        })
+
     },
     forgotPassword: function(data, callback) {
         this.findOne({

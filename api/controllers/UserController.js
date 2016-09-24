@@ -157,7 +157,7 @@ module.exports = {
                     value: false
                 });
             } else {
-                req.session.user = data;
+                // req.session.user = data;
 
                 res.json({
                     data: "User Registered",
@@ -232,7 +232,7 @@ module.exports = {
                     req.session.user = {};
 
                     res.json({
-                        data: {},
+                        data: data,
                         value: false
                     });
                 }
