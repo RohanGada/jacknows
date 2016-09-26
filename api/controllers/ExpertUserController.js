@@ -1180,6 +1180,21 @@ module.exports = {
         }
     },
     emailVerification: function(req, res) {
+      var callback = function(err, data) {
+          if (err || _.isEmpty(data)) {
+              res.json({
+                  error: err,
+                  value: false
+              });
+          } else {
+              req.session.expertuser = data;
+
+              res.json({
+                  data: "User Registered",
+                  value: true
+              });
+          }
+      };
         if (req.body) {
             if (req.body.verifyemail && req.body.verifyemail !== "") {
                 ExpertUser.emailVerification(req.body, function(err, respo) {
@@ -1209,6 +1224,6 @@ module.exports = {
                 data: "Invalid Request"
             });
         }
-    },
+    }
 
 };

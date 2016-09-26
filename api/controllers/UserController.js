@@ -31,34 +31,84 @@ module.exports = {
             });
         }
     },
-    emailVerification:function(req,res){
-      if (req.body) {
-        if (req.body.verifyemail && req.body.verifyemail !== ""){
-          User.emailVerification(req.body, function(err, respo) {
-              if (err) {
-                  res.json({
-                      value: false,
-                      data: err
-                  });
-              } else {
-                  res.json({
-                      value: true,
-                      data: respo
-                  });
-              }
-          });
-        }else{
-          res.json({
-            value: false,
-            data: "invalid params"
-          });
+
+
+    // emailVerification: function(req, res) {
+    //     if (req.body) {
+    //         if (req.body.verifyemail && req.body.verifyemail !== "") {
+    //             User.emailVerification(req.body, function(err, respo) {
+    //                 if (err) {
+    //                     res.json({
+    //                         value: false,
+    //                         data: err
+    //                     });
+    //                 } else {
+    //                   req.session.user = {};
+    //                   req.session.user = respo;
+    //                     res.json({
+    //                         value: true,
+    //                         data: respo
+    //                     });
+    //                 }
+    //             });
+    //         } else {
+    //             res.json({
+    //                 value: false,
+    //                 data: "invalid params"
+    //             });
+    //         }
+    //     } else {
+    //         res.json({
+    //             value: false,
+    //             data: "Invalid Request"
+    //         });
+    //     }
+    // },
+    emailVerification: function(req, res) {
+      var callback = function(err, data) {
+          if (err || _.isEmpty(data)) {
+              res.json({
+                  error: err,
+                  value: false
+              });
+          } else {
+              req.session.user = data;
+
+              res.json({
+                  data: "User Registered",
+                  value: true
+              });
+          }
+      };
+        if (req.body) {
+            if (req.body.verifyemail && req.body.verifyemail !== "") {
+                User.emailVerification(req.body, function(err, respo) {
+                    if (err) {
+                        res.json({
+                            value: false,
+                            data: err
+                        });
+                    } else {
+                      req.session.user = {};
+                      req.session.user = respo;
+                        res.json({
+                            value: true,
+                            data: respo
+                        });
+                    }
+                });
+            } else {
+                res.json({
+                    value: false,
+                    data: "invalid params"
+                });
+            }
+        } else {
+            res.json({
+                value: false,
+                data: "Invalid Request"
+            });
         }
-      } else {
-        res.json({
-          value: false,
-          data: "Invalid Request"
-        });
-      }
     },
     getAll: function(req, res) {
         if (req.body) {

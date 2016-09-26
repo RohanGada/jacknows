@@ -336,7 +336,7 @@ console.log(data2);
                             callback(err, null)
                         } else {
                           console.log("innnn", res);
-                        
+
                             if (res) {
                                 console.log("res", res);
                                 ExpertUser.findOne({
@@ -2041,23 +2041,36 @@ console.log(data2);
                                 // if (data2.verifyotp !== true) {
                                 //     callback("Please complete mobile verification", null);
                                 // } else {
-                                var updated = data2.toObject();
-                                updated.verifyemail = "";
-                                delete updated._id;
-                                ExpertUser.saveData(updated, function(err, data2) {
+                                // var updated = data2.toObject();
+                                // updated.verifyemail = "";
+                                // delete updated._id;
+                                ExpertUser.findOne({
+                                  _id:data2._id,
+                                  email:data2.email,
+                                    isVerify: true
+                                }).exec(function(err, data2) {
                                     if (err) {
                                         console.log(err);
-                                        callback(err, null);
+                                        callback(err, null)
                                     } else {
-                                        console.log(data2);
-
                                         callback(null, data2);
                                     }
                                 });
+                                // ExpertUser.saveData(updated, function(err, data2) {
+                                //     if (err) {
+                                //         console.log(err);
+                                //         callback(err, null);
+                                //     } else {
+                                //         console.log(data2);
+                                //
+                                //         callback(null, data2);
+                                //     }
+                                // });
                                 // }
                             }
                         }
                     });
+
 
                 },
         };
