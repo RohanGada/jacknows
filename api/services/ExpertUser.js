@@ -321,99 +321,78 @@ console.log(data2);
             });
         },
         login: function(data, callback) {
-            data.password = md5(data.password);
-            ExpertUser.findOne({
-                        $or: [{
-                            mobileno: data.email
-                        }, {
-                            email: data.email
-                        }],
-                        password: data.password,
-                        isVerify: true
-                    }).exec(function(err, res) {
+        data.password = md5(data.password);
+        ExpertUser.findOne({
+            email: data.email,
+            password: data.password,
+            isVerify:true
+        }, function(err, data2) {
+
+            if (err) {
+                console.log(err);
+                callback(er, null);
+
+            } else {
+                if (_.isEmpty(data2)) {
+
+                    ExpertUser.findOne({
+                        email: data.email,
+                        forgotpassword: data.password
+                    }, function(err, data4) {
+
                         if (err) {
                             console.log(err);
-                            callback(err, null)
-                        } else {
-                          console.log("innnn", res);
+                            callback(err, null);
 
-                            if (res) {
-                                console.log("res", res);
-                                ExpertUser.findOne({
-                                    $or: [{
-                                        mobileno: data.email
-                                    }, {
-                                        email: data.email
-                                    }],
-                                    password: data.password
-                                }, function(err, data2) {
+                        } else {
+                            if (_.isEmpty(data4)) {
+                                callback(null, {
+                                    comment: "ExpertUser Not Found"
+
+                                });
+                            } else {
+                                ExpertUser.findOneAndUpdate({
+                                    _id: data4._id
+
+                                }, {
+                                    password: data.password,
+                                    forgotpassword: ""
+                                }, function(err, data5) {
+
                                     if (err) {
                                         console.log(err);
-                                        callback(er, null);
+                                        callback(err, null);
                                     } else {
-                                        if (_.isEmpty(data2)) {
-                                            ExpertUser.findOne({
-                                                $or: [{
-                                                    mobileno: data.email
-                                                }, {
-                                                    email: data.email
-                                                }],
-                                                forgotpassword: data.password
-                                            }, function(err, data4) {
-                                                if (err) {
-                                                    console.log(err);
-                                                    callback(err, null);
-                                                } else {
-                                                    if (_.isEmpty(data4)) {
-                                                        callback(null, {
-                                                            comment: "User Not Found"
-                                                        });
-                                                    } else {
-                                                        ExpertUser.findOneAndUpdate({
-                                                            _id: data4._id
-                                                        }, {
-                                                            password: data.password,
-                                                            forgotpassword: ""
-                                                        }, function(err, data5) {
-                                                            if (err) {
-                                                                console.log(err);
-                                                                callback(err, null);
-                                                            } else {
-                                                                data5.password = "";
-                                                                data5.forgotpassword = "";
-                                                                callback(null, data5);
-                                                            }
-                                                        });
-                                                    }
-                                                }
-                                            });
-                                        } else {
-                                            ExpertUser.findOneAndUpdate({
-                                                _id: data2._id
-                                            }, {
-                                                forgotpassword: ""
-                                            }, function(err, data3) {
-                                                if (err) {
-                                                    console.log(err);
-                                                    callback(err, null);
-                                                } else {
-                                                    data3.password = "";
-                                                    data3.forgotpassword = "";
-                                                    callback(null, data3);
-                                                }
-                                            });
-                                        }
-                                    }
-                                });
+                                        data5.password = "";
+                                        data5.forgotpassword = "";
+                                        callback(null, data5);
 
-                            } else {
-                                callback(null, {
-                                    comment: "User Not Verified"
+                                    }
                                 });
                             }
                         }
                     });
-                },
+                } else {
+                    ExpertUser.findOneAndUpdate({
+                        _id: data2._id
+                    }, {
+                        forgotpassword: ""
+                    }, function(err, data3) {
+                        if (err) {
+                            console.log(err);
+                            callback(err, null);
+                        } else {
+                            data3.password = "";
+                            data3.forgotpassword = "";
+                            callback(null, data3);
+                        }
+
+                    });
+                }
+            }
+        });
+
+    },
 
                 saveData: function(data, callback) {
                     //delete data.forgotpassword;
@@ -1250,67 +1229,67 @@ console.log(data2);
 
 
                 forgotPassword: function(data, callback) {
-                    this.findOne({
-                        email: data.email
-                    }, {
-                        password: 0,
-                        forgotpassword: 0
-                    }, function(err, found) {
-                        if (err) {
-                            console.log(err);
-                            callback(err, null);
-                        } else {
-                            if (found) {
-                                if (!found.oauthLogin || (found.oauthLogin && found.oauthLogin.length <= 0)) {
-                                    var text = "";
-                                    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-                                    for (var i = 0; i < 8; i++) {
-                                        text += possible.charAt(Math.floor(Math.random() * possible.length));
-                                    }
-                                    var encrypttext = md5(text);
-                                    this.findOneAndUpdate({
-                                        _id: found._id
-                                    }, {
-                                        forgotpassword: encrypttext
-                                    }, function(err, data2) {
-                                        if (err) {
-                                            console.log(err);
-                                            callback(err, null);
-                                        } else {
-                                            var emailData = {};
-                                            emailData.email = data.email;
-                                            console.log('data.email', data.email);
-                                            emailData.content = "Your new password for the JacKnows website is: " + text + ".Please note that this is a system generated password which will remain valid for 3 hours only. Kindly change it to something you would be more comfortable remembering at the earliest.";
-                                            emailData.filename = "newsletter.ejs";
-                                            emailData.subject = "Jacknows forgot password";
-                                            // user.email = data.email;
-                                            // user.filename = data.filename;
-                                            Config.email(emailData, function(err, emailRespo) {
-                                                if (err) {
-                                                    console.log(err);
-                                                    callback(err, null);
-                                                } else {
-                                                    console.log(emailRespo);
-                                                    callback(null, {
-                                                        comment: "Mail Sent"
-                                                    });
-                                                }
-                                            });
-                                        }
-                                    });
-                                } else {
-                                    callback(null, {
-                                        comment: "User logged in through social login"
-                                    });
-                                }
-                            } else {
-                                callback(null, {
-                                    comment: "User not found"
-                                });
-                            }
-                        }
-                    });
-                },
+                     this.findOne({
+                         email: data.email
+                     }, {
+                         password: 0,
+                         forgotpassword: 0
+                     }, function(err, found) {
+                         if (err) {
+                             console.log(err);
+                             callback(err, null);
+                         } else {
+                             if (found) {
+                                 if (!found.oauthLogin || (found.oauthLogin && found.oauthLogin.length <= 0)) {
+                                     var text = "";
+                                     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+                                     for (var i = 0; i < 8; i++) {
+                                         text += possible.charAt(Math.floor(Math.random() * possible.length));
+                                     }
+                                     var encrypttext = md5(text);
+                                     this.findOneAndUpdate({
+                                         _id: found._id
+                                     }, {
+                                         forgotpassword: encrypttext
+                                     }, function(err, data2) {
+                                         if (err) {
+                                             console.log(err);
+                                             callback(err, null);
+                                         } else {
+                                             var emailData = {};
+                                             emailData.email = data.email;
+                                             console.log('data.email', data.email);
+                                             emailData.content = "Your new password for the JacKnows website is: " + text + ".Please note that this is a system generated password which will remain valid for 3 hours only. Kindly change it to something you would be more comfortable remembering at the earliest.";
+                                             emailData.filename = "newsletter.ejs";
+                                             emailData.subject = "Jacknows forgot password";
+                                             // user.email = data.email;
+                                             // user.filename = data.filename;
+                                             Config.email(emailData, function(err, emailRespo) {
+                                                 if (err) {
+                                                     console.log(err);
+                                                     callback(err, null);
+                                                 } else {
+                                                     console.log(emailRespo);
+                                                     callback(null, {
+                                                         comment: "Mail Sent"
+                                                     });
+                                                 }
+                                             });
+                                         }
+                                     });
+                                 } else {
+                                     callback(null, {
+                                         comment: "User logged in through social login"
+                                     });
+                                 }
+                             } else {
+                                 callback(null, {
+                                     comment: "User not found"
+                                 });
+                             }
+                         }
+                     });
+                 },
                 findLimited: function(data, callback) {
                     var newreturns = {};
                     newreturns.data = [];

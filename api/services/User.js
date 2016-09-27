@@ -398,18 +398,20 @@ var models = {
                         //     }
                         // });
                         // }
-                        callback(null, data2);
+                        // callback(null, data2);
+                        User.findOne({
+                          _id:data2._id,
+                          email:data2.email,
+                            isVerify: true
+                        }).exec(function(err, data2) {
+                            if (err) {
+                                console.log(err);
+                                callback(err, null)
+                            } else {
+                                callback(null, data2);
+                            }
+                        });
                     }
-                }
-            });
-            User.findOne({
-                isVerify: true
-            }).exec(function(err, data2) {
-                if (err) {
-                    console.log(err);
-                    callback(err, null)
-                } else {
-                    callback(null, data2);
                 }
             });
 
@@ -554,8 +556,8 @@ var models = {
         data.password = md5(data.password);
         User.findOne({
             email: data.email,
-            password: data.password
-            // isVerify:true
+            password: data.password,
+            isVerify:true
         }, function(err, data2) {
 
             if (err) {

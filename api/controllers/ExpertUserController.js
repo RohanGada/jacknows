@@ -235,47 +235,47 @@ module.exports = {
         }
     },
     login: function(req, res) {
-        var callback = function(err, data) {
-            if (err || _.isEmpty(data)) {
-                console.log('in 1 loop');
-                res.json({
-                    error: err,
-                    value: false
-                });
-            } else {
-                if (data._id) {
-                    req.session.expertuser = data;
+         var callback = function(err, data) {
+             if (err || _.isEmpty(data)) {
+                 console.log('in 1 loop');
+                 res.json({
+                     error: err,
+                     value: false
+                 });
+             } else {
+                 if (data._id) {
+                     req.session.expertuser = data;
 
-                    res.json({
-                        data: data,
-                        value: true
-                    });
-                } else {
-                    req.session.expertuser = {};
+                     res.json({
+                         data: data,
+                         value: true
+                     });
+                 } else {
+                     req.session.expertuser = {};
 
-                    res.json({
-                        data: data,
-                        value: false
-                    });
-                }
-            }
-        }
-        if (req.body) {
-            if (req.body.email && req.body.email != "" && req.body.password && req.body.password != "") {
-                ExpertUser.login(req.body, callback);
-            } else {
-                res.json({
-                    data: "Please provide params",
-                    value: true
-                });
-            }
-        } else {
-            res.json({
-                data: "Invalid Call",
-                value: true
-            });
-        }
-    },
+                     res.json({
+                         data: data,
+                         value: false
+                     });
+                 }
+             }
+         }
+         if (req.body) {
+             if (req.body.email && req.body.email != "" && req.body.password && req.body.password != "") {
+                 ExpertUser.login(req.body, callback);
+             } else {
+                 res.json({
+                     data: "Please provide params",
+                     value: true
+                 });
+             }
+         } else {
+             res.json({
+                 data: "Invalid Call",
+                 value: true
+             });
+         }
+     },
     logout: function(req, res) {
         req.session.destroy(function(err) {
             if (err) {
