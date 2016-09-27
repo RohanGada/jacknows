@@ -164,7 +164,7 @@ console.log(data2);
                                 emailData.name = data.firstName;
                                 var encryptVerEm = text + "00x00" + ExpertUser.encrypt(data.email, 9);
                                 console.log(encryptVerEm);
-                                emailData.link = "http://localhost:8080/#/verifyemail/" + encryptVerEm;
+                                emailData.link = "http://jacknows.wohlig.com/verifyemail/" + encryptVerEm;
                                 emailData.content = "Thank you for sharing your details with us. Our expert on-boarding team will get back to you at the earliest.Please click on the button below to verify your email :" + emailData.link;
                                 emailData.subject = "Signup in Jacknows with Email Verification";
 
@@ -324,8 +324,8 @@ console.log(data2);
         data.password = md5(data.password);
         ExpertUser.findOne({
             email: data.email,
-            password: data.password,
-            isVerify:true
+            password: data.password
+            // isVerify:true
         }, function(err, data2) {
 
             if (err) {
@@ -373,6 +373,7 @@ console.log(data2);
                         }
                     });
                 } else {
+                    if (data2.isVerify == true) {
                     ExpertUser.findOneAndUpdate({
                         _id: data2._id
                     }, {
@@ -388,6 +389,13 @@ console.log(data2);
                         }
 
                     });
+                  } else {
+                    console.log('in else');
+                      callback(null, {
+                          comment: "Expert Email Not Verified"
+
+                      });
+                  }
                 }
             }
         });
@@ -1301,7 +1309,8 @@ console.log(data2);
                                 ExpertUser.count({
                                     firstName: {
                                         '$regex': check
-                                    }
+                                    },
+                                    isVerify:true
                                 }).exec(function(err, number) {
                                     if (err) {
                                         console.log(err);
@@ -1319,7 +1328,8 @@ console.log(data2);
                                 ExpertUser.find({
                                     firstName: {
                                         '$regex': check
-                                    }
+                                    },
+                                    isVerify:true
                                 }, {
                                     password: 0
                                 }).skip(data.pagesize * (data.pagenumber - 1)).limit(data.pagesize).exec(function(err, data2) {
@@ -1358,7 +1368,8 @@ console.log(data2);
                                     firstName: {
                                         '$regex': check
                                     },
-                                    forVerification: true
+                                    isVerify: true,
+                                    verifyExpert: true
                                 }).exec(function(err, number) {
                                     if (err) {
                                         console.log(err);
@@ -1377,7 +1388,8 @@ console.log(data2);
                                     firstName: {
                                         '$regex': check
                                     },
-                                    forVerification: true
+                                    isVerify: true,
+                                    verifyExpert: true
                                 }, {
                                     password: 0
                                 }).skip(data.pagesize * (data.pagenumber - 1)).limit(data.pagesize).exec(function(err, data2) {
@@ -1416,7 +1428,8 @@ console.log(data2);
                                     firstName: {
                                         '$regex': check
                                     },
-                                    forVerification: false
+                                    isVerify: true,
+                                    verifyExpert:false
                                 }).exec(function(err, number) {
                                     if (err) {
                                         console.log(err);
@@ -1435,7 +1448,8 @@ console.log(data2);
                                     firstName: {
                                         '$regex': check
                                     },
-                                    forVerification: false
+                                    isVerify: true,
+                                    verifyExpert:false
                                 }, {
                                     password: 0
                                 }).skip(data.pagesize * (data.pagenumber - 1)).limit(data.pagesize).exec(function(err, data2) {
