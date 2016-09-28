@@ -164,7 +164,7 @@ console.log(data2);
                                 emailData.name = data.firstName;
                                 var encryptVerEm = text + "00x00" + ExpertUser.encrypt(data.email, 9);
                                 console.log(encryptVerEm);
-                                emailData.link = "http://jacknows.wohlig.com/verifyemail/" + encryptVerEm;
+                                emailData.link = "http://wohlig.co.in/jacknows/#/verifyemail/" + encryptVerEm;
                                 emailData.content = "Thank you for sharing your details with us. Our expert on-boarding team will get back to you at the earliest.Please click on the button below to verify your email :" + emailData.link;
                                 emailData.subject = "Signup in Jacknows with Email Verification";
 
@@ -1425,11 +1425,12 @@ console.log(data2);
                     async.parallel([
                             function(callback) {
                                 ExpertUser.count({
+                                  isVerify: true,
+                                  verifyExpert:false,
                                     firstName: {
                                         '$regex': check
-                                    },
-                                    isVerify: true,
-                                    verifyExpert:false
+                                    }
+
                                 }).exec(function(err, number) {
                                     if (err) {
                                         console.log(err);
@@ -1445,11 +1446,12 @@ console.log(data2);
                             },
                             function(callback) {
                                 ExpertUser.find({
+                                  isVerify: true,
+                                  verifyExpert:false,
                                     firstName: {
                                         '$regex': check
-                                    },
-                                    isVerify: true,
-                                    verifyExpert:false
+                                    }
+
                                 }, {
                                     password: 0
                                 }).skip(data.pagesize * (data.pagenumber - 1)).limit(data.pagesize).exec(function(err, data2) {
