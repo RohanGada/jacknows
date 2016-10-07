@@ -298,15 +298,15 @@ module.exports = {
                                 "CHANNEL_ID": "WEB",
                                 "CUST_ID": req.session.user._id,
                                 "EMAIL": req.session.user.email,
-                                "INDUSTRY_TYPE_ID": "Retail",
-                                "MID": "GoFish30419544249686",
+                                "INDUSTRY_TYPE_ID": "Retail110",
+                                "MID": "GoFish10361235284009",
                                 "MERC_UNQ_REF": req.body._id,
                                 "MOBILE_NO": req.session.user.mobile,
                                 "ORDER_ID": "ORD-",
                                 "REQUEST_TYPE": "DEFAULT",
                                 "THEME": "merchant",
                                 "TXN_AMOUNT": respo.finalAmount,
-                                "WEBSITE": "jacknows"
+                                "WEBSITE": "GoFishweb"
                             };
                             var possible = "abcdefghijklmnopqrstuvwxyz1234567890";
                             for (var i = 0; i < 8; i++) {
@@ -316,7 +316,8 @@ module.exports = {
                             _.each(genParams, function(value, key) {
                                 abc += key + "=" + value + "&";
                             });
-                            checksum.genchecksum(genParams, "7_Ew6zbUNTNvfJXv", function(err, genParams) {
+                            checksum.genchecksum(genParams, "5cF_FfuNlg1fxvxr", function(err, genParams) {
+                            // checksum.genchecksum(genParams, "7_Ew6zbUNTNvfJXv", function(err, genParams) {
                                 if (err) {
                                     console.log(err);
                                     res.json({
