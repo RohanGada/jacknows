@@ -22,6 +22,7 @@ var schema = new Schema({
         default: false
     },
     reason: String,
+    shortDescription: String,
     name: String,
     firstName: String,
     lastName: String,
