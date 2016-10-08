@@ -110,6 +110,38 @@ module.exports = {
             });
         }
     },
+    foundSlot: function(req, res) {
+      if (req.body) {
+          Booking.foundSlot(req.body, function(err, respo) {
+            if(!_.isEmpty(respo)){
+              if (err) {
+                  res.json({
+                      value: false,
+                      data: err
+                  });
+              } else {
+                  res.json({
+                      value: true,
+                      mesg: "This expert is already booked on this time",
+                      data: respo
+                  });
+              }
+            }else{
+              res.json({
+                  value: false,
+                  mesg: "This expert is available on this time",
+                  data: respo
+              });
+            }
+
+          });
+      } else {
+          res.json({
+              value: false,
+              data: "Invalid call"
+          });
+      }
+    },
     delete: function(req, res) {
         if (req.body) {
             if (req.body._id && req.body._id != "") {

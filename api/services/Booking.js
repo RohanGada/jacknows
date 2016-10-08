@@ -388,6 +388,22 @@ var models = {
             });
         }
     },
+    foundSlot: function(data, callback) {
+      // console.log('data.callTime',data.callTime);
+      // var chkwithin2Hr = moment(data.callTime).add(2, 'hour');
+      // console.log('chkwithin2Hr',chkwithin2Hr);
+        this.find({
+            expert: data.expertuser,
+            callTime: data.callTime
+        }, {}, {}).exec(function(err, deleted) {
+            if (err) {
+                callback(err, null);
+            } else {
+              console.log('deleted',deleted);
+                callback(null, deleted);
+            }
+        });
+    },
     getAll: function(data, callback) {
         this.find({}, {}, {}).populate("expert", "firstName").populate("user", "firstName").lean().exec(function(err, deleted) {
             if (err) {
