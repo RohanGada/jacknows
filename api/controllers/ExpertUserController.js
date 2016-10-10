@@ -1224,6 +1224,26 @@ module.exports = {
                 data: "Invalid Request"
             });
         }
-    }
+    },
+
+    sms: function (req, res) {
+
+           var options = {
+               hostname: 'http://api-alerts.solutionsinfini.com/v3/?method=sms&api_key=Ad9e5XXXXXXXXXXXXX&to=997XXXXXXX&sender=INFXXX&message=test&unicode=1',
+              //  hostname: 'http://URL/api/v3/index.php?method=sms&api_key=A84a4330cfxxxxxxxxxxxxxxxxxxxxxxxxx&to=9594390024&sender=INFXXX&message=testing&unicode=1',
+               method: 'GET'
+           };
+
+           console.log('=> %s', curl.cmd(options));
+
+           http.request(options, function (res) {
+               console.log('STATUS: ' + res.statusCode);
+               console.log('HEADERS: ' + JSON.stringify(res.headers));
+               res.setEncoding('utf8');
+               res.on('data', function (chunk) {
+                   console.log('BODY: ' + chunk);
+               });
+           }).end();
+}
 
 };
