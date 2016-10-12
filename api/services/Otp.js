@@ -36,20 +36,37 @@
                              console.log(err);
                              callback(err, null);
                          } else {
+
+
+                          //  data.content2 = "Hi, your OTP for verification of your mobile number on JacKnows is "+data.otp;
+                          //  Config.message2({
+                          //      mobile: data.mobile,
+                          //      content: data.content2
+                          //  }, function(err, data2) {
+                          //      if (err) {
+                          //          callback(null, {
+                          //              message: "Done"
+                          //          });
+                          //      } else {
+                          //          // callback(null, {
+                          //          //     message: "Done"
+                          //          // });
+                          //      }
+                          //  });
+
+
                              request.get({
-                                 url: "http://api-alerts.solutionsinfini.com/v3/?method=sms&api_key=Accfcbe3dd1296a7def430bb0678279b3&to=" + data.contact + "&sender=SRTVST&message=Dear User, One Time Password (OTP) to complete your mobile number verification is " + data.otp + "&format=json"
+                                 url: "http://api-alerts.solutionsinfini.com/v3/?method=sms&api_key=Ab239cf5d62a8e6d2c531663f289d0f5d&to=" + data.contact + "&sender=JAKNWS&message=Hi, your OTP for verification of your mobile number on JacKnows is " + data.otp + "&format=json"
                              }, function(err, http, body) {
                                  if (err) {
                                      console.log(err);
                                      callback(err, null);
                                  } else {
                                      console.log(body);
-
-                                     var resp = data2.toObject();
-                                     delete resp.otp;
-                                     callback(null, resp);
                                  }
                              });
+
+
                          }
                      });
                  } else {
@@ -62,7 +79,7 @@
                              callback(err, null);
                          } else {
                              request.get({
-                                 url: "http://api-alerts.solutionsinfini.com/v3/?method=sms&api_key=Accfcbe3dd1296a7def430bb0678279b3&to=" + data.contact + "&sender=SRTVST&message=Dear User, One Time Password (OTP) to complete your mobile number verification is " + data.otp + "&format=json"
+                                 url: "http://api-alerts.solutionsinfini.com/v3/?method=sms&api_key=Accfcbe3dd1296a7def430bb0678279b3&to=" + data.contact + "&sender=JAKNWS&message=Dear User, One Time Password (OTP) to complete your mobile number verification is " + data.otp + "&format=json"
                              }, function(err, http, body) {
                                  if (err) {
                                      console.log(err);

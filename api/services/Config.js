@@ -368,11 +368,21 @@ var models = {
     },
     message: function(data, callback) {
         if (data.mobile || data.mobileno) {
+            // request.get({
+            //     url: "http://etsdom.kapps.in/webapi/wohlig/api/gofish_sms.py?sms_text=" + data.content + "&mobile_number=" + data.mobile
+            // }, function(err, http, body) {
+            //     if (err) {
+            //         console.log(err);
+            //     } else {
+            //         console.log(body);
+            //     }
+            // });
             request.get({
-                url: "http://etsdom.kapps.in/webapi/wohlig/api/gofish_sms.py?sms_text=" + data.content + "&mobile_number=" + data.mobile
+                url: "http://api-alerts.solutionsinfini.com/v3/?method=sms&api_key=Ab239cf5d62a8e6d2c531663f289d0f5d&to=" + data.mobile + "&sender=JAKNWS&message="+data.content+"&format=json"
             }, function(err, http, body) {
                 if (err) {
                     console.log(err);
+                    callback(err, null);
                 } else {
                     console.log(body);
                 }
@@ -384,14 +394,13 @@ var models = {
     message2: function(data, callback) {
         if (data.mobile || data.mobileno) {
             request.get({
-                url: "http://etsdom.kapps.in/webapi/wohlig/api/gofish_sms.py?sms_text=" + data.content + "&mobile_number=" + data.mobile
+                url: "http://api-alerts.solutionsinfini.com/v3/?method=sms&api_key=Ab239cf5d62a8e6d2c531663f289d0f5d&to=" + data.mobile + "&sender=JAKNWS&message="+data.content+"&format=json"
             }, function(err, http, body) {
                 if (err) {
                     console.log(err);
                     callback(err, null);
                 } else {
                     console.log(body);
-                    callback(null, body);
                 }
             });
         } else {

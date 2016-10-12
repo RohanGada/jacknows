@@ -8,6 +8,7 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var md5 = require('MD5');
 var moment = require('moment');
+var request = require("request");
 
 
 var schema = new Schema({
@@ -171,6 +172,44 @@ var models = {
                         if (err) {
                             callback(err, null);
                         } else {
+
+                          //   ***************************
+
+                          data.content2 = "Thank you for signing up with us! We hope you have a great experience on this platform.";
+                          Config.message2({
+                              mobile: data.mobile,
+                              content: data.content2
+                          }, function(err, data2) {
+                              if (err) {
+                                  callback(null, {
+                                      message: "Done"
+                                  });
+                              } else {
+                                  // callback(null, {
+                                  //     message: "Done"
+                                  // });
+                              }
+                          });
+
+
+
+                          // request.get({
+                          //     url: "http://api-alerts.solutionsinfini.com/v3/?method=sms&api_key=Ab239cf5d62a8e6d2c531663f289d0f5d&to=" + data.mobile + "&sender=JAKNWS&message=Thank you for signing up with us! We hope you have a great experience on this platform.&format=json"
+                          // }, function(err, http, body) {
+                          //     if (err) {
+                          //         console.log(err);
+                          //         callback(err, null);
+                          //     } else {
+                          //         console.log(body);
+                          //         //
+                          //         // var resp = data2.toObject();
+                          //         // delete resp.otp;
+                          //         // callback(null, data);
+                          //     }
+                          // });
+
+
+                          // ***************************
                             var text = "";
                             var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
                             for (var i = 0; i < 12; i++) {

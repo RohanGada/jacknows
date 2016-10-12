@@ -182,26 +182,26 @@ var models = {
                     }
                     switch (booking.status) {
                         case "accept":
-                            var emailData = {};
+                            var emailData = {}; /////TO EXPERT
                             emailData.email = data.email;
                             emailData.filename = 'dummy.ejs';
                             emailData.name = data.expertname;
                             emailData.content = "Hi, we have sent your reply to the User, we will revert once the call is confirmed.";
                             emailData.mobile = data.expertmobile;
-                            emailData.content2 = "Hi, we have sent your reply to the User, we will revert once the call is confirmed.";
+                            emailData.content2 = "We have sent your response to the user. We will get back to you once the call is confirmed.";
                             emailData.subject = "Booking Status";
-                            var emailData2 = {};
+                            var emailData2 = {}; /////TO USER
                             emailData2.email = data.useremail;
                             emailData2.filename = 'dummy.ejs';
                             emailData2.name = data.username;
                             emailData2.content = "Hi, the expert has replied to your request, please login to check. (http://wohlig.co.in/jacknows/#/login)";
                             emailData2.subject = "Booking Status";
                             emailData2.mobile = data.mobile;
-                            emailData2.content2 = "Hi, the expert has replied to your request, please login to check.";
+                            emailData2.content2 = "You have received a response from the expert regarding your request. Please login to check.";
                             callMail(emailData, emailData2);
                             break;
                         case "reject":
-                            var emailData = {};
+                            var emailData = {};/////TO EXPERT
                             emailData.email = data.email;
                             emailData.filename = 'dummy.ejs';
                             emailData.name = data.expertname;
@@ -209,7 +209,7 @@ var models = {
                             emailData.subject = "Booking Status";
                             emailData.mobile = data.expertmobile;
                             emailData.content2 = "Hi, we have sent your reply to the User, we will revert once the call is confirmed.";
-                            var emailData2 = {};
+                            var emailData2 = {}; /////TO USER
                             emailData2.email = data.useremail;
                             emailData2.filename = 'dummy.ejs';
                             emailData2.name = data.username;
@@ -220,7 +220,7 @@ var models = {
                             callMail(emailData, emailData2);
                             break;
                         case "paid":
-                            var emailData = {};
+                            var emailData = {}; /////TO EXPERT
                             var timestamp = moment(data2.callTime).add(5, "hours").add(30, "minutes").format("DD-MM-YYYY hh:mm A");
                             // var timestamp = moment(data2.callTime).format("DD-MM-YYYY hh:mm A");
                             emailData.email = data.expertemail;
@@ -228,20 +228,20 @@ var models = {
                             emailData.name = data.expertname;
                             emailData.content = "Your call with " + data.username + " is confirmed for " + timestamp + " IST.";
                             emailData.mobile = data.expertmobile;
-                            emailData.content2 = "Your call with " + data.username + " is confirmed for " + timestamp + " IST.";
+                            emailData.content2 = "Your call with " + data.username + " is confirmed. We will connect you with the user on " + timestamp + ".";
                             emailData.subject = "Booking Status";
-                            var emailData2 = {};
+                            var emailData2 = {}; /////TO USER
                             emailData2.email = data.email;
                             emailData2.filename = 'dummy.ejs';
                             emailData2.name = data.username;
-                            emailData2.content = "Thanks for making the payment, your call with " + data.expertname + "  is confimed for " + timestamp + " IST.";
+                            emailData2.content = "Thanks for making the payment, your call with " + data.expertname + "  is confimed for " + timestamp + ".";
                             emailData2.subject = "Booking Status";
                             emailData2.mobile = data.mobile;
-                            emailData2.content2 = "Thanks for making the payment, your call with " + data.expertname + "  is confimed for " + timestamp + " IST.";
+                            emailData2.content2 = "Thank you for the payment. Your call with " + data.expertname + "  is confirmed. We will connect you with the expert at " + timestamp + ".";
                             callMail(emailData, emailData2);
                             break;
                         case "failure":
-                            var emailData = {};
+                            var emailData = {};/////TO EXPERT
                             emailData.email = data.expertemail;
                             emailData.filename = 'dummy.ejs';
                             emailData.name = data.expertname;
@@ -249,7 +249,7 @@ var models = {
                             emailData.mobile = data.expertmobile;
                             emailData.content2 = "Your booking with " + data.username + " was cancelled";
                             emailData.subject = "Booking Status";
-                            var emailData2 = {};
+                            var emailData2 = {};/////TO USER
                             emailData2.email = data.email;
                             emailData2.filename = 'dummy.ejs';
                             emailData2.name = data.username;
@@ -336,7 +336,7 @@ var models = {
                                         });
                                     },
                                     function(callback1) {
-                                        data.content2 = "Hi, you have received a request from a user, please login to check.";
+                                        data.content2 = "=Hi! You have received a request for a discussion. Please login to check and confirm. Thanks.";
                                         Config.message2({
                                             mobile: data.mobile,
                                             content: data.content2
@@ -353,7 +353,7 @@ var models = {
                                         });
                                     },
                                     function(callback1) {
-                                        data.content2 = "Thanks, your request has been sent to the expert. We will get back to you once they revert.";
+                                        data.content2 = "Your request has been sent across to the expert. Please await our confirmation.";
                                         Config.message2({
                                             mobile: data.usermobile,
                                             content: data.content2
