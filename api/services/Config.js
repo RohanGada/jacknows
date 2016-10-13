@@ -401,6 +401,7 @@ var models = {
                     callback(err, null);
                 } else {
                     console.log(body);
+                    callback(null,body);
                 }
             });
         } else {

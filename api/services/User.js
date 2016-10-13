@@ -233,7 +233,7 @@ var models = {
                                 } else {
                                     // callback(null, data3);
                                     Otp.saveData({
-                                        contact: user.mobileno
+                                        contact: user.mobile
                                     }, function(err, data) {
                                         if (err) {
                                             callback(err, null);

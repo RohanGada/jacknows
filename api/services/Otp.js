@@ -78,18 +78,18 @@
                              console.log(err);
                              callback(err, null);
                          } else {
-                             request.get({
-                                 url: "http://api-alerts.solutionsinfini.com/v3/?method=sms&api_key=Accfcbe3dd1296a7def430bb0678279b3&to=" + data.contact + "&sender=JAKNWS&message=Dear User, One Time Password (OTP) to complete your mobile number verification is " + data.otp + "&format=json"
-                             }, function(err, http, body) {
-                                 if (err) {
-                                     console.log(err);
-                                     callback(err, null);
-                                 } else {
-                                     console.log(body);
-                                     delete data.otp;
-                                     callback(null, data);
-                                 }
-                             });
+                            //  request.get({
+                            //      url: "http://api-alerts.solutionsinfini.com/v3/?method=sms&api_key=Accfcbe3dd1296a7def430bb0678279b3&to=" + data.contact + "&sender=JAKNWS&message=Dear User, One Time Password (OTP) to complete your mobile number verification is " + data.otp + "&format=json"
+                            //  }, function(err, http, body) {
+                            //      if (err) {
+                            //          console.log(err);
+                            //          callback(err, null);
+                            //      } else {
+                            //          console.log(body);
+                            //          delete data.otp;
+                            //          callback(null, data);
+                            //      }
+                            //  });
                          }
                      });
                  }
@@ -113,7 +113,7 @@
                  callback(err, null);
              } else {
                  if (data2 !== null) {
-                   TempUser.findOneAndUpdate({
+                   User.findOneAndUpdate({
                      mobile: data.contact
                    },{
                      $set:{
@@ -131,28 +131,8 @@
                                callback(err, null);
                            } else {
                                console.log(data2);
-                               User.update({
-                                   mobile: updated.referralCode
-                               }, {
-                                   $push: {
-                                       referred: {
-                                           name: data2.name,
-                                           user: data2._id
-                                       }
-                                   },
-                                   $inc: {
-                                       points: 2000
-                                   }
-                               }, function(err, saveres) {
-                                   if (err) {
-                                       console.log(err);
-                                       callback(err, null);
-                                   } else {
-                                       // console.log(saveres);
-                                       callback(null, data2);
-                                   }
-                               });
-                               // callback(null, data2);
+
+                               callback(null, data2);
                            }
                        });
                      }

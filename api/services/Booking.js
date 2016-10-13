@@ -88,24 +88,25 @@ var models = {
                                         }
                                     });
                                 },
-                                function(callback1) {
-                                    Config.message2({
-                                        mobile: emailData2.mobile,
-                                        content: emailData2.content2
-                                    }, function(err, data2) {
-                                        callback1(null, {
-                                            message: "Done"
-                                        });
-                                    });
-                                },
+                                // function(callback1) {
+                                //     Config.message2({
+                                //         mobile: emailData2.mobile,
+                                //         content: emailData2.content2
+                                //     }, function(err, data2) {
+                                //         // callback1(null, {
+                                //         //     message: "Done"
+                                //         // });
+                                //     });
+                                // }
+                                // ,
                                 function(callback1) {
                                     Config.message2({
                                         mobile: emailData.mobile,
                                         content: emailData.content2
                                     }, function(err, data2) {
-                                        callback1(null, {
-                                            message: "Done"
-                                        });
+                                        // callback1(null, {
+                                        //     message: "Done"
+                                        // });
                                     });
                                 }
                             ],
@@ -279,6 +280,8 @@ var models = {
                     console.log(err);
                     callback(err, null);
                 } else {
+                  console.log('in else');
+                  console.log(foundme);
                     if (_.isEmpty(foundme)) {
                         booking.status = "pending";
                         booking.save(function(err, data2) {
@@ -336,15 +339,16 @@ var models = {
                                         });
                                     },
                                     function(callback1) {
-                                        data.content2 = "=Hi! You have received a request for a discussion. Please login to check and confirm. Thanks.";
+                                        data.content2 = "Hi! You have received a request for a discussion. Please login to check and confirm. Thanks.";
                                         Config.message2({
                                             mobile: data.mobile,
                                             content: data.content2
                                         }, function(err, data2) {
                                             if (err) {
-                                                callback1(null, {
-                                                    message: "Done"
-                                                });
+                                                callback1(err, null);
+                                                // callback1(null, {
+                                                //     message: "Done"
+                                                // });
                                             } else {
                                                 callback1(null, {
                                                     message: "Done"
@@ -359,9 +363,10 @@ var models = {
                                             content: data.content2
                                         }, function(err, data2) {
                                             if (err) {
-                                                callback1(null, {
-                                                    message: "Done"
-                                                });
+                                                callback1(err, null);
+                                                // callback1(null, {
+                                                //     message: "Done"
+                                                // });
                                             } else {
                                                 callback1(null, {
                                                     message: "Done"
@@ -388,6 +393,7 @@ var models = {
             });
         }
     },
+
     foundSlot: function(data, callback) {
       // console.log('data.callTime',data.callTime);
       // var chkwithin2Hr = moment(data.callTime).add(2, 'hour');
