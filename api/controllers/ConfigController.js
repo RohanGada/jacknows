@@ -282,6 +282,7 @@ module.exports = {
         if (req.body && req.body._id) {
             if (req.session.user) {
                 if (req.session.user.mobile && req.session.user.email) {
+                // if (true) {
                     Booking.findOne({
                         _id: req.body._id
                     }, {
@@ -306,18 +307,50 @@ module.exports = {
                                 "REQUEST_TYPE": "DEFAULT",
                                 "THEME": "merchant",
                                 "TXN_AMOUNT": respo.finalAmount,
-                                "WEBSITE": "GoFishweb"
+                                "WEBSITE": "GoFishweb",
+                                "CALLBACK_URL":"http://localhost:80/config/successError"
+                            };
+                            // var genParams = {
+                            //     "CHANNEL_ID": "WEB",
+                            //     "CUST_ID":123,
+                            //     "EMAIL": "chintan@wohlig.com",
+                            //     "INDUSTRY_TYPE_ID": "Retail110",
+                            //     "MID": "GoFish10361235284009",
+                            //     "MERC_UNQ_REF": req.body._id+""+parseInt(Math.random()*1000000),
+                            //     "MOBILE_NO": "9819222221",
+                            //     "ORDER_ID": ""+parseInt(Math.random()*1000000),
+                            //     "REQUEST_TYPE": "DEFAULT",
+                            //     "THEME": "merchant",
+                            //     "TXN_AMOUNT": 100,
+                            //     "WEBSITE": "GoFishweb",
+                            //     "CALLBACK_URL":"http://localhost:80/config/successError"
+                            // };
+                            var checkParam = {
+                              MID: genParams.MID,
+                              ORDER_ID: genParams.ORDER_ID,
+                              CUST_ID: genParams.CUST_ID,
+                              TXN_AMOUNT: genParams.TXN_AMOUNT,
+                              CHANNEL_ID: genParams.CHANNEL_ID,
+                              INDUSTRY_TYPE_ID: genParams.INDUSTRY_TYPE_ID,
+                              WEBSITE: genParams.WEBSITE,
+                              CHECKSUMHASH: '5xORNy+qP7G53XWptN7dh1AzD226cTTDsUe4yjAgKe19eO5olCPseqhFDmlmUTcSiEJFXuP/usVEjHlfMCgvqtI8rbkoUCVC3uKZzOBFpOw='
                             };
                             var possible = "abcdefghijklmnopqrstuvwxyz1234567890";
                             for (var i = 0; i < 8; i++) {
                                 genParams.ORDER_ID += possible.charAt(Math.floor(Math.random() * possible.length));
                             }
-                            var abc = "https://pguat.paytm.com/oltp-web/processTransaction?";
-                            _.each(genParams, function(value, key) {
-                                abc += key + "=" + value + "&";
-                            });
-                            checksum.genchecksum(genParams, "5cF_FfuNlg1fxvxr", function(err, genParams) {
-                            // checksum.genchecksum(genParams, "7_Ew6zbUNTNvfJXv", function(err, genParams) {
+                            var abc = "https://secure.paytm.in/oltp-web/processTransaction?";
+
+                        //  genchecksum(checkParam, "5cF_FfuNlg1fxvxr", function (err, checkParam) {
+                        //       console.log(checkParam);
+                        //     });
+                        //     if (verifychecksum(checkParam, "5cF_FfuNlg1fxvxr")) {
+                        //       console.log('verified checksum');
+                        //     } else {
+                        //       console.log("verification failed");
+                        //     }
+                            checksum.genchecksum(genParams, "5cF_FfuNlg1fxvxr", function(err, checkParam) {
+                            // checksum.genchecksum(genParams, "7_Ew6zbUNTNvfJXv", function(err, genParams)
                                 if (err) {
                                     console.log(err);
                                     res.json({
@@ -325,12 +358,21 @@ module.exports = {
                                         data: err
                                     });
                                 } else {
-                                    abc += "CHECKSUMHASH=" + encodeURIComponent(genParams.CHECKSUMHASH);
+
+                                  _.each(checkParam, function(value, key) {
+                                      abc += key + "=" + encodeURIComponent(value) + "&";
+                                  });
+                                  abc = abc.substr(0,abc.length-1);
                                     res.json({
                                         value: true,
                                         data: abc
                                     });
-                                    console.log('abc',abc);
+                                    if(checksum.verifychecksum(genParams, "5cF_FfuNlg1fxvxr")){
+                                      console.log('Verify checkParam');
+                                      console.log(checkParam);
+                                    }else{
+                                      console.log('not verify');
+                                    }
                                 }
                             });
                         }
@@ -446,6 +488,50 @@ module.exports = {
                 data: "Invalid Call"
             });
         }
+    },
+    successError: function (req, res) {
+      console.log(" In succes ");
+        var data = req.allParams();
+        res.json(data);
+        if(data.RESPCODE == "01") {
+          //make changes for the success made
+          res.redirect("http://wohlig.co.in/jacknows/#/thankyou");
+        } else {
+          res.redirect("http://wohlig.co.in/jacknows/#/thankyou");
+        }
+         console.log('successError');
+         console.log(data);
+        // if (data.status != "success") {
+        //     // failure
+        //     var transactionid = data.mihpayid;
+        //     var orderid = data.txnid;
+        //     var status = data.status;
+        //
+        //     function callback1(err, data) {
+        //         if (data) {
+        //             // go to fail url
+        //             res.redirect("http://thestylease.com/newsite/testing/#/sorry");
+        //         } else {
+        //             res.redirect("http://thestylease.com/newsite/testing/#/sorry");
+        //         }
+        //     }
+        //     Payu.updateOrderStatus(transactionid, orderid, status, callback1);
+        // } else {
+        //     var transactionid = data.mihpayid;
+        //     var orderid = data.txnid;
+        //     var status = data.status;
+        //
+        //     function callback2(err, data) {
+        //         if (data) {
+        //             // go to success url
+        //             res.redirect("http://thestylease.com/newsite/testing/#/thankyou/" + data.orderid);
+        //         } else {
+        //             res.redirect("http://thestylease.com/newsite/testing/#/sorry");
+        //         }
+        //     }
+        //     Payu.updateOrderStatus(transactionid, orderid, status, callback2);
+        //     //    success
+        // }
     },
     checkFailed: function(req, res) {
         Booking.update({
