@@ -81,7 +81,7 @@ module.exports.verifychecksum = verifychecksum;
 (function () {
 
   if (require.main === module) {
-       
+
     var ver_param = {
       MID: 'wVhtoq05771472615938',
       ORDER_ID: 52,
@@ -103,6 +103,3 @@ module.exports.verifychecksum = verifychecksum;
 
   }
 }());
-
-
-

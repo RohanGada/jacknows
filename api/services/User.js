@@ -903,7 +903,7 @@ var models = {
                         firstName: {
                             '$regex': check
                         },
-                        isVerify:true
+                        // isVerify:true
                     }).exec(function(err, number) {
                         if (err) {
                             console.log(err);
@@ -922,7 +922,7 @@ var models = {
                         firstName: {
                             '$regex': check
                         },
-                        isVerify:true
+                        // isVerify:true
                     }, {
                         password: 0
                     }).skip(data.pagesize * (data.pagenumber - 1)).limit(data.pagesize).exec(function(err, data2) {
