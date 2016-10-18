@@ -143,6 +143,8 @@ var models = {
             }, {
                 "mobileno": data.mobileno
             }]
+            // ,
+            // "verifyotp":true
         }).exec(function(err, data2) {
             if (err) {
                 callback(err, null);
