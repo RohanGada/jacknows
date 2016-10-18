@@ -339,6 +339,7 @@ var models = {
                             console.log(err);
                             callback(err, null);
                         } else {
+                          console.log('email else');
                             if (body && body.value != false) {
                                 var sendgrid = require("sendgrid")(userdata[0].name);
                                 sendgrid.send({
@@ -462,6 +463,6 @@ var models = {
             }
         });
     },
-    
+
 };
 module.exports = _.assign(module.exports, models);

@@ -178,12 +178,16 @@ module.exports = {
                     value: false
                 });
             } else {
-                setTimeout(function() {
-                    res.json({
-                        data: "Expert Registered",
-                        value: true
-                    });
-                }, 2000);
+              res.json({
+                  data: "Expert Registered",
+                  value: true
+              });
+                // setTimeout(function() {
+                //     res.json({
+                //         data: "Expert Registered",
+                //         value: true
+                //     });
+                // }, 2000);
             }
         };
         if (req.body) {
