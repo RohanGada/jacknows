@@ -142,9 +142,8 @@ var models = {
                 "email": data.email
             }, {
                 "mobileno": data.mobileno
-            }]
-            // ,
-            // "verifyotp":true
+            }],
+            "verifyotp": true
         }).exec(function(err, data2) {
             if (err) {
                 callback(err, null);
@@ -152,10 +151,21 @@ var models = {
                 console.log(data2);
                 // console.log(_.isEmpty(data));
                 if (data2 == 0) {
-                    expertuser.save(function(err, data3) {
-                        // data3.password = '';
-                        if (err) {
-                            callback(err, null);
+                  ExpertUser.findOneAndUpdate({
+                    email:data.email,
+                    mobileno:data.mobileno
+                  },{
+                    $setOnInsert:expertuser
+                  },{
+                    upsert:true,
+                    new:true
+                  },function (err,data3) {
+                    if(err){
+                      callback(err,null);
+                    // expertuser.save(function(err, data3) {
+                    //     // data3.password = '';
+                    //     if (err) {
+                    //         callback(err, null);
                         } else {
 
                             //   ***************************
@@ -210,42 +220,43 @@ var models = {
                                 if (err) {
                                     console.log(err, null);
                                 } else if (data) {
-                                    expertuser.save(function(err, data3) {
+                                    // expertuser.save(function(err, data3) {
+                                    //     if (err) {
+                                    //         console.log(err, null);
+                                    //     } else {
+                                    //         console.log(null, data3);
+                                    //     }
+                                    // });
+                                    Config.email(emailData, function(err, emailRespo) {
                                         if (err) {
-                                            console.log(err, null);
+                                            console.log(err);
+                                            callback(err, null);
                                         } else {
-                                            console.log(null, data3);
+                                            // callback(null, data3);
+                                            ExpertUser.findOneAndUpdate({
+                                                _id: data3._id,
+                                            }, {
+                                                $set: {
+                                                    verifyemail: expertuser.verifyemail
+                                                }
+                                            }, function(err, data12) {
+                                                if (err) {
+                                                    callback(err, null);
+                                                } else {
+
+                                                    callback(null, data12);
+
+                                                }
+                                            });
+
                                         }
                                     });
                                 } else {
                                     console.log(null, data);
-                                }
-                            });
-
-                            Config.email(emailData, function(err, emailRespo) {
-                                if (err) {
-                                    console.log(err);
-                                    callback(err, null);
-                                } else {
-                                    // callback(null, data3);
-                                    ExpertUser.findOneAndUpdate({
-                                        _id: data3._id,
-                                    }, {
-                                        $set: {
-                                            verifyemail: expertuser.verifyemail
-                                        }
-                                    }, function(err, data12) {
-                                        if (err) {
-                                            callback(err, null);
-                                        } else {
-
-                                            callback(null, data12);
-
-                                        }
-                                    });
 
                                 }
                             });
+
 
                         }
                     });
