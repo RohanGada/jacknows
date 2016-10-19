@@ -202,7 +202,7 @@ var models = {
                             callMail(emailData, emailData2);
                             break;
                         case "reject":
-                            var emailData = {};/////TO EXPERT
+                            var emailData = {}; /////TO EXPERT
                             emailData.email = data.email;
                             emailData.filename = 'dummy.ejs';
                             emailData.name = data.expertname;
@@ -242,7 +242,7 @@ var models = {
                             callMail(emailData, emailData2);
                             break;
                         case "failure":
-                            var emailData = {};/////TO EXPERT
+                            var emailData = {}; /////TO EXPERT
                             emailData.email = data.expertemail;
                             emailData.filename = 'dummy.ejs';
                             emailData.name = data.expertname;
@@ -250,7 +250,7 @@ var models = {
                             emailData.mobile = data.expertmobile;
                             emailData.content2 = "Your booking with " + data.username + " was cancelled";
                             emailData.subject = "Booking Status";
-                            var emailData2 = {};/////TO USER
+                            var emailData2 = {}; /////TO USER
                             emailData2.email = data.email;
                             emailData2.filename = 'dummy.ejs';
                             emailData2.name = data.username;
@@ -280,8 +280,8 @@ var models = {
                     console.log(err);
                     callback(err, null);
                 } else {
-                  console.log('in else');
-                  console.log(foundme);
+                    console.log('in else');
+                    console.log(foundme);
                     if (_.isEmpty(foundme)) {
                         booking.status = "pending";
                         booking.save(function(err, data2) {
@@ -395,9 +395,9 @@ var models = {
     },
 
     foundSlot: function(data, callback) {
-      // console.log('data.callTime',data.callTime);
-      // var chkwithin2Hr = moment(data.callTime).add(2, 'hour');
-      // console.log('chkwithin2Hr',chkwithin2Hr);
+        // console.log('data.callTime',data.callTime);
+        // var chkwithin2Hr = moment(data.callTime).add(2, 'hour');
+        // console.log('chkwithin2Hr',chkwithin2Hr);
         this.find({
             expert: data.expertuser,
             callTime: data.callTime
@@ -405,7 +405,7 @@ var models = {
             if (err) {
                 callback(err, null);
             } else {
-              console.log('deleted',deleted);
+                console.log('deleted', deleted[0].callDuration);
                 callback(null, deleted);
             }
         });
@@ -578,6 +578,19 @@ var models = {
             });
         }
 
+    },
+
+    getExpertTime: function(data, callback) {
+        Booking.find({
+            expert: data.expert
+        }).exec(function(err, found) {
+            if (err) {
+                console.log(err);
+                callback(err, null);
+            } else {
+                callback(null, found);
+            }
+        });
     },
 
 };

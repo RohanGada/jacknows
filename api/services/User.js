@@ -960,7 +960,9 @@ var models = {
                 User.count({
                     email: {
                         "$regex": checkfor
-                    }
+                    },
+                    isVerify:true,
+                    verifyotp:true
                 }).exec(function(err, number) {
                     if (err) {
                         console.log(err);
@@ -978,7 +980,9 @@ var models = {
                 User.find({
                     email: {
                         "$regex": checkfor
-                    }
+                    },
+                    isVerify:true,
+                    verifyotp:true
                 }, {}).sort({
                     email: 1
                 }).lean().exec(function(err, data2) {
@@ -1009,7 +1013,7 @@ var models = {
         });
     },
 
-    findLimited: function(data, callback) {
+    findLimitedAuth: function(data, callback) {
         var newreturns = {};
         newreturns.data = [];
         var check = new RegExp(data.search, "i");
@@ -1021,6 +1025,7 @@ var models = {
                         firstName: {
                             '$regex': check
                         },
+                        oauthLogin: {'$gte': 1}
                         // isVerify:true
                     }).exec(function(err, number) {
                         if (err) {
@@ -1040,6 +1045,7 @@ var models = {
                         firstName: {
                             '$regex': check
                         },
+                        oauthLogin: {'$gte': 1}
                         // isVerify:true
                     }, {
                         password: 0
@@ -1049,9 +1055,13 @@ var models = {
                             callback(err, null);
                         } else if (data2 && data2.length > 0) {
                             newreturns.data = data2;
+                            newreturns.pagenumber = data.pagenumber;
                             callback(null, newreturns);
                         } else {
-                            callback(null, newreturns);
+                          callback({
+                              message: "No data found"
+                          }, null);
+                            // callback(null, newreturns);
                         }
                     });
                 }

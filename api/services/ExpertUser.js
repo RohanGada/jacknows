@@ -151,21 +151,21 @@ var models = {
                 console.log(data2);
                 // console.log(_.isEmpty(data));
                 if (data2 == 0) {
-                  ExpertUser.findOneAndUpdate({
-                    email:data.email,
-                    mobileno:data.mobileno
-                  },{
-                    $setOnInsert:expertuser
-                  },{
-                    upsert:true,
-                    new:true
-                  },function (err,data3) {
-                    if(err){
-                      callback(err,null);
-                    // expertuser.save(function(err, data3) {
-                    //     // data3.password = '';
-                    //     if (err) {
-                    //         callback(err, null);
+                    ExpertUser.findOneAndUpdate({
+                        email: data.email,
+                        mobileno: data.mobileno
+                    }, {
+                        $setOnInsert: expertuser
+                    }, {
+                        upsert: true,
+                        new: true
+                    }, function(err, data3) {
+                        if (err) {
+                            callback(err, null);
+                            // expertuser.save(function(err, data3) {
+                            //     // data3.password = '';
+                            //     if (err) {
+                            //         callback(err, null);
                         } else {
 
                             //   ***************************
@@ -1373,7 +1373,8 @@ var models = {
                         firstName: {
                             '$regex': check
                         },
-                        isVerify: true
+                        isVerify: true,
+                        verifyotp: true
                     }).exec(function(err, number) {
                         if (err) {
                             console.log(err);
@@ -1392,7 +1393,8 @@ var models = {
                         firstName: {
                             '$regex': check
                         },
-                        isVerify: true
+                        isVerify: true,
+                        verifyotp: true
                     }, {
                         password: 0
                     }).skip(data.pagesize * (data.pagenumber - 1)).limit(data.pagesize).exec(function(err, data2) {
@@ -1432,7 +1434,8 @@ var models = {
                             '$regex': check
                         },
                         isVerify: true,
-                        verifyExpert: true
+                        verifyExpert: true,
+                        verifyotp: true
                     }).exec(function(err, number) {
                         if (err) {
                             console.log(err);
@@ -1452,7 +1455,8 @@ var models = {
                             '$regex': check
                         },
                         isVerify: true,
-                        verifyExpert: true
+                        verifyExpert: true,
+                        verifyotp: true
                     }, {
                         password: 0
                     }).skip(data.pagesize * (data.pagenumber - 1)).limit(data.pagesize).exec(function(err, data2) {

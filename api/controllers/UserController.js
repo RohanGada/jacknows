@@ -548,13 +548,13 @@ module.exports = {
           });
       }
   },
-  getLimited: function(req, res) {
+  findLimitedAuth: function(req, res) {
       function callback(err, data) {
           Global.response(err, data, res);
       }
       if (req.body) {
           if (req.body.pagesize && req.body.pagenumber) {
-              User.findLimited(req.body, res.callback);
+              User.findLimitedAuth(req.body, res.callback);
           } else {
               res.json({
                   value: false,
