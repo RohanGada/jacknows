@@ -46,7 +46,11 @@ var schema = new Schema({
     cancelReason: String,
     expertRating: String,
     query: String,
-    from: String
+    from: String,
+    alreadyBooked:{
+      type:Boolean,
+      default:false
+    }
 });
 
 
@@ -87,7 +91,8 @@ var models = {
                                             });
                                         }
                                     });
-                                },
+                                }
+                                // ,
                                 // function(callback1) {
                                 //     Config.message2({
                                 //         mobile: emailData2.mobile,
@@ -99,16 +104,16 @@ var models = {
                                 //     });
                                 // }
                                 // ,
-                                function(callback1) {
-                                    Config.message2({
-                                        mobile: emailData.mobile,
-                                        content: emailData.content2
-                                    }, function(err, data2) {
-                                        // callback1(null, {
-                                        //     message: "Done"
-                                        // });
-                                    });
-                                }
+                                // function(callback1) {
+                                //     Config.message2({
+                                //         mobile: emailData.mobile,
+                                //         content: emailData.content2
+                                //     }, function(err, data2) {
+                                //         // callback1(null, {
+                                //         //     message: "Done"
+                                //         // });
+                                //     });
+                                // }
                             ],
                             function(err, asyncrespo) {
                                 if (err) {
@@ -396,6 +401,7 @@ var models = {
 
     foundSlot: function(data, callback) {
         // console.log('data.callTime',data.callTime);
+        // data.callTime = new Date(data.callTime);
         // var chkwithin2Hr = moment(data.callTime).add(2, 'hour');
         // console.log('chkwithin2Hr',chkwithin2Hr);
         this.find({
@@ -404,10 +410,15 @@ var models = {
         }, {}, {}).exec(function(err, deleted) {
             if (err) {
                 callback(err, null);
-            } else {
-                console.log('deleted', deleted[0].callDuration);
-                callback(null, deleted);
             }
+            else{
+                console.log('here else');
+                callback(null, deleted);
+
+              }
+                // console.log('deleted', deleted[0].callDuration);
+
+
         });
     },
     getAll: function(data, callback) {

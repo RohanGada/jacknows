@@ -44,7 +44,7 @@ module.exports = {
                     } else {
                         res.json({
                             value: false,
-                            data: "User not loggd-in"
+                            data: "Expert not loggd-in"
                         });
                     }
                 } else if (req.body.from == "user") {
