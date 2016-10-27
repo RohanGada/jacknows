@@ -6,7 +6,7 @@
  */
 var sendgrid = require('sendgrid')('');
 // var redirect="http://146.148.4.222/test";
-var redirect = "http://localhost:8080/#/home";
+// var redirect = "http://localhost:8080/#/home";
 var redirect = "http://wohlig.co.in/jacknows/";
 module.exports = {
     saveData: function(req, res) {

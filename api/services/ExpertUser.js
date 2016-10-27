@@ -198,8 +198,8 @@ var models = {
                             emailData.name = data.firstName;
                             var encryptVerEm = text + "00x00" + ExpertUser.encrypt(data.email, 9);
                             console.log(encryptVerEm);
-                            // emailData.link = "http://wohlig.co.in/jacknows/#/verifyemail/" + encryptVerEm;
-                            emailData.link = "http://localhost:8080/#/verifyemail/" + encryptVerEm;
+                            emailData.link = "http://wohlig.co.in/jacknows/#/verifyemail/" + encryptVerEm;
+                            // emailData.link = "http://localhost:8080/#/verifyemail/" + encryptVerEm;
                             emailData.content = "Thank you for sharing your details with us. Our expert on-boarding team will get back to you at the earliest.Please click on the button below to verify your email :" + emailData.link;
                             emailData.subject = "Signup in Jacknows with Email Verification";
                             Config.message2({
