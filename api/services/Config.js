@@ -354,6 +354,13 @@ var models = {
                                         callback(err, null);
                                     } else {
                                       console.log('not in error');
+                                      console.log({
+                                          to: data.email,
+                                          from: "info@wohlig.com",
+                                          subject: data.subject,
+                                          html: body
+                                      });
+                                      console.log(json);
                                         callback(null, json);
                                     }
                                 });
