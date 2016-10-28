@@ -98,11 +98,11 @@ var model = {
                            }, function(err, data2) {
                                if (err) {
                                    callback(null, {
-                                       message: "Done"
+                                       message: "Done error msg"
                                    });
                                } else {
 
-                                 console.log("message",content);
+                                 console.log("message10",content2);
                                  callback(null,"done")
                                    // callback(null, {
                                    //     message: "Done"
