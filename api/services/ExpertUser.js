@@ -1496,7 +1496,9 @@ var models = {
                         firstName: {
                             '$regex': check
                         },
-                        verifyExpert: false
+                        verifyExpert: false,
+                        isVerify: true,
+                        verifyotp: true
                     }).exec(function(err, number) {
                         if (err) {
                             console.log(err);
@@ -1516,7 +1518,9 @@ var models = {
                         firstName: {
                             '$regex': check
                         },
-                        verifyExpert: false
+                        verifyExpert: false,
+                        isVerify: true,
+                        verifyotp: true
                     }, {
                         password: 0
                     }).skip(data.pagesize * (data.pagenumber - 1)).limit(data.pagesize).exec(function(err, data2) {
