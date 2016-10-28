@@ -341,6 +341,7 @@ var models = {
                         } else {
                           console.log('email else');
                             if (body && body.value != false) {
+                              console.log("body", body);
                                 var sendgrid = require("sendgrid")(userdata[0].name);
                                 sendgrid.send({
                                     to: data.email,
