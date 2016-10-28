@@ -93,7 +93,7 @@ var model = {
 
                            data.content2 = "Hi, your OTP for verification of your mobile number on JacKnows is " + data.otp;
                            Config.message2({
-                               mobile: data.mobile,
+                               mobile: data.contact,
                                content: data.content2
                            }, function(err, data2) {
                                if (err) {
