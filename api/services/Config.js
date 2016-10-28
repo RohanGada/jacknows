@@ -350,8 +350,10 @@ var models = {
                                     html: body
                                 }, function(err, json) {
                                     if (err) {
+                                      console.log('in email error');
                                         callback(err, null);
                                     } else {
+                                      console.log('not in error');
                                         callback(null, json);
                                     }
                                 });

@@ -330,9 +330,10 @@ var models = {
                                 // });
                                 Config.email(emailData, function(err, emailRespo) {
                                     if (err) {
-                                        console.log(err);
+                                        console.log('errrror',err);
                                         callback(err, null);
                                     } else {
+                                      console.log('emmmmmail elllllse');
                                         // callback(null, emailRespo);
                                         User.findOneAndUpdate({
                                             _id: data3._id,
