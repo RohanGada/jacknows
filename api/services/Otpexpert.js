@@ -33,7 +33,7 @@
                  callback(err, null);
              } else {
 
-               console.log("Found111",found);
+               console.log("Found111 otpexpert",found);
                  if (found === 0) {
                      console.log(found);
                      otpexpert.save(function(err, data2) {
@@ -80,17 +80,17 @@
                          }
                      });
                  } else {
-                   console.log('inside else');
+                   console.log('inside 1 else otp exp');
                      data.timestamp = new Date();
                      Otpexpert.findOneAndUpdate({
                          contact: data.contact
                      }, data, function(err, data2) {
                          if (err) {
-                             console.log(err);
+                             console.log('err');
                              callback(err, null);
                          } else {
                            //  callback(null, data2);
-
+console.log('inside 2 else otp exp');
                             data.content2 = "Hi, your OTP for verification of your mobile number on JacKnows is " + data.otp;
                             Config.message2({
                                 mobile: data.mobileno,
@@ -101,7 +101,7 @@
                                         message: "Done"
                                     });
                                 } else {
-
+console.log('inside 3 else otp exp');
                                   // console.log("message",content);
                                   callback(null,"done")
                                     // callback(null, {
