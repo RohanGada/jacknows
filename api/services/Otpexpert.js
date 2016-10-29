@@ -91,17 +91,21 @@ var model = {
                         } else {
                             //  callback(null, data2);
                             console.log('inside 2 else otp exp');
-                            console.log('data.mobile upper side',data.mobile);
-                            console.log('data.mobileno upper side',data.mobileno);
-                            console.log('data.content2 upper side',data.content2);
+                            console.log('data.mobile upper side',data2);
+                            // console.log('data.mobileno upper side',data.mobileno);
+                            // console.log('data.content2 upper side',data.content2);
                             data.content2 = "Hi, your OTP for verification of your mobile number on JacKnows is " + data.otp;
                             Config.message2({
                                 mobile: data.mobile,
                                 content: data.content2
                             }, function(err, data2) {
-                              console.log('data.mobile',data.mobile);
-                              console.log('data.mobileno',data.mobileno);
-                              console.log('data.content2',data.content2);
+                              console.log({
+                                  mobile: data.mobile,
+                                  content: data.content2
+                              });
+                              // console.log('data.mobile',data.mobile);
+                              // console.log('data.mobileno',data.mobileno);
+                              // console.log('data.content2',data.content2);
                                 if (err) {
                                   console.log('inside error 1 otp exp',err);
                                     callback(null, {
