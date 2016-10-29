@@ -102,7 +102,7 @@
                                     });
                                 } else {
 
-                                  console.log("message",content);
+                                  // console.log("message",content);
                                   callback(null,"done")
                                     // callback(null, {
                                     //     message: "Done"
