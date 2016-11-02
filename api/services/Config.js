@@ -408,9 +408,11 @@ var models = {
                 url: "http://api-alerts.solutionsinfini.com/v3/?method=sms&api_key=Ab239cf5d62a8e6d2c531663f289d0f5d&to=" + data.mobile + "&sender=JAKNWS&message="+data.content+"&format=json"
             }, function(err, http, body) {
                 if (err) {
+                  console.log('config error mesg2');
                     console.log(err);
                     callback(err, null);
                 } else {
+                    console.log('config else mesg2');
                     console.log(body);
                     callback(null,body);
                 }

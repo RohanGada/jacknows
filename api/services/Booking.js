@@ -104,7 +104,7 @@ var models = {
                                           //     message: "Done"
                                           // });
                                       } else {
-                                        console.log('message2 else not in error');
+                                        console.log('message2 else not in error emailData2');
                                           callback1(null, {
                                               message: "Done"
                                           });
@@ -121,7 +121,7 @@ var models = {
                                           //     message: "Done"
                                           // });
                                       } else {
-                                          console.log('message2 else not in error');
+                                          console.log('message2 else not in error emailData');
                                           callback1(null, {
                                               message: "Done"
                                           });
