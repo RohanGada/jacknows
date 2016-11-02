@@ -1201,14 +1201,18 @@ module.exports = {
       };
         if (req.body) {
             if (req.body.verifyemail && req.body.verifyemail !== "") {
+              console.log('email here');
                 ExpertUser.emailVerification(req.body, function(err, respo) {
                     if (err) {
+                      console.log('inside error emailVerification');
                         res.json({
                             value: false,
                             data: err
                         });
                     } else {
-                      req.session.expertuser = {};
+                      console.log('inside else of emailVerification');
+                      console.log(respo);
+                      // req.session.expertuser = {};
                       req.session.expertuser = respo;
                         res.json({
                             value: true,
