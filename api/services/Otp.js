@@ -55,8 +55,8 @@ var model = {
                                         message: "Done"
                                     });
                                 } else {
-
-                                    console.log("message", content);
+                                    console.log("message save");
+                                    // console.log("message", content);
                                     callback(null, "done")
                                         // callback(null, {
                                         //     message: "Done"
