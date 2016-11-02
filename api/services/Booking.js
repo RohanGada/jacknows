@@ -184,6 +184,8 @@ var models = {
                     }
                     switch (booking.status) {
                         case "accept":
+                        console.log('accept cassssssssssse');
+                        console.log(data);
                             var emailData = {}; /////TO EXPERT
                             emailData.email = data.email;
                             emailData.filename = 'dummy.ejs';
