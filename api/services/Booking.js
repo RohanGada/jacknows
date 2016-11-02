@@ -92,6 +92,10 @@ var models = {
                                         }
                                     });
                                 },function(callback1) {
+                                  console.log('emailData2.mobile');
+                                  console.log(emailData2.mobile);
+                                  console.log('emailData2.content2');
+                                  console.log(emailData2.content2);
                                     Config.message2({
                                         mobile: emailData2.mobile,
                                         content: emailData2.content2
@@ -111,6 +115,10 @@ var models = {
                                       }
                                     });
                                 },function(callback1) {
+                                  console.log('emailData.mobile');
+                                  console.log(emailData.mobile);
+                                  console.log('emailData.content2');
+                                  console.log(emailData.content2);
                                     Config.message2({
                                         mobile: emailData.mobile,
                                         content: emailData.content2
