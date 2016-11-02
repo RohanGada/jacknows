@@ -96,18 +96,36 @@ var models = {
                                         mobile: emailData2.mobile,
                                         content: emailData2.content2
                                     }, function(err, data2) {
-                                        // callback1(null, {
-                                        //     message: "Done"
-                                        // });
+                                      if (err) {
+                                        console.log('err');
+                                        // console.log(err);
+                                          callback1(err, null);
+                                          // callback1(null, {
+                                          //     message: "Done"
+                                          // });
+                                      } else {
+                                        console.log('message2 else not in error');
+                                          callback1(null, {
+                                              message: "Done"
+                                          });
+                                      }
                                     });
                                 },function(callback1) {
                                     Config.message2({
                                         mobile: emailData.mobile,
                                         content: emailData.content2
                                     }, function(err, data2) {
-                                        // callback1(null, {
-                                        //     message: "Done"
-                                        // });
+                                      if (err) {
+                                          callback1(err, null);
+                                          // callback1(null, {
+                                          //     message: "Done"
+                                          // });
+                                      } else {
+                                          console.log('message2 else not in error');
+                                          callback1(null, {
+                                              message: "Done"
+                                          });
+                                      }
                                     });
                                 }
                             ],
