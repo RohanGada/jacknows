@@ -51,12 +51,13 @@ var model = {
                                 content: data.content2
                             }, function(err, data2) {
                                 if (err) {
+                                  console.log("message error");
                                     callback(null, {
                                         message: "Done error msg"
                                     });
                                 } else {
 
-                                    //  console.log("message",content);
+                                     console.log("message save");
                                     callback(null, "done")
                                         // callback(null, {
                                         //     message: "Done"
