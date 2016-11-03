@@ -344,8 +344,8 @@ module.exports = {
                                 "THEME": "merchant",
                                 "TXN_AMOUNT": respo.finalAmount,
                                 "WEBSITE": "GoFishweb",
-                                "CALLBACK_URL": "http://localhost:80/config/response"
-                                // "CALLBACK_URL": "http://jacknows.wohlig.com/config/response"
+                                // "CALLBACK_URL": "http://localhost:80/config/response"
+                                "CALLBACK_URL": "http://jacknows.wohlig.com/config/response"
                             };
                             // var genParams = {
                             //     "CHANNEL_ID": "WEB",
@@ -480,8 +480,8 @@ module.exports = {
                                 reqParam.expertemail = respo.expert.email;
                                 reqParam.expertname = respo.expert.firstName;
                                 callSave();
-                                res.redirect("http://localhost:8080/#/paymentSuccess");
-                                // res.redirect("http://wohlig.co.in/jacknows/#/paymentSuccess");
+                                // res.redirect("http://localhost:8080/#/paymentSuccess");
+                                res.redirect("http://wohlig.co.in/jacknows/#/paymentSuccess");
                             } else {
                                 console.log('doing cancel payment');
                                 reqParam.cancelReason = req.body.RESPMSG
@@ -497,8 +497,8 @@ module.exports = {
                                 reqParam.expertemail = respo.expert.email;
                                 reqParam.expertname = respo.expert.firstName;
                                 callSave();
-                                res.redirect("http://localhost:8080/#/paymentError");
-                                // res.redirect("http://wohlig.co.in/jacknows/#/paymentError");
+                                // res.redirect("http://localhost:8080/#/paymentError");
+                                res.redirect("http://wohlig.co.in/jacknows/#/paymentError");
                             }
                         } else {
                             res.json({
