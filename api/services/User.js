@@ -886,7 +886,7 @@ var models = {
                             text += possible.charAt(Math.floor(Math.random() * possible.length));
                         }
                         var encrypttext = md5(text);
-                        this.findOneAndUpdate({
+                        User.findOneAndUpdate({
                             _id: found._id
                         }, {
                             forgotpassword: encrypttext
