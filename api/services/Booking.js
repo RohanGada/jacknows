@@ -238,7 +238,7 @@ var models = {
                             emailData.content = "Hi, we have sent your reply to the User, we will revert once the call is confirmed.";
                             emailData.subject = "Booking Status";
                             emailData.mobile = data.mobile;
-                            emailData.content2 = "Hi, we have sent your reply to the User, we will revert once the call is confirmed.";
+                            emailData.content2 = "We have sent your response to the user. We will get back to you once the call is confirmed.";
                             var emailData2 = {}; /////TO USER
                             emailData2.email = data.useremail;
                             emailData2.filename = 'dummy.ejs';
@@ -246,7 +246,7 @@ var models = {
                             emailData2.content = "Hi, the expert has replied to your request, please login to check. (http://wohlig.co.in/jacknows/#/login)";
                             emailData2.subject = "Booking Status";
                             emailData2.mobile = data.usermobile;
-                            emailData2.content2 = "Hi, the expert has replied to your request, please login to check.";
+                            emailData2.content2 = "You have received a response from the expert regarding your request. Please login to check.";
                             callMail(emailData, emailData2);
                             break;
                         case "paid":
@@ -258,7 +258,8 @@ var models = {
                             emailData.name = data.expertname;
                             emailData.content = "Your call with " + data.username + " is confirmed for " + timestamp + " IST.";
                             emailData.mobile = data.mobile;
-                            emailData.content2 = "Your call with " + data.username + " is confirmed. We will connect you with the user on " + timestamp + ".";
+                            emailData.content2 = "The call with" + data.username + "is confirmed. We will connect you with the user on" + timestamp + ".";
+                            // emailData.content2 = "Your call with " + data.username + " is confirmed. We will connect you with the user on " + timestamp + ".";
                             emailData.subject = "Booking Status";
                             var emailData2 = {}; /////TO USER
                             emailData2.email = data.email;
@@ -277,7 +278,8 @@ var models = {
                             emailData.name = data.expertname;
                             emailData.content = "Your booking with " + data.username + " was cancelled";
                             emailData.mobile = data.mobile;
-                            emailData.content2 = "Your booking with " + data.username + " was cancelled";
+                            emailData.content2 = "We have sent your response to the user. We will get back to you once the call is confirmed.";
+                            // emailData.content2 = "Your booking with " + data.username + " was cancelled";
                             emailData.subject = "Booking Status";
                             var emailData2 = {}; /////TO USER
                             emailData2.email = data.email;
@@ -286,7 +288,8 @@ var models = {
                             emailData2.content = "Your booking with " + data.expertname + " was cancelled";
                             emailData2.subject = "Booking Status";
                             emailData2.mobile = data.usermobile;
-                            emailData2.content2 = "Your booking with " + data.expertname + " was cancelled";
+                            emailData2.content2 = "You have received a response from the expert regarding your request. Please login to check.";
+                            // emailData2.content2 = "Your booking with " + data.expertname + " was cancelled";
                             callMail(emailData, emailData2);
                             break;
                         default:
